@@ -5,8 +5,10 @@
 "
 " :PluginInstall
 "
-" cd .vim/bundle/YouCompleteMe && ./install.sh --clang-completer
 " sudo apt-get install fonts-powerline
+" pip install --user neovim
+"
+" cd .vim/bundle/YouCompleteMe && ./install.sh --clang-completer
 " cd .vim/bundle/vimproc.vim && make
 
 set nocompatible 
@@ -23,6 +25,7 @@ Plugin 'altercation/vim-colors-solarized'
 Plugin 'djjcast/mirodark'
 Plugin 'morhetz/gruvbox'
 Plugin 'rust-lang/rust.vim'
+Plugin 'kien/ctrlp.vim'
 
 if !has('nvim')
     Plugin 'jszakmeister/vim-togglecursor'
@@ -96,6 +99,9 @@ else
     " Tweaks for togglecursor
     set timeout timeoutlen=1000 ttimeoutlen=50
 endif
+
+let g:ctrlp_map = '<c-k>' " like Qt Creator
+let g:ctrlp_cmd = 'CtrlPMixed'
 
 color gruvbox
 set bg=dark
