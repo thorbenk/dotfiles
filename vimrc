@@ -30,6 +30,7 @@ Plugin 'djjcast/mirodark'
 Plugin 'morhetz/gruvbox'
 Plugin 'rust-lang/rust.vim'
 Plugin 'kien/ctrlp.vim'
+Plugin 'scrooloose/nerdtree'
 
 if !has('nvim')
     Plugin 'jszakmeister/vim-togglecursor'
@@ -106,6 +107,8 @@ endif
 
 let g:ctrlp_map = '<c-k>' " like Qt Creator
 let g:ctrlp_cmd = 'CtrlPMixed'
+
+map <A-0> :NERDTreeToggle<CR>
 
 color gruvbox
 set bg=dark
