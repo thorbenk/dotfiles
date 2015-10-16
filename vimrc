@@ -1,3 +1,7 @@
+" vim:fdm=marker
+"
+" Documentation {{{
+"
 " Installation
 " ============
 "
@@ -15,33 +19,66 @@
 " cd .vim/bundle/YouCompleteMe && ./install.sh --clang-completer
 " cd .vim/bundle/vimproc.vim && make
 
+" Notes
+" =====
+"
+" * folds:
+"   - open/close via 'zo' and 'zc' (remember: z == folded piece of paper)
+"   - close all folds in a file: 'zm'     
+"
+" Keyboard Shortcuts (Plugins, this configuration)
+" ==================
+"
+" tab completion   : C-n
+" toggle nerd tree : A-0
+" toggle line num  : C-n (normal mode)
+"
+" CtrlP:
+" when open, switch mode : C-f
+" when open, ask for which split to use : C-o
+"
+" }}}
+
+" Plugins {{{
 set nocompatible 
 filetype off 
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 Plugin 'gmarik/Vundle.vim'
-Plugin 'tpope/vim-sensible'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-obsession'
+Plugin 'tpope/vim-dispatch'
+Plugin 'vim-scripts/Align'
 Plugin 'bling/vim-airline'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'djjcast/mirodark'
 Plugin 'morhetz/gruvbox'
-Plugin 'rust-lang/rust.vim'
 Plugin 'kien/ctrlp.vim'
 Plugin 'scrooloose/nerdtree'
+
+" Show absolute line numbers in insert mode,
+"      relative line numbers in normal mode
+" Use C-n to toggle the mode.
+Plugin 'jeffkreeftmeijer/vim-numbertoggle'
 
 if !has('nvim')
     Plugin 'jszakmeister/vim-togglecursor'
 endif
 
+" rust
+Plugin 'rust-lang/rust.vim'
+Plugin 'racer-rust/vim-racer'
+
 " Plugin 'Valloric/YouCompleteMe'
 
 call vundle#end()
-filetype plugin indent on 
+" }}}
 
-" let g:ycm_confirm_extra_conf = 0
+filetype plugin indent on 
+syntax enable
+set backspace=indent,eol,start
 
 set hlsearch
 
@@ -52,34 +89,31 @@ set expandtab
 
 set colorcolumn=80
 
-set number
-
 set laststatus=2 " show vim-airline all the time, not just on first split
 let g:airline_powerline_fonts=1
 
 set relativenumber
 set number
 
-" Colorscheme
-" set t_Co=256
-" set background=dark
-" let g:solarized_termcolors=256
+set hidden " keep buffer around when switching to different buffer
 
-" <TAB>: completion.
+" tab completion: <C-n>
 inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
 
+" Window management {{{
 :nnoremap <A-h> <C-w>h
 :nnoremap <A-j> <C-w>j
 :nnoremap <A-k> <C-w>k
 :nnoremap <A-l> <C-w>l
+" }}}
+
+" NeoVim {{{
 if has('nvim')
     :tnoremap <A-h> <C-\><C-n><C-w>h
     :tnoremap <A-j> <C-\><C-n><C-w>j
     :tnoremap <A-k> <C-\><C-n><C-w>k
     :tnoremap <A-l> <C-\><C-n><C-w>l
-endif
-
-if has('nvim')
+    
     let $NVIM_TUI_ENABLE_TRUE_COLOR=1
     let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 
@@ -100,17 +134,73 @@ if has('nvim')
     endfunction
     command! RunCargoBuild call SendLinesToTerminal(['clear && cargo build'])
     nnoremap <silent> <f6> :RunCargoBuild<cr>
-else
+endif
+" }}}
+
+" Standard vim {{{
+if !has('nvim')
     " Tweaks for togglecursor
     set timeout timeoutlen=1000 ttimeoutlen=50
 endif
+" }}}
 
-let g:ctrlp_map = '<c-k>' " like Qt Creator
+" gvim {{{
+if has('gui')
+    set guioptions-=m  "remove menu bar
+    set guioptions-=T  "remove toolbar
+endif
+" }}}
+
+" Save all buffers when window loses focus
+:au FocusLost * silent! :wa
+
+set wildignore+=*/.git/*,*/.svn/*
+set wildignore+=*.so,*.swp,*.swo
+set wildignore+=*/target/debug*,*/target/release/*
+
+" CtrlP {{{
+" search upwards for a directory containgin .git etc. ('r')
+" if no root can be found, use the directory of the current file ('c')
+let g:ctrlp_working_path_mode = 'ra'
+
+" Ctrl-k (like Qt Creator)
+let g:ctrlp_map = '<c-k>'
+
+" CtrlP at bottom, order top-to-bottom
+let g:ctrlp_match_window = 'bottom,order:ttb'
+
+" Search in files, buffers and MRU files at the same time
 let g:ctrlp_cmd = 'CtrlPMixed'
+" }}}
 
+" NerdTree {{{
 map <A-0> :NERDTreeToggle<CR>
+" }}}
+
+" Rust Make {{{
+
+autocmd BufRead,BufNewFile Cargo.toml,Cargo.lock,*.rs compiler cargo
+
+au FileType rust compiler cargo
+
+let g:racer_cmd = "/opt/racer/target/release/racer"
+
+" This uses the vim-dispatch plugin to run ':make build'
+" (which translates into 'cargo build' for rust projects)
+" _in the background_.
+"
+" It opens the quickfix window (when there are errors only, warnings
+" don't count).
+" To jump to error, either 
+"  - Select a line in the quickfix window and hit <CR> to jump
+"  - :cfirst, :cn
+"
+:nnoremap <F1> :wa<bar>:Make build<CR>
+
+" Alternatively, this would the build _synchronously_
+" :nnoremap <F1> :wa<CR>:make build<CR>
+" }}}
 
 color gruvbox
 set bg=dark
 set t_Co=256
-
