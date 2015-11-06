@@ -69,7 +69,10 @@ endif
 
 " rust
 Plugin 'rust-lang/rust.vim'
-Plugin 'racer-rust/vim-racer'
+
+if !empty($RUST_SRC_PATH)
+    Plugin 'racer-rust/vim-racer'
+endif
 
 " Plugin 'Valloric/YouCompleteMe'
 

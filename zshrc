@@ -1,6 +1,8 @@
+export LC_ALL="C"
+export EDITOR="vim"
+
 export NOBACKUP="/nobackup"
 export LOCAL_INSTALL_PREFIX=/nobackup/inst
-
 export KDEV_DUCHAIN_DIR=$NOBACKUP/kdevduchain
 
 #--- oh-my-zsh ---------------------------------------------------------------
