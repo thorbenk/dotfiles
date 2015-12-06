@@ -103,11 +103,23 @@ set hidden " keep buffer around when switching to different buffer
 " tab completion: <C-n>
 inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
 
+" Backup files {{{
+set nobackup
+set noswapfile
+" }}}
+
 " Window management {{{
+"
+" Alt+{hjkl} to cycle through windows
 :nnoremap <A-h> <C-w>h
 :nnoremap <A-j> <C-w>j
 :nnoremap <A-k> <C-w>k
 :nnoremap <A-l> <C-w>l
+" Alt+Shift+{hjkl} to resize windows
+:nnoremap <A-S-h> :vertical resize +1<CR>
+:nnoremap <A-S-j> :resize -1<CR>
+:nnoremap <A-S-k> :resize +1<CR>
+:nnoremap <A-S-l> :vertical resize -1<CR>
 " }}}
 
 " NeoVim {{{
@@ -151,6 +163,8 @@ endif
 if has('gui')
     set guioptions-=m  "remove menu bar
     set guioptions-=T  "remove toolbar
+    set guioptions-=r  "remove right-hand scroll bar
+    set guioptions-=L  "remove left-hand scroll bar
 endif
 " }}}
 
@@ -160,6 +174,7 @@ endif
 set wildignore+=*/.git/*,*/.svn/*
 set wildignore+=*.so,*.swp,*.swo
 set wildignore+=*/target/debug*,*/target/release/*
+set wildignore+=Cargo.lock
 
 " CtrlP {{{
 " search upwards for a directory containgin .git etc. ('r')
