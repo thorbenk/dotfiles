@@ -1,5 +1,7 @@
 " vim:fdm=marker
 "
+" " open/close folds with `zo` and `zc`
+"
 " Documentation {{{
 "
 " Installation
@@ -38,7 +40,6 @@
 " when open, ask for which split to use : C-o
 "
 " }}}
-
 " Plugins {{{
 set nocompatible 
 filetype off 
@@ -51,12 +52,13 @@ Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-obsession'
 Plugin 'tpope/vim-dispatch'
 Plugin 'vim-scripts/Align'
-Plugin 'bling/vim-airline'
+Plugin 'vim-airline/vim-airline'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'djjcast/mirodark'
 Plugin 'morhetz/gruvbox'
 Plugin 'kien/ctrlp.vim'
 Plugin 'scrooloose/nerdtree'
+Plugin 'mhinz/vim-startify'
 
 " Show absolute line numbers in insert mode,
 "      relative line numbers in normal mode
@@ -78,7 +80,7 @@ endif
 
 call vundle#end()
 " }}}
-
+" Basic settings {{{
 filetype plugin indent on 
 syntax enable
 set backspace=indent,eol,start
@@ -100,14 +102,19 @@ set number
 
 set hidden " keep buffer around when switching to different buffer
 
+" leader key is SPACE
+let mapleader=" "
+
+" save file with <leader>w
+noremap <Leader>w :update<CR>
+
 " tab completion: <C-n>
 inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-
+" }}}
 " Backup files {{{
 set nobackup
 set noswapfile
 " }}}
-
 " Window management {{{
 "
 " Alt+{hjkl} to cycle through windows
@@ -121,7 +128,6 @@ set noswapfile
 :nnoremap <A-S-k> :resize +1<CR>
 :nnoremap <A-S-l> :vertical resize -1<CR>
 " }}}
-
 " NeoVim {{{
 if has('nvim')
     :tnoremap <A-h> <C-\><C-n><C-w>h
@@ -151,14 +157,12 @@ if has('nvim')
     nnoremap <silent> <f6> :RunCargoBuild<cr>
 endif
 " }}}
-
 " Standard vim {{{
 if !has('nvim')
     " Tweaks for togglecursor
     set timeout timeoutlen=1000 ttimeoutlen=50
 endif
 " }}}
-
 " gvim {{{
 if has('gui')
     set guioptions-=m  "remove menu bar
