@@ -1,0 +1,5 @@
+{
+    // Workaround for issue vscode/23991
+    // to make "caps lock as additional ESC" work
+    "keyboard.dispatch": "keyCode"
+}
