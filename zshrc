@@ -11,7 +11,8 @@ export KDEV_DUCHAIN_DIR=$NOBACKUP/kdevduchain
 
 #--- oh-my-zsh ---------------------------------------------------------------
 
-export ZSH=$HOME/code/dotfiles/oh-my-zsh
+export DOTFILES_DIR=$HOME/code/dotfiles
+export ZSH=$DOTFILES_DIR/oh-my-zsh
 export ZSH_THEME="bira"
 export CASE_SENSITIVE="false" # case-insesitive completion
 export DISABLE_AUTO_UPDATE="true" # no weekly update checks
@@ -88,5 +89,6 @@ alias plssh="keychain ~/.ssh/id_dsa"
 # export CMAKE_LIBRARY_PATH="$LOCAL_INSTALL_PREFIX/lib"
 # export CMAKE_LOCAL_INSTALL_PREFIX_PATH="$LOCAL_INSTALL_PREFIX"
 
-export PATH=$HOME/.cargo/bin:$PATH
+export PYTHONPATH=$DOTFILES_DIR/pytk:$PYTHONPATH
+export PATH=$HOME/.cargo/bin:$DOTFILES_DIR/bin:$PATH
 
