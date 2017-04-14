@@ -16,4 +16,5 @@ chsh -s $(which zsh)
 # Tips & Tricks
 
 - [Vim](vim.md)
+- [T570](t570.md)
 

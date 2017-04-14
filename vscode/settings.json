@@ -1,5 +1,8 @@
 {
     // Workaround for issue vscode/23991
     // to make "caps lock as additional ESC" work
-    "keyboard.dispatch": "keyCode"
+    "keyboard.dispatch": "keyCode",
+
+    // vertical ruler at 80 columns
+    "editor.rulers": [80]
 }
