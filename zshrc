@@ -90,5 +90,5 @@ alias plssh="keychain ~/.ssh/id_dsa"
 # export CMAKE_LOCAL_INSTALL_PREFIX_PATH="$LOCAL_INSTALL_PREFIX"
 
 export PYTHONPATH=$DOTFILES_DIR/pytk:$PYTHONPATH
-export PATH=$HOME/.cargo/bin:$DOTFILES_DIR/bin:$PATH
+export PATH=/opt/bin:$HOME/.cargo/bin:$DOTFILES_DIR/bin:$PATH
 
