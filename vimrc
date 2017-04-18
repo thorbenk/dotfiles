@@ -31,6 +31,7 @@ Plugin 'morhetz/gruvbox'
 Plugin 'rust-lang/rust.vim'
 Plugin 'kien/ctrlp.vim'
 Plugin 'scrooloose/nerdtree'
+Plugin 'vim-scripts/Align'
 
 if !has('nvim')
     Plugin 'jszakmeister/vim-togglecursor'
@@ -114,3 +115,7 @@ color gruvbox
 set bg=dark
 set t_Co=256
 
+" save all files when focus is lost
+:au FocusLost * :wa
+" save when switching buffers etc.
+:set autowriteall
