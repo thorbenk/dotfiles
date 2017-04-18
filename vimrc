@@ -51,13 +51,13 @@ Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-obsession'
 Plugin 'tpope/vim-dispatch'
-Plugin 'vim-scripts/Align'
 Plugin 'vim-airline/vim-airline'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'djjcast/mirodark'
 Plugin 'morhetz/gruvbox'
 Plugin 'kien/ctrlp.vim'
 Plugin 'scrooloose/nerdtree'
+Plugin 'vim-scripts/Align'
 Plugin 'mhinz/vim-startify'
 
 " Show absolute line numbers in insert mode,
@@ -226,3 +226,8 @@ let g:racer_cmd = "/opt/racer/target/release/racer"
 color gruvbox
 set bg=dark
 set t_Co=256
+
+" save all files when focus is lost
+:au FocusLost * :wa
+" save when switching buffers etc.
+:set autowriteall
