@@ -1,0 +1,28 @@
+{
+    // Workaround for issue vscode/23991
+    // to make "caps lock as additional ESC" work
+    "keyboard.dispatch": "keyCode",
+
+    // vertical ruler at 80 columns
+    "editor.rulers": [80],
+
+    "files.autoSave": "onFocusChange",
+
+    "vim.leader": "<space>",
+    "vim.textwidth": 80,
+    "vim.easymotion": true,
+
+    // <leader>w saves current file
+    "vim.otherModesKeyBindingsNonRecursive": [
+        {
+            "before": ["leader", "w"],
+            "after": [],
+            "commands": [
+                {
+                    "command": "workbench.action.files.save",
+                    "args": []
+                }
+            ]
+        }
+    ]
+}

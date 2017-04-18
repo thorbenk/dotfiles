@@ -1,11 +1,18 @@
+export EDITOR="vim"
+
+if [ `hostname` = "raspberrypi" ]; then
+    # otherwise, command prompt is messed up?
+    export LC_ALL="C"
+fi
+
 export NOBACKUP="/nobackup"
 export LOCAL_INSTALL_PREFIX=/nobackup/inst
-
 export KDEV_DUCHAIN_DIR=$NOBACKUP/kdevduchain
 
 #--- oh-my-zsh ---------------------------------------------------------------
 
-export ZSH=$HOME/dotfiles/oh-my-zsh
+export DOTFILES_DIR=$HOME/code/dotfiles
+export ZSH=$DOTFILES_DIR/oh-my-zsh
 export ZSH_THEME="bira"
 export CASE_SENSITIVE="false" # case-insesitive completion
 export DISABLE_AUTO_UPDATE="true" # no weekly update checks
@@ -34,7 +41,6 @@ setopt NO_SHARE_HISTORY
 
 # http://matt.blissett.me.uk/linux/zsh/zshrc
 
-alias 'make=makeobj'
 alias 'l=ls'
 alias 'll=ls -lh'
 alias 'kw=kwrite'
@@ -76,12 +82,13 @@ alias plssh="keychain ~/.ssh/id_dsa"
 #so we can make with srcdir != builddir
 #http://blogs.kde.org/node/2559
 
-export PATH=$LOCAL_INSTALL_PREFIX/bin:$PATH
+# export PATH=$LOCAL_INSTALL_PREFIX/bin:$PATH
+# export PYTHONPATH="$LOCAL_INSTALL_PREFIX/lib/python/site-packages:$PYTHONPATH"
+# export CMAKE_INSTALL_LOCAL_INSTALL_PREFIX="$LOCAL_INSTALL_PREFIX"
+# export CMAKE_INCLUDE_PATH="$LOCAL_INSTALL_PREFIX/include"
+# export CMAKE_LIBRARY_PATH="$LOCAL_INSTALL_PREFIX/lib"
+# export CMAKE_LOCAL_INSTALL_PREFIX_PATH="$LOCAL_INSTALL_PREFIX"
 
-export PYTHONPATH="$LOCAL_INSTALL_PREFIX/lib/python/site-packages:$PYTHONPATH"
-
-export CMAKE_INSTALL_LOCAL_INSTALL_PREFIX="$LOCAL_INSTALL_PREFIX"
-export CMAKE_INCLUDE_PATH="$LOCAL_INSTALL_PREFIX/include"
-export CMAKE_LIBRARY_PATH="$LOCAL_INSTALL_PREFIX/lib"
-export CMAKE_LOCAL_INSTALL_PREFIX_PATH="$LOCAL_INSTALL_PREFIX"
+export PYTHONPATH=$DOTFILES_DIR/pytk:$PYTHONPATH
+export PATH=/opt/bin:$HOME/.cargo/bin:$DOTFILES_DIR/bin:$PATH
 
