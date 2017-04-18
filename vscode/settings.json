@@ -24,5 +24,10 @@
                 }
             ]
         }
-    ]
+    ],
+
+    "rust.rls": {
+        "executable": "rustup",
+        "args": ["run", "nightly", "rls"]
+    }
 }
