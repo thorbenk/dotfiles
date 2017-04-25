@@ -9,4 +9,7 @@ ln -sfn $PWD/profile $HOME/.profile
 mkdir -p "$HOME/.config/Code - Insiders/User"
 ln -sfn $PWD/vscode/settings.json "$HOME/.config/Code - Insiders/User"
 
+mkdir -p "$HOME/.config/Code/User"
+ln -sfn $PWD/vscode/settings.json "$HOME/.config/Code/User"
+
 ln -sfn $PWD/xdg/user-dirs.dirs "$HOME/.config/user-dirs.dirs"
