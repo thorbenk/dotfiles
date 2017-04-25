@@ -92,3 +92,5 @@ alias plssh="keychain ~/.ssh/id_dsa"
 export PYTHONPATH=$DOTFILES_DIR/pytk:$PYTHONPATH
 export PATH=/opt/bin:$HOME/.cargo/bin:$DOTFILES_DIR/bin:$PATH
 
+[ -f ~/.zshrc.user ] && source ~/.zshrc.user
+
