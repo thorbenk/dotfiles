@@ -29,5 +29,8 @@
     "rust.rls": {
         "executable": "rustup",
         "args": ["run", "nightly", "rls"]
-    }
+    },
+
+    "python.linting.enabled": false,
+    "python.pythonPath": "/usr/bin/python3"
 }
