@@ -74,7 +74,7 @@ f() {
     find . -iname "*$1*"
 }
 
-alias plssh="keychain ~/.ssh/id_dsa"
+alias plssh="ssh-add ~/.ssh/id_rsa"
 
 #--- paths ------------------------------------------------------------------
 
