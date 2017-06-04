@@ -4,7 +4,7 @@ ln -sfn $PWD/vimrc $HOME/.nvimrc
 
 ln -sfn $PWD/zshrc $HOME/.zshrc
 
-ln -sfn $PWD/profile $HOME/.profile
+ln -sfn $PWD/zprofile $HOME/.zprofile
 
 mkdir -p "$HOME/.config/Code - Insiders/User"
 ln -sfn $PWD/vscode/settings.json "$HOME/.config/Code - Insiders/User"
