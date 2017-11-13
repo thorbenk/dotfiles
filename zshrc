@@ -48,7 +48,7 @@ alias 'tf=tail -f'
 alias 'grep=grep --colour'
 alias 'creator=QT_PLUGIN_PATH="" XDG_DATA_DIRS="" QML2_IMPORT_PATH="" QT_PLUGIN_PATH="" XDG_DATA_DIRS="" /nobackup/thirdparty/qt-creator/bin/qtcreator.sh'
 alias 'qtc=QT_PLUGIN_PATH="" XDG_DATA_DIRS="" QML2_IMPORT_PATH="" QT_PLUGIN_PATH="" XDG_DATA_DIRS="" /nobackup/thirdparty/qtc-master/bin/qtcreator.sh'
-
+alias 'f=fzf'
 alias 'k=z kate'
 
 # Automatically background processes (no output to terminal etc)
@@ -67,12 +67,6 @@ for i in inkscape acroread chromium eclipse \
          firefox thunderbird; do
     alias "$i=z $i"
 done
-
-# Quick find
-f() {
-    echo "find . -iname \"*$1*\""
-    find . -iname "*$1*"
-}
 
 alias plssh="ssh-add ~/.ssh/id_rsa"
 
@@ -94,3 +88,5 @@ export PATH=/opt/bin:$HOME/.cargo/bin:$DOTFILES_DIR/bin:$PATH
 
 [ -f ~/.zshrc.user ] && source ~/.zshrc.user
 
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

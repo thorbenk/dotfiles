@@ -90,5 +90,16 @@
 
     "python.linting.enabled": false,
     "python.pythonPath": "/usr/bin/python3",
-    "vim.disableAnnoyingNeovimMessage": true
+    "vim.disableAnnoyingNeovimMessage": true,
+
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/.venv": true,
+        "**/*.pyc": true,`
+        "**/__pycache__": true
+    }
 }

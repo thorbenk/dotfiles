@@ -44,21 +44,23 @@
 set nocompatible 
 filetype off 
 set rtp+=~/.vim/bundle/Vundle.vim
+set rtp+=~/.fzf
 call vundle#begin()
-
 Plugin 'VundleVim/Vundle.vim'
-Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-obsession'
-Plugin 'tpope/vim-dispatch'
-Plugin 'vim-airline/vim-airline'
+
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'djjcast/mirodark'
-Plugin 'morhetz/gruvbox'
+Plugin 'junegunn/fzf.vim'
 Plugin 'kien/ctrlp.vim'
-Plugin 'scrooloose/nerdtree'
-Plugin 'vim-scripts/Align'
 Plugin 'mhinz/vim-startify'
+Plugin 'morhetz/gruvbox'
+Plugin 'scrooloose/nerdtree'
+Plugin 'tpope/vim-dispatch'
+Plugin 'tpope/vim-obsession'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-surround'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-scripts/Align'
 
 " Show absolute line numbers in insert mode,
 "      relative line numbers in normal mode
