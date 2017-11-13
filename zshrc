@@ -88,5 +88,4 @@ export PATH=/opt/bin:$HOME/.cargo/bin:$DOTFILES_DIR/bin:$PATH
 
 [ -f ~/.zshrc.user ] && source ~/.zshrc.user
 
-
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

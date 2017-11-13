@@ -5,6 +5,13 @@ emulators, but only in gvim.
 
 - Jump to previous: `C-o` ("old")
 
+## FZF
+
+- open `Space-F`
+- search `Space-A` (Ag)
+- history `Space-H`
+- buffers `Space-B`
+
 ## Window Management
 
 - Navigate around windows `A-{hjkl}`

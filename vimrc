@@ -35,6 +35,10 @@
 " toggle nerd tree : A-0
 " toggle line num  : C-n (normal mode)
 "
+" FZF:
+" open files  : C-f
+" search files: C-a
+"
 " CtrlP:
 " when open, switch mode : C-f
 " when open, ask for which split to use : C-o
@@ -107,12 +111,21 @@ set hidden " keep buffer around when switching to different buffer
 " leader key is SPACE
 let mapleader=" "
 
-" save file with <leader>w
-noremap <Leader>w :update<CR>
-
 " tab completion: <C-n>
 inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
 " }}}
+
+" Leader {{{
+" save file with <leader>w
+noremap <Leader>w :update<CR>
+
+" fzf
+noremap <Leader>f :Files<CR>
+noremap <Leader>a :Ag<CR>
+noremap <Leader>b :Buffers<CR>
+noremap <Leader>h :History:<CR>
+" }}}
+
 " Backup files {{{
 set nobackup
 set noswapfile
