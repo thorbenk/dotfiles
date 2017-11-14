@@ -13,10 +13,10 @@ export KDEV_DUCHAIN_DIR=$NOBACKUP/kdevduchain
 
 export DOTFILES_DIR=$HOME/code/dotfiles
 export ZSH=$DOTFILES_DIR/oh-my-zsh
-export ZSH_THEME="bira"
+export ZSH_THEME="half-life"
 export CASE_SENSITIVE="false" # case-insesitive completion
 export DISABLE_AUTO_UPDATE="true" # no weekly update checks
-plugins=(git)
+plugins=(git, svn)
 source $ZSH/oh-my-zsh.sh
 
 #--- zsh --------------------------------------------------------------------
