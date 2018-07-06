@@ -83,7 +83,7 @@ alias plssh="ssh-add ~/.ssh/id_rsa"
 # export CMAKE_LIBRARY_PATH="$LOCAL_INSTALL_PREFIX/lib"
 # export CMAKE_LOCAL_INSTALL_PREFIX_PATH="$LOCAL_INSTALL_PREFIX"
 
-export PYTHONPATH=$DOTFILES_DIR/pytk:$PYTHONPATH
+#export PYTHONPATH=$DOTFILES_DIR/pytk:$PYTHONPATH
 export PATH=/opt/bin:$HOME/.cargo/bin:$DOTFILES_DIR/bin:$PATH
 
 [ -f ~/.zshrc.user ] && source ~/.zshrc.user
