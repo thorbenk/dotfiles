@@ -18,22 +18,29 @@
     "vim.enableNeovim": true,
     "vim.neovimPath": "/usr/bin/nvim",
 
+    "cquery.codeLens.renderInline": false,
+
     // * <leader>w saves current file
     // * <leader>b saves all files and runs `cargo build`
-    "vim.otherModesKeyBindingsNonRecursive": [
+    "vim.normalModeKeyBindingsNonRecursive": [
+        {
+            "before" : ["leader", "p"],
+            "commands": [
+                {
+                    "command": "editor.action.previewDeclaration",
+                }
+            ]
+        },
         {
             "before": ["leader", "w"],
-            "after": [],
             "commands": [
                 {
                     "command": "workbench.action.files.save",
-                    "args": []
                 }
             ]
         },
         {
             "before": ["leader", "b"],
-            "after": [],
             "commands": [
                 {
                     "command": "workbench.action.files.saveAll",
@@ -90,7 +97,6 @@
 
     "python.linting.enabled": false,
     "python.pythonPath": "/usr/bin/python3",
-    "vim.disableAnnoyingNeovimMessage": true,
 
     "files.exclude": {
         "**/.git": true,
@@ -99,7 +105,8 @@
         "**/CVS": true,
         "**/.DS_Store": true,
         "**/.venv": true,
-        "**/*.pyc": true,`
+        "**/*.pyc": true,
         "**/__pycache__": true
-    }
+    },
+    "cquery.misc.status": "detailed",
 }
