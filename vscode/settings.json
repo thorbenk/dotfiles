@@ -5,20 +5,42 @@
     // Workaround for issue vscode/23991
     // to make "caps lock as additional ESC" work
     "keyboard.dispatch": "keyCode",
-    "editor.autoClosingBrackets": false,
 
-    // vertical ruler at 80 columns
+    "editor.autoClosingBrackets": false,
     "editor.rulers": [80],
+    "editor.fontSize": 14,
 
     "files.autoSave": "onFocusChange",
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/.venv": true,
+        "**/*.pyc": true,
+        "**/__pycache__": true
+    },
 
+    "materialTheme.fixIconsRunning": false,
+
+    "workbench.colorTheme": "Material Theme Darker High Contrast",
+    "workbench.iconTheme": "eq-material-theme-icons-darker",
+
+    //-------------------------------------------------------------------------
+    // Python
+    //-------------------------------------------------------------------------
+    "python.linting.enabled": false,
+    "python.pythonPath": "/usr/bin/python3",
+
+    //-------------------------------------------------------------------------
+    // VIM
+    //-------------------------------------------------------------------------
     "vim.leader": "<space>",
     "vim.textwidth": 80,
     "vim.easymotion": true,
     "vim.enableNeovim": true,
     "vim.neovimPath": "/usr/bin/nvim",
-
-    "cquery.codeLens.renderInline": false,
 
     // * <leader>w saves current file
     // * <leader>b saves all files and runs `cargo build`
@@ -27,7 +49,15 @@
             "before" : ["leader", "p"],
             "commands": [
                 {
-                    "command": "editor.action.previewDeclaration",
+                    "command": "editor.action.previewDeclaration"
+                }
+            ]
+        },
+        {
+            "before" : ["leader", "r"],
+            "commands": [
+                {
+                    "command": "editor.action.referenceSearch.trigger"
                 }
             ]
         },
@@ -35,7 +65,7 @@
             "before": ["leader", "w"],
             "commands": [
                 {
-                    "command": "workbench.action.files.save",
+                    "command": "workbench.action.files.save"
                 }
             ]
         },
@@ -90,23 +120,26 @@
         }
     ],
 
-    "rust.rls": {
-        "executable": "rustup",
-        "args": ["run", "nightly", "rls"]
-    },
+    //-------------------------------------------------------------------------
+    // C++
+    //-------------------------------------------------------------------------
 
-    "python.linting.enabled": false,
-    "python.pythonPath": "/usr/bin/python3",
-
-    "files.exclude": {
-        "**/.git": true,
-        "**/.svn": true,
-        "**/.hg": true,
-        "**/CVS": true,
-        "**/.DS_Store": true,
-        "**/.venv": true,
-        "**/*.pyc": true,
-        "**/__pycache__": true
-    },
+    "cquery.codeLens.renderInline": false,
     "cquery.misc.status": "detailed",
+    "[cpp]": {
+      "editor.tabSize": 2,
+      "editor.insertSpaces": true,
+      "editor.autoIndent": true
+    },
+    
+    //-------------------------------------------------------------------------
+    // Rust
+    //-------------------------------------------------------------------------
+
+    "rust.all_targets": true,
+    "editor.minimap.enabled": true,
+    "[rust]": {
+       "editor.formatOnSave": true 
+    },
+    "window.zoomLevel": 0,
 }

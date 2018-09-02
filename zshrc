@@ -59,7 +59,7 @@ zz () {
 }
 
 # Aliases to use this; use e.g. 'command gv' to avoid
-for i in inkscape acroread chromium eclipse \
+for i in acroread chromium eclipse \
          gimp k3b \
          kopete kwrite kate konqueror dolphin gwenview okular amarok akregator \
          kile \
@@ -68,7 +68,9 @@ for i in inkscape acroread chromium eclipse \
     alias "$i=z $i"
 done
 
-alias plssh="ssh-add ~/.ssh/id_rsa"
+alias inkscape="GDK_SCALE=2 GDK_DPI_SCALE=0.5 /usr/bin/inkscape"
+
+alias plssh="z ssh-add ~/.ssh/id_rsa"
 
 #--- paths ------------------------------------------------------------------
 
