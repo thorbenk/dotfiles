@@ -1,6 +1,6 @@
 ln -sfn $PWD/vimrc $HOME/.vimrc
 ln -sfn "$PWD/vim" "$HOME/.vim"
-ln -sfn $PWD/vimrc $HOME/.nvimrc
+ln -sfn "$PWD/vim" "$HOME/.config/nvim"
 
 ln -sfn $PWD/zshrc $HOME/.zshrc
 

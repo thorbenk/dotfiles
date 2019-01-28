@@ -41,6 +41,7 @@ setopt NO_SHARE_HISTORY
 
 # http://matt.blissett.me.uk/linux/zsh/zshrc
 
+alias 'vim=nvim'
 alias 'l=ls'
 alias 'll=ls -lh'
 alias 'kw=kwrite'

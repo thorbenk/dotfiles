@@ -52,13 +52,16 @@ set rtp+=~/.fzf
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
+Plugin 'justinmk/vim-sneak'
+Plugin 'machakann/vim-highlightedyank'
+
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'djjcast/mirodark'
+
+Plugin 'airblade/vim-rooter'
 Plugin 'junegunn/fzf.vim'
-Plugin 'kien/ctrlp.vim'
 Plugin 'mhinz/vim-startify'
 Plugin 'morhetz/gruvbox'
-Plugin 'scrooloose/nerdtree'
 Plugin 'tpope/vim-dispatch'
 Plugin 'tpope/vim-obsession'
 Plugin 'tpope/vim-repeat'
@@ -114,7 +117,6 @@ let mapleader=" "
 " tab completion: <C-n>
 inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
 " }}}
-
 " Leader {{{
 " save file with <leader>w
 noremap <Leader>w :update<CR>
@@ -125,7 +127,11 @@ noremap <Leader>a :Ag<CR>
 noremap <Leader>b :Buffers<CR>
 noremap <Leader>h :History:<CR>
 " }}}
-
+" Colors {{{
+color gruvbox
+set bg=dark
+set t_Co=256
+" }}}
 " Backup files {{{
 set nobackup
 set noswapfile
@@ -186,34 +192,21 @@ if has('gui')
     set guioptions-=L  "remove left-hand scroll bar
 endif
 " }}}
-
-" Save all buffers when window loses focus
-:au FocusLost * silent! :wa
-
+" Ignore files {{{
 set wildignore+=*/.git/*,*/.svn/*
 set wildignore+=*.so,*.swp,*.swo
 set wildignore+=*/target/debug*,*/target/release/*
 set wildignore+=Cargo.lock
-
-" CtrlP {{{
-" search upwards for a directory containgin .git etc. ('r')
-" if no root can be found, use the directory of the current file ('c')
-let g:ctrlp_working_path_mode = 'ra'
-
-" Ctrl-k (like Qt Creator)
-let g:ctrlp_map = '<c-k>'
-
-" CtrlP at bottom, order top-to-bottom
-let g:ctrlp_match_window = 'bottom,order:ttb'
-
-" Search in files, buffers and MRU files at the same time
-let g:ctrlp_cmd = 'CtrlPMixed'
 " }}}
-
+" vim-sneak {{{
+"let g:sneak#label = 1
+" }}}
+" fzf {{{
+:nnoremap <c-k> :Files<CR>
+" }}}
 " NerdTree {{{
 map <A-0> :NERDTreeToggle<CR>
 " }}}
-
 " Rust Make {{{
 
 autocmd BufRead,BufNewFile Cargo.toml,Cargo.lock,*.rs compiler cargo
@@ -237,12 +230,25 @@ let g:racer_cmd = "/opt/racer/target/release/racer"
 " Alternatively, this would the build _synchronously_
 " :nnoremap <F1> :wa<CR>:make build<CR>
 " }}}
-
-color gruvbox
-set bg=dark
-set t_Co=256
-
-" save all files when focus is lost
-:au FocusLost * :wa
+" Misc {{{
+" Save all buffers when window loses focus
+:au FocusLost * silent! :wa
 " save when switching buffers etc.
 :set autowriteall
+
+set incsearch
+set ignorecase
+set smartcase
+set gdefault
+
+" Search results centered please
+nnoremap <silent> n nzz
+nnoremap <silent> N Nzz
+nnoremap <silent> * *zz
+nnoremap <silent> # #zz
+nnoremap <silent> g* g*zz
+
+
+
+" }}}
+
