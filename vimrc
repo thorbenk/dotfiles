@@ -68,6 +68,11 @@ Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-scripts/Align'
+Plugin 'joshdick/onedark.vim'
+
+Plugin 'neoclide/coc.nvim'
+" and then run:
+" :call coc#util#install()
 
 " Show absolute line numbers in insert mode,
 "      relative line numbers in normal mode
@@ -105,6 +110,7 @@ set colorcolumn=80
 
 set laststatus=2 " show vim-airline all the time, not just on first split
 let g:airline_powerline_fonts=1
+let g:airline_theme='onedark'
 
 set relativenumber
 set number
@@ -128,9 +134,11 @@ noremap <Leader>b :Buffers<CR>
 noremap <Leader>h :History:<CR>
 " }}}
 " Colors {{{
-color gruvbox
-set bg=dark
-set t_Co=256
+" color gruvbox
+" set bg=dark
+" set t_Co=256
+
+colorscheme onedark
 " }}}
 " Backup files {{{
 set nobackup
