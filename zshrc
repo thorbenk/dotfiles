@@ -37,6 +37,11 @@ unsetopt correct_all
 
 setopt NO_SHARE_HISTORY
 
+#--- fzf ------------------------------------------------------------------
+
+# use ripgrep to hide ignored files
+export FZF_DEFAULT_COMMAND="rg --files"
+
 #--- alias ------------------------------------------------------------------
 
 # http://matt.blissett.me.uk/linux/zsh/zshrc
