@@ -106,6 +106,8 @@ set softtabstop=4
 set shiftwidth=4
 set expandtab
 
+set mouse=a
+
 set colorcolumn=80
 
 set laststatus=2 " show vim-airline all the time, not just on first split
@@ -147,10 +149,19 @@ set noswapfile
 " Window management {{{
 "
 " Alt+{hjkl} to cycle through windows
+:tnoremap <A-h> <C-\><C-N><C-w>h
+:tnoremap <A-j> <C-\><C-N><C-w>j
+:tnoremap <A-k> <C-\><C-N><C-w>k
+:tnoremap <A-l> <C-\><C-N><C-w>l
+:inoremap <A-h> <C-\><C-N><C-w>h
+:inoremap <A-j> <C-\><C-N><C-w>j
+:inoremap <A-k> <C-\><C-N><C-w>k
+:inoremap <A-l> <C-\><C-N><C-w>l
 :nnoremap <A-h> <C-w>h
 :nnoremap <A-j> <C-w>j
 :nnoremap <A-k> <C-w>k
 :nnoremap <A-l> <C-w>l
+"
 " Alt+Shift+{hjkl} to resize windows
 :nnoremap <A-S-h> :vertical resize +1<CR>
 :nnoremap <A-S-j> :resize -1<CR>
