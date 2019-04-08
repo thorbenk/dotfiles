@@ -110,6 +110,8 @@ set mouse=a
 
 set colorcolumn=80
 
+set termguicolors
+
 set laststatus=2 " show vim-airline all the time, not just on first split
 let g:airline_powerline_fonts=1
 let g:airline_theme='onedark'
@@ -124,6 +126,13 @@ let mapleader=" "
 
 " tab completion: <C-n>
 inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+
+" saving
+noremap  <silent> <C-S> :update<CR>
+vnoremap <silent> <C-S> <C-C>:update<CR>
+inoremap <silent> <C-S> <C-O>:update<CR>
+
+set autowrite
 " }}}
 " Leader {{{
 " save file with <leader>w
@@ -153,14 +162,14 @@ set noswapfile
 :tnoremap <A-j> <C-\><C-N><C-w>j
 :tnoremap <A-k> <C-\><C-N><C-w>k
 :tnoremap <A-l> <C-\><C-N><C-w>l
-:inoremap <A-h> <C-\><C-N><C-w>h
-:inoremap <A-j> <C-\><C-N><C-w>j
-:inoremap <A-k> <C-\><C-N><C-w>k
-:inoremap <A-l> <C-\><C-N><C-w>l
-:nnoremap <A-h> <C-w>h
-:nnoremap <A-j> <C-w>j
-:nnoremap <A-k> <C-w>k
-:nnoremap <A-l> <C-w>l
+:inoremap <A-h> <C-O>:update<CR><C-w>h
+:inoremap <A-j> <C-O>:update<CR><C-w>j
+:inoremap <A-k> <C-O>:update<CR><C-w>k
+:inoremap <A-l> <C-O>:update<CR><C-w>l
+:nnoremap <A-h> :update<CR><C-w>h
+:nnoremap <A-j> :update<CR><C-w>j
+:nnoremap <A-k> :update<CR><C-w>k
+:nnoremap <A-l> :update<CR><C-w>l
 "
 " Alt+Shift+{hjkl} to resize windows
 :nnoremap <A-S-h> :vertical resize +1<CR>
@@ -269,5 +278,23 @@ nnoremap <silent> g* g*zz
 
 
 
+" }}}
+" Window dimming {{{
+" Background colors for active vs inactive windows
+" (note: needs `termguicolors` set to on
+" background of onedark
+hi ActiveWindow guibg=#282c34
+hi InactiveWindow guibg=#21242b
+
+" Call method on window enter
+augroup WindowManagement
+  autocmd!
+  autocmd WinEnter * call Handle_Win_Enter()
+augroup END
+
+" Change highlight group of active/inactive windows
+function! Handle_Win_Enter()
+  setlocal winhighlight=Normal:ActiveWindow,NormalNC:InactiveWindow
+endfunction
 " }}}
 
