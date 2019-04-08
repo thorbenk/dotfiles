@@ -5,6 +5,9 @@ git clone https://github.com/thorbenk/dotfiles
 git submodule init
 git submodule update
 
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install
+
 cd dotfiles
 ./make-symlinks.sh
 
