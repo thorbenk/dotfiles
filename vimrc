@@ -1,7 +1,85 @@
 " vim:fdm=marker
 "
-" " open/close folds with `zo` and `zc`
+" Documentation {{{
 "
+" Installation
+" ============
+"
+" git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+"
+" :PluginInstall
+"
+" sudo apt-get install fonts-powerline
+
+" sudo add-apt-repository ppa:neovim-ppa/unstable
+" sudo apt-get update
+" sudo apt-get install neovim
+" pip install --user neovim
+"
+" Notes
+" =====
+"
+" * folds:
+"   - open/close via 'zo' and 'zc' (remember: z == folded piece of paper)
+"   - close all folds in a file: 'zm'     
+"   - open all folds: 'zR'
+"
+" Keyboard Shortcuts (Plugins, this configuration)
+" ==================
+"
+" tab completion   : C-n
+"
+" FZF:
+" open file      :   C-k (like in QtCreator) | <Leader>-f
+" open buffer    :   C-b                     | <Leader>-b
+" search in files:   C-f (via ripgrep)       | <Leader>-a
+" search in history:                         | <Leader>-h
+" }}}
+" Plugins {{{
+set nocompatible 
+filetype off 
+set rtp+=~/.vim/bundle/Vundle.vim
+set rtp+=~/.fzf
+call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'
+
+" Colorschemes
+Plugin 'hzchirs/vim-material'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'djjcast/mirodark'
+Plugin 'joshdick/onedark.vim'
+Plugin 'morhetz/gruvbox'
+
+" Eye candy
+Plugin 'machakann/vim-highlightedyank'
+Plugin 'vim-airline/vim-airline'
+Plugin 'mhinz/vim-startify'
+
+Plugin 'justinmk/vim-sneak'
+
+Plugin 'farmergreg/vim-lastplace' " open files at the last edited place
+
+Plugin 'airblade/vim-rooter'
+Plugin 'junegunn/fzf.vim'
+Plugin 'tpope/vim-dispatch'
+Plugin 'tpope/vim-obsession'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-surround'
+Plugin 'vim-scripts/Align'
+
+Plugin 'neoclide/coc.nvim'
+" and then run:
+" :call coc#util#install()
+
+" Show absolute line numbers in insert mode,
+"      relative line numbers in normal mode
+" Use C-n to toggle the mode.
+Plugin 'jeffkreeftmeijer/vim-numbertoggle'
+
+if !has('nvim')
+    Plugin 'jszakmeister/vim-togglecursor'
+endif
+" }}}
 " Documentation {{{
 "
 " Installation
@@ -32,17 +110,11 @@
 " ==================
 "
 " tab completion   : C-n
-" toggle nerd tree : A-0
-" toggle line num  : C-n (normal mode)
 "
 " FZF:
-" open files  : C-f
-" search files: C-a
-"
-" CtrlP:
-" when open, switch mode : C-f
-" when open, ask for which split to use : C-o
-"
+" open file      : C-k (like in QtCreator)
+" open buffer    : C-b
+" search in files: C-f (via ripgrep)
 " }}}
 " Plugins {{{
 set nocompatible 
@@ -52,23 +124,30 @@ set rtp+=~/.fzf
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
-Plugin 'justinmk/vim-sneak'
-Plugin 'machakann/vim-highlightedyank'
-
+" Colorschemes
+Plugin 'hzchirs/vim-material'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'djjcast/mirodark'
+Plugin 'joshdick/onedark.vim'
+Plugin 'morhetz/gruvbox'
+
+" Eye candy
+Plugin 'ryanoasis/vim-devicons' " ???
+Plugin 'machakann/vim-highlightedyank'
+Plugin 'vim-airline/vim-airline'
+Plugin 'mhinz/vim-startify'
+
+Plugin 'justinmk/vim-sneak'
+
+Plugin 'farmergreg/vim-lastplace' " open files at the last edited place
 
 Plugin 'airblade/vim-rooter'
 Plugin 'junegunn/fzf.vim'
-Plugin 'mhinz/vim-startify'
-Plugin 'morhetz/gruvbox'
 Plugin 'tpope/vim-dispatch'
 Plugin 'tpope/vim-obsession'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
-Plugin 'vim-airline/vim-airline'
 Plugin 'vim-scripts/Align'
-Plugin 'joshdick/onedark.vim'
 
 Plugin 'neoclide/coc.nvim'
 " and then run:
@@ -86,12 +165,6 @@ endif
 " rust
 Plugin 'rust-lang/rust.vim'
 
-if !empty($RUST_SRC_PATH)
-    Plugin 'racer-rust/vim-racer'
-endif
-
-" Plugin 'Valloric/YouCompleteMe'
-
 call vundle#end()
 " }}}
 " Basic settings {{{
@@ -107,6 +180,7 @@ set shiftwidth=4
 set expandtab
 
 set mouse=a
+set clipboard+=unnamedplus " use system clipboard by default
 
 set colorcolumn=80
 
@@ -136,11 +210,11 @@ set autowrite
 " }}}
 " Leader {{{
 " save file with <leader>w
-noremap <Leader>w :update<CR>
+noremap <Leader>wa :update<CR>
 
 " fzf
 noremap <Leader>f :Files<CR>
-noremap <Leader>a :Ag<CR>
+noremap <Leader>a :Rg<CR>
 noremap <Leader>b :Buffers<CR>
 noremap <Leader>h :History:<CR>
 " }}}
@@ -231,9 +305,11 @@ set wildignore+=Cargo.lock
 " }}}
 " fzf {{{
 :nnoremap <c-k> :Files<CR>
+:nnoremap <c-b> :Buffers<CR>
+:nnoremap <c-f> :Rg<CR>
 " }}}
-" NerdTree {{{
-map <A-0> :NERDTreeToggle<CR>
+" Neovim Remote {{{
+" pip3 install neovim-remote
 " }}}
 " Rust Make {{{
 
@@ -275,8 +351,6 @@ nnoremap <silent> N Nzz
 nnoremap <silent> * *zz
 nnoremap <silent> # #zz
 nnoremap <silent> g* g*zz
-
-
 
 " }}}
 " Window dimming {{{

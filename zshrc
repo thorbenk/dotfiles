@@ -1,4 +1,5 @@
-export EDITOR="vim"
+export EDITOR="nvim"
+export NVIM_LISTEN_ADDRESS="/tmp/nvimsocket"
 
 if [ `hostname` = "raspberrypi" ]; then
     # otherwise, command prompt is messed up?
@@ -98,4 +99,4 @@ export PATH=/opt/bin:$HOME/.cargo/bin:$DOTFILES_DIR/bin:$PATH
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+export PATH="$HOME/.local/bin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
