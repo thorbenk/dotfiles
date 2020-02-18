@@ -4,6 +4,8 @@ ln -sfn "$PWD/vim" "$HOME/.config/nvim"
 
 ln -sfn $PWD/zshrc $HOME/.zshrc
 
+ln -sfn $PWD/tmux.conf $HOME/.tmux.conf
+
 ln -sfn $PWD/zprofile $HOME/.zprofile
 
 mkdir -p "$HOME/.config/Code - Insiders/User"
