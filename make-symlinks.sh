@@ -37,3 +37,4 @@ ln -sfn $PWD/xdg/user-dirs.dirs "$HOME/.config/user-dirs.dirs"
 
 cargo install bat
 cargo install exa
+cargo install fd-find
