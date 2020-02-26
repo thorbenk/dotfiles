@@ -48,6 +48,7 @@ export FZF_DEFAULT_COMMAND="rg --files"
 # http://matt.blissett.me.uk/linux/zsh/zshrc
 
 alias 'vim=nvim'
+alias 'cat=bat'
 alias 'l=ls'
 alias 'll=ls -lh'
 alias 'kw=kwrite'

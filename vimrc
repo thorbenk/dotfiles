@@ -51,87 +51,6 @@ Plugin 'joshdick/onedark.vim'
 Plugin 'morhetz/gruvbox'
 
 " Eye candy
-Plugin 'machakann/vim-highlightedyank'
-Plugin 'vim-airline/vim-airline'
-Plugin 'mhinz/vim-startify'
-
-Plugin 'justinmk/vim-sneak'
-
-Plugin 'farmergreg/vim-lastplace' " open files at the last edited place
-
-Plugin 'airblade/vim-rooter'
-Plugin 'junegunn/fzf.vim'
-Plugin 'tpope/vim-dispatch'
-Plugin 'tpope/vim-obsession'
-Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-surround'
-Plugin 'vim-scripts/Align'
-
-Plugin 'neoclide/coc.nvim'
-" and then run:
-" :call coc#util#install()
-
-" Show absolute line numbers in insert mode,
-"      relative line numbers in normal mode
-" Use C-n to toggle the mode.
-Plugin 'jeffkreeftmeijer/vim-numbertoggle'
-
-if !has('nvim')
-    Plugin 'jszakmeister/vim-togglecursor'
-endif
-" }}}
-" Documentation {{{
-"
-" Installation
-" ============
-"
-" git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-"
-" :PluginInstall
-"
-" sudo apt-get install fonts-powerline
-
-" sudo add-apt-repository ppa:neovim-ppa/unstable
-" sudo apt-get update
-" sudo apt-get install neovim
-" pip install --user neovim
-"
-" cd .vim/bundle/YouCompleteMe && ./install.sh --clang-completer
-" cd .vim/bundle/vimproc.vim && make
-
-" Notes
-" =====
-"
-" * folds:
-"   - open/close via 'zo' and 'zc' (remember: z == folded piece of paper)
-"   - close all folds in a file: 'zm'     
-"
-" Keyboard Shortcuts (Plugins, this configuration)
-" ==================
-"
-" tab completion   : C-n
-"
-" FZF:
-" open file      : C-k (like in QtCreator)
-" open buffer    : C-b
-" search in files: C-f (via ripgrep)
-" }}}
-" Plugins {{{
-set nocompatible 
-filetype off 
-set rtp+=~/.vim/bundle/Vundle.vim
-set rtp+=~/.fzf
-call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
-
-" Colorschemes
-Plugin 'hzchirs/vim-material'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'djjcast/mirodark'
-Plugin 'joshdick/onedark.vim'
-Plugin 'morhetz/gruvbox'
-
-" Eye candy
 Plugin 'ryanoasis/vim-devicons' " ???
 Plugin 'machakann/vim-highlightedyank'
 Plugin 'vim-airline/vim-airline'
@@ -164,6 +83,10 @@ endif
 
 " rust
 Plugin 'rust-lang/rust.vim'
+
+Plugin 'christoomey/vim-tmux-navigator'
+" Write all buffers before navigating from Vim to tmux pane
+let g:tmux_navigator_save_on_switch=2
 
 call vundle#end()
 " }}}
@@ -231,20 +154,6 @@ set noswapfile
 " }}}
 " Window management {{{
 "
-" Alt+{hjkl} to cycle through windows
-:tnoremap <A-h> <C-\><C-N><C-w>h
-:tnoremap <A-j> <C-\><C-N><C-w>j
-:tnoremap <A-k> <C-\><C-N><C-w>k
-:tnoremap <A-l> <C-\><C-N><C-w>l
-:inoremap <A-h> <C-O>:update<CR><C-w>h
-:inoremap <A-j> <C-O>:update<CR><C-w>j
-:inoremap <A-k> <C-O>:update<CR><C-w>k
-:inoremap <A-l> <C-O>:update<CR><C-w>l
-:nnoremap <A-h> :update<CR><C-w>h
-:nnoremap <A-j> :update<CR><C-w>j
-:nnoremap <A-k> :update<CR><C-w>k
-:nnoremap <A-l> :update<CR><C-w>l
-"
 " Alt+Shift+{hjkl} to resize windows
 :nnoremap <A-S-h> :vertical resize +1<CR>
 :nnoremap <A-S-j> :resize -1<CR>
@@ -253,10 +162,10 @@ set noswapfile
 " }}}
 " NeoVim {{{
 if has('nvim')
-    :tnoremap <A-h> <C-\><C-n><C-w>h
-    :tnoremap <A-j> <C-\><C-n><C-w>j
-    :tnoremap <A-k> <C-\><C-n><C-w>k
-    :tnoremap <A-l> <C-\><C-n><C-w>l
+    tnoremap <silent> <m-h> <C-\><C-n>:TmuxNavigateLeft<cr>
+    tnoremap <silent> <m-j> <C-\><C-n>:TmuxNavigateDown<cr>
+    tnoremap <silent> <m-k> <C-\><C-n>:TmuxNavigateUp<cr>
+    tnoremap <silent> <m-l> <C-\><C-n>:TmuxNavigateRight<cr>
     
     let $NVIM_TUI_ENABLE_TRUE_COLOR=1
     let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
@@ -304,9 +213,9 @@ set wildignore+=Cargo.lock
 "let g:sneak#label = 1
 " }}}
 " fzf {{{
-:nnoremap <c-k> :Files<CR>
-:nnoremap <c-b> :Buffers<CR>
-:nnoremap <c-f> :Rg<CR>
+" :nnoremap <c-k> :Files<CR>
+" :nnoremap <c-b> :Buffers<CR>
+" :nnoremap <c-f> :Rg<CR>
 " }}}
 " Neovim Remote {{{
 " pip3 install neovim-remote

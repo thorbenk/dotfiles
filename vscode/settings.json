@@ -21,10 +21,15 @@
         "**/*.pyc": true,
         "**/__pycache__": true
     },
+    "files.watcherExclude": {
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true,
+        "**/node_modules/**": true,
+        "**/.pytest_cache/**": true,
+        "**/.venv/**": true
+    },
 
     "materialTheme.fixIconsRunning": false,
-
-    "workbench.colorTheme": "Material Theme Darker High Contrast",
     "workbench.iconTheme": "eq-material-theme-icons-darker",
 
     //-------------------------------------------------------------------------
@@ -39,7 +44,6 @@
     "vim.leader": "<space>",
     "vim.textwidth": 80,
     "vim.easymotion": true,
-    "vim.enableNeovim": true,
     "vim.neovimPath": "/usr/bin/nvim",
 
     // * <leader>w saves current file
@@ -141,5 +145,9 @@
     "[rust]": {
        "editor.formatOnSave": true 
     },
-    "window.zoomLevel": 0,
+    "window.zoomLevel": -1,
+    "python.jediEnabled": false,
+    "[python]": {
+        
+    },
 }
