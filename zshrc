@@ -1,4 +1,6 @@
 export EDITOR="nvim"
+export VISUAL="nvim"
+
 export NVIM_LISTEN_ADDRESS="/tmp/nvimsocket"
 
 if [ `hostname` = "raspberrypi" ]; then
@@ -17,7 +19,7 @@ export ZSH=$DOTFILES_DIR/oh-my-zsh
 export ZSH_THEME="half-life"
 export CASE_SENSITIVE="false" # case-insesitive completion
 export DISABLE_AUTO_UPDATE="true" # no weekly update checks
-plugins=(git svn)
+plugins=(git svn colored-man-pages)
 source $ZSH/oh-my-zsh.sh
 
 #--- zsh --------------------------------------------------------------------
@@ -49,6 +51,7 @@ export FZF_DEFAULT_COMMAND="rg --files"
 
 alias 'vim=nvim'
 alias 'cat=bat'
+alias 'less=bat'
 alias 'l=ls'
 alias 'll=ls -lh'
 alias 'kw=kwrite'

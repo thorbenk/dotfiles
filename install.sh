@@ -19,6 +19,7 @@ ln -sfn $PWD/tmux.conf $HOME/.tmux.conf
 ln -sfn $PWD/tmux $HOME/.tmux
 cd ~/.tmux/plugins/tmux-thumbs
 cargo build --release
+cd -
 
 #
 # vscode
@@ -38,3 +39,6 @@ ln -sfn $PWD/xdg/user-dirs.dirs "$HOME/.config/user-dirs.dirs"
 cargo install bat
 cargo install exa
 cargo install fd-find
+cargo install tealdeer
+cargo install skim
+cargo install thumbs
