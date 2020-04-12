@@ -5,6 +5,34 @@ emulators, but only in gvim.
 
 - Jump to previous: `C-o` ("old")
 
+## Help
+
+After reading (parts) of the manual, here are some notes:
+
+- Jump to topic: `C-]`, back via `C-o`
+
+## usr_20.txt
+
+- Editing in command line
+  - Jump to beginning `C-B`, end `C-E`
+  - Delete word `C-W`
+  - Erase everything `C-U`
+- Cancel `C-C`
+- Go through cmd line history: `C-P`, `C-N` (previous, next)
+- open history via `q:` in normal mode, edit any line and `<Enter>` to
+  execute
+
+## usr_21.txt
+
+
+
+## Vim command line
+
+- insert
+  - word under cursor `C-R C-W`, WORD `C-R C-A`
+  - from register `C-R=` (unnamed register), `C-R%` (current filename),
+    `C-R+` (X11 clipboard)
+
 ## FZF
 
 - open `Space-F`
