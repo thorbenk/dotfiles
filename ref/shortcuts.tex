@@ -88,9 +88,35 @@
 \vskip -0.3cm
 
 \section{tmux}
+%
+\cm{}{\tmux{}c}{new window}
+\cm{}{\tmux{}$\{$|,-$\}$}{split left/right or top/bottom}
+\cm{}{\tmux{},}{rename window}
 \cm{}{\tmux{}t}{thumbs}
-\cm{}{\tmux{},}{rename tab}
-\cm{}{C-S <left>,<right>}{move tab left/right}
+\cm{}{\tmux{}!}{break pane out into own window}
+\cm{}{\tmux{}$\{$s,w$\}$}{list of sessions, list of windows}
+%
+\cm{}{C-S$\{\leftarrow$,$\rightarrow\}$}{move the tab left/right}
+\cm{}{C-$\{$hjkl$\}$}{move between windows}
+
+\section{vim}
+%
+\cm{}{jk}{Esc}
+\cm{}{C-n}{open completion menu}
+\cm{}{C-k}{fzf search files}
+\cm{}{C-S-f}{ripgrep via fzf}
+\cm{}{C-$\{${h,j,k,l}$\}$}{$\leftarrow$,$\downarrow$,$\uparrow$,$\rightarrow$ through splits}
+\cm{}{A-S-$\{${h,j,k,l}$\}$}{resize current split}
+\cm{}{\leader{}$\{$b,h$\}$}{fzf buffers, history}
+%
+\section{coc.nvim}
+\cm{}{C-Space}{trigger completion}
+\cm{}{[g, ]g}{prev/next diagnostic}
+\cm{}{gd, gy, gi}{go to definition, type def., impl.,}
+\cm{}{gr}{list references}
+%
+\cm{}{\leader{}rn}{rename}
+
 
 %\dcm{n:}{\leader d}{i:}{\ileader d}{Insert date stamp}
 

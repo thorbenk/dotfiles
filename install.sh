@@ -36,9 +36,4 @@ ln -sfn $PWD/vscode/settings.json "$HOME/.config/Code/User"
 #
 ln -sfn $PWD/xdg/user-dirs.dirs "$HOME/.config/user-dirs.dirs"
 
-cargo install bat
-cargo install exa
-cargo install fd-find
-cargo install tealdeer
-cargo install skim
-cargo install thumbs
+./install-cargo-bins.sh

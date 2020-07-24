@@ -150,7 +150,4 @@
     "[python]": {
         
     },
-    "yaml.schemas": {
-        "file:///home/kroeger%40volumegraphics.com/.vscode/extensions/atlassian.atlascode-2.4.11/resources/schemas/pipelines-schema.json": "bitbucket-pipelines.yml"
-    },
 }

@@ -5,9 +5,10 @@
 " Installation
 " ============
 "
-" git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+" curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+"    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 "
-" :PluginInstall
+" :PlugInstall
 "
 " sudo apt-get install fonts-powerline
 
@@ -38,57 +39,66 @@
 " Plugins {{{
 set nocompatible 
 filetype off 
-set rtp+=~/.vim/bundle/Vundle.vim
 set rtp+=~/.fzf
-call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
+call plug#begin('~/.vim/plugged')
 
 " Colorschemes
-Plugin 'hzchirs/vim-material'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'djjcast/mirodark'
-Plugin 'joshdick/onedark.vim'
-Plugin 'morhetz/gruvbox'
+Plug 'hzchirs/vim-material'
+Plug 'altercation/vim-colors-solarized'
+Plug 'djjcast/mirodark'
+Plug 'joshdick/onedark.vim'
+Plug 'morhetz/gruvbox'
 
 " Eye candy
-Plugin 'ryanoasis/vim-devicons' " ???
-Plugin 'machakann/vim-highlightedyank'
-Plugin 'vim-airline/vim-airline'
-Plugin 'mhinz/vim-startify'
+Plug 'ryanoasis/vim-devicons' " ???
+Plug 'machakann/vim-highlightedyank'
+Plug 'vim-airline/vim-airline'
+Plug 'mhinz/vim-startify'
 
-Plugin 'justinmk/vim-sneak'
+Plug 'justinmk/vim-sneak'
 
-Plugin 'farmergreg/vim-lastplace' " open files at the last edited place
+Plug 'farmergreg/vim-lastplace' " open files at the last edited place
 
-Plugin 'airblade/vim-rooter'
-Plugin 'junegunn/fzf.vim'
-Plugin 'tpope/vim-dispatch'
-Plugin 'tpope/vim-obsession'
-Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-surround'
-Plugin 'vim-scripts/Align'
+let g:rooter_manual_only = 1
+" call :Rooter to determine the root directory (e.g. where the .git is)
+"              and then switch to it
+Plug 'airblade/vim-rooter'
 
-Plugin 'neoclide/coc.nvim'
-" and then run:
-" :call coc#util#install()
+Plug 'junegunn/fzf.vim'
+Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-obsession'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
+Plug 'vim-scripts/Align'
+
+" coc.nvim
+" --------
+"
+" 1.) make sure `node` is recent enough (node shipped with Ubuntu 18.04 is not)
+"     curl -sL install-node.now.sh/lts | bash
+"
+" 2.) :CocInstall coc-python
+Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 
 " Show absolute line numbers in insert mode,
 "      relative line numbers in normal mode
 " Use C-n to toggle the mode.
-Plugin 'jeffkreeftmeijer/vim-numbertoggle'
+Plug 'jeffkreeftmeijer/vim-numbertoggle'
 
 if !has('nvim')
-    Plugin 'jszakmeister/vim-togglecursor'
+    Plug 'jszakmeister/vim-togglecursor'
 endif
 
 " rust
-Plugin 'rust-lang/rust.vim'
+Plug 'rust-lang/rust.vim'
 
-Plugin 'christoomey/vim-tmux-navigator'
+Plug 'christoomey/vim-tmux-navigator'
 " Write all buffers before navigating from Vim to tmux pane
 let g:tmux_navigator_save_on_switch=2
 
-call vundle#end()
+Plug 'benmills/vimux'
+
+call plug#end()
 " }}}
 " Basic settings {{{
 filetype plugin indent on 
@@ -106,6 +116,7 @@ set mouse=a
 set clipboard+=unnamedplus " use system clipboard by default
 
 set colorcolumn=80
+hi ColorColumn ctermbg=red ctermfg=blue
 
 set termguicolors
 
@@ -120,6 +131,9 @@ set hidden " keep buffer around when switching to different buffer
 
 " leader key is SPACE
 let mapleader=" "
+
+" jk is ESC
+inoremap jk <esc>
 
 " tab completion: <C-n>
 inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
@@ -137,7 +151,7 @@ noremap <Leader>wa :update<CR>
 
 " fzf
 noremap <Leader>f :Files<CR>
-noremap <Leader>a :Rg<CR>
+noremap <Leader>r :Rg<CR>
 noremap <Leader>b :Buffers<CR>
 noremap <Leader>h :History:<CR>
 " }}}
@@ -150,6 +164,7 @@ colorscheme onedark
 " }}}
 " Backup files {{{
 set nobackup
+set nowritebackup
 set noswapfile
 " }}}
 " Window management {{{
@@ -280,4 +295,164 @@ function! Handle_Win_Enter()
   setlocal winhighlight=Normal:ActiveWindow,NormalNC:InactiveWindow
 endfunction
 " }}}
+
+" tmux {{{
+" https://www.bugsnag.com/blog/tmux-and-vim
+map <Leader>vp :VimuxPromptCommand<CR>
+map <Leader>vl :wa <bar> :VimuxRunLastCommand<CR>
+map <Leader>vq :VimuxCloseRunner<CR>
+map <Leader>vx :VimuxInterruptRunner<CR>
+map <Leader>vz :VimuxZoomRunner<CR>
+" }}}
+
+" coc.nvim {{{
+
+" TextEdit might fail if hidden is not set.
+set hidden
+
+" Some servers have issues with backup files, see #649.
+set nobackup
+set nowritebackup
+
+" Give more space for displaying messages.
+set cmdheight=2
+
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=300
+
+" Don't pass messages to |ins-completion-menu|.
+set shortmess+=c
+
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+set signcolumn=yes
+
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
+" position. Coc only does snippet and additional edit on confirm.
+" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
+if exists('*complete_info')
+  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+else
+  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+endif
+
+" Use `[g` and `]g` to navigate diagnostics
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
+
+" Formatting selected code.
+" xmap <leader>f  <Plug>(coc-format-selected)
+" nmap <leader>f  <Plug>(coc-format-selected)
+
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder.
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+
+" Applying codeAction to the selected region.
+" Example: `<leader>aap` for current paragraph
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap keys for applying codeAction to the current line.
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Apply AutoFix to problem on the current line.
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+" Map function and class text objects
+" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+xmap if <Plug>(coc-funcobj-i)
+omap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap af <Plug>(coc-funcobj-a)
+xmap ic <Plug>(coc-classobj-i)
+omap ic <Plug>(coc-classobj-i)
+xmap ac <Plug>(coc-classobj-a)
+omap ac <Plug>(coc-classobj-a)
+
+" Use CTRL-S for selections ranges.
+" Requires 'textDocument/selectionRange' support of LS, ex: coc-tsserver
+nmap <silent> <C-s> <Plug>(coc-range-select)
+xmap <silent> <C-s> <Plug>(coc-range-select)
+
+" Add `:Format` command to format current buffer.
+command! -nargs=0 Format :call CocAction('format')
+
+" Add `:Fold` command to fold current buffer.
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+" Add `:OR` command for organize imports of the current buffer.
+command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+
+" Add (Neo)Vim's native statusline support.
+" NOTE: Please see `:h coc-status` for integrations with external plugins that
+" provide custom statusline: lightline.vim, vim-airline.
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+" Mappings using CoCList:
+" Show all diagnostics.
+nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions.
+nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" Show commands.
+nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document.
+nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols.
+nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list.
+nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
+" }}}
+
+let g:xml_syntax_folding=1 
+au FileType xml setlocal foldmethod=syntax
 

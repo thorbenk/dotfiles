@@ -19,7 +19,7 @@ export ZSH=$DOTFILES_DIR/oh-my-zsh
 export ZSH_THEME="half-life"
 export CASE_SENSITIVE="false" # case-insesitive completion
 export DISABLE_AUTO_UPDATE="true" # no weekly update checks
-plugins=(git svn colored-man-pages)
+plugins=(git svn colored-man-pages ssh-agent)
 source $ZSH/oh-my-zsh.sh
 
 #--- zsh --------------------------------------------------------------------
