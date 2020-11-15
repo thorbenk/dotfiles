@@ -17,9 +17,11 @@ ln -sfn "$PWD/vim" "$HOME/.config/nvim"
 #
 ln -sfn $PWD/tmux.conf $HOME/.tmux.conf
 ln -sfn $PWD/tmux $HOME/.tmux
-cd ~/.tmux/plugins/tmux-thumbs
-cargo build --release
-cd -
+~/.tmux/plugins/tpm/bin/install_plugins
+
+#cd ~/.tmux/plugins/tmux-thumbs
+#cargo build --release
+#cd -
 
 #
 # vscode
@@ -36,4 +38,4 @@ ln -sfn $PWD/vscode/settings.json "$HOME/.config/Code/User"
 #
 ln -sfn $PWD/xdg/user-dirs.dirs "$HOME/.config/user-dirs.dirs"
 
-./install-cargo-bins.sh
+#./install-cargo-bins.sh

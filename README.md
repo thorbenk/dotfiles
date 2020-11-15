@@ -11,7 +11,7 @@ git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 cd dotfiles
 ./make-symlinks.sh
 
-vim +PluginInstall +qall
+vim +PlugInstall +qall
 
 chsh -s $(which zsh)
 ```
