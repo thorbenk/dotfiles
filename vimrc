@@ -78,7 +78,7 @@ Plug 'vim-scripts/Align'
 "     curl -sL install-node.now.sh/lts | bash
 "
 " 2.) :CocInstall coc-python
-Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Show absolute line numbers in insert mode,
 "      relative line numbers in normal mode

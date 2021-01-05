@@ -17,7 +17,11 @@ ln -sfn "$PWD/vim" "$HOME/.config/nvim"
 #
 ln -sfn $PWD/tmux.conf $HOME/.tmux.conf
 ln -sfn $PWD/tmux $HOME/.tmux
+export TMUX_PLUGIN_MANAGER_PATH='$HOME/.tmux/plugins/'
 ~/.tmux/plugins/tpm/bin/install_plugins
+
+nvim +'PlugInstall --sync' +qa
+nvim +'PlugUpdate --sync' +qa
 
 #cd ~/.tmux/plugins/tmux-thumbs
 #cargo build --release
