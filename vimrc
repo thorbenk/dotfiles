@@ -217,6 +217,12 @@ if has('gui')
     set guioptions-=r  "remove right-hand scroll bar
     set guioptions-=L  "remove left-hand scroll bar
 endif
+
+if exists('g:neovide')
+    " set guifont=DejaVuSansMono:h22
+    set guifont=NotoMono:h22
+endif
+
 " }}}
 " Ignore files {{{
 set wildignore+=*/.git/*,*/.svn/*

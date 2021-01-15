@@ -1,3 +1,29 @@
+set -e
+
+if ! node --version &> /dev/null ; then
+    echo "install nodejs"
+    exit
+fi
+if ! fzf --version &> /dev/null ; then
+    echo "install fzf"
+    exit
+fi
+if ! clangd --version &> /dev/null ; then
+    echo "install clangd"
+    exit
+fi
+if ! tmux -V &> /dev/null ; then
+    echo "install tmux"
+    exit
+fi
+if ! nvim --version &> /dev/null ; then
+    echo "install neovim"
+    exit
+fi
+
+git submodule init
+git submodule update
+
 #
 # zsh
 #
@@ -22,6 +48,8 @@ export TMUX_PLUGIN_MANAGER_PATH='$HOME/.tmux/plugins/'
 
 nvim +'PlugInstall --sync' +qa
 nvim +'PlugUpdate --sync' +qa
+nvim +'CocInstall coc-python' +qa
+nvim +'CocInstall coc-clangd' +qa
 
 #cd ~/.tmux/plugins/tmux-thumbs
 #cargo build --release
