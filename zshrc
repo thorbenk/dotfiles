@@ -99,6 +99,12 @@ export PATH=/opt/bin:$HOME/.cargo/bin:$DOTFILES_DIR/bin:$PATH
 
 [ -f ~/.zshrc.user ] && source ~/.zshrc.user
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+if [ -f /usr/share/fzf/key-bindings.zsh ]; then
+    # fzf install in Manjaro
+    source /usr/share/fzf/key-bindings.zsh
+elif [ -f ~/.fzf.zsh ]; then
+    # fzf local user install 
+    source ~/.fzf.zsh
+fi
 
 export PATH="$HOME/.local/bin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
