@@ -71,6 +71,8 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'vim-scripts/Align'
 
+Plug 'dyng/ctrlsf.vim'
+
 " coc.nvim
 " --------
 "
@@ -461,4 +463,16 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
 let g:xml_syntax_folding=1 
 au FileType xml setlocal foldmethod=syntax
+
+nmap     <C-F>f <Plug>CtrlSFPrompt
+vmap     <C-F>f <Plug>CtrlSFVwordPath
+vmap     <C-F>F <Plug>CtrlSFVwordExec
+nmap     <C-F>n <Plug>CtrlSFCwordPath
+nmap     <C-F>p <Plug>CtrlSFPwordPath
+nnoremap <C-F>o :CtrlSFOpen<CR>
+nnoremap <C-F>t :CtrlSFToggle<CR>
+inoremap <C-F>t <Esc>:CtrlSFToggle<CR>
+
+let g:ctrlsf_default_root = 'project'
+let g:ctrlsf_position = 'bottom'
 

@@ -1,0 +1,1 @@
+- onedark.xml : imported style from https://gitlab.com/iohanaan/qtcreator-onedark/-/blob/master/styles/onedark.xml
