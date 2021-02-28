@@ -70,4 +70,12 @@ ln -sfn $PWD/vscode/settings.json "$HOME/.config/Code/User"
 #
 ln -sfn $PWD/xdg/user-dirs.dirs "$HOME/.config/user-dirs.dirs"
 
+#
+# i3 and related
+#
+
+ln -sfn $PWD/Xresources "$HOME/.Xresources"
+ln -sfn $PWD/i3/config "$HOME/.config/i3/config"
+ln -sfn $PWD/i3/i3status-rs.toml "$HOME/.config/i3/i3status-rs.toml"
+
 #./install-cargo-bins.sh

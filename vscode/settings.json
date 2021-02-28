@@ -145,7 +145,6 @@
     "[rust]": {
        "editor.formatOnSave": true 
     },
-    "window.zoomLevel": -1,
     "python.jediEnabled": false,
     "[python]": {
         

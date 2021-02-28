@@ -1,0 +1,36 @@
+theme = "slick"
+icons = "awesome"
+
+[[block]]
+block = "cpu"
+interval = 1
+
+[[block]]
+block = "load"
+interval = 1
+format = "{1m}"
+
+[[block]]
+block = "sound"
+
+[[block]]
+block = "networkmanager"
+device_format = "{icon}{ap}"
+
+[[block]]
+block = "focused_window"
+max_width = 50
+show_marks = "visible"
+
+[[block]]
+block = "battery"
+driver = "upower"
+format = "{percentage}% {time}"
+
+[[block]]
+block = "notify"
+
+[[block]]
+block = "time"
+interval = 60
+format = "%a %d.%m %R"
