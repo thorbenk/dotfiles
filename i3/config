@@ -170,6 +170,8 @@ bindsym $mod+m mode "$mode_display"
 
 exec --no-startup-id dunst
 
+exec_always --no-startup-id feh --no-fehbg --bg-fill ~/code/dotfiles/wallpaper/perseverance.png &
+
 bar {
     font pango:FiraCode Nerd Font Mono, Font Awesome 5 Free 9
     position bottom
