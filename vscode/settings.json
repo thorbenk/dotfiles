@@ -149,4 +149,5 @@
     "[python]": {
         
     },
+    "python.languageServer": "Microsoft",
 }

@@ -146,6 +146,7 @@ vnoremap <silent> <C-S> <C-C>:update<CR>
 inoremap <silent> <C-S> <C-O>:update<CR>
 
 set autowrite
+
 " }}}
 " Leader {{{
 " save file with <leader>w
@@ -270,7 +271,6 @@ let g:racer_cmd = "/opt/racer/target/release/racer"
 " Save all buffers when window loses focus
 :au FocusLost * silent! :wa
 " save when switching buffers etc.
-:set autowriteall
 
 set incsearch
 set ignorecase

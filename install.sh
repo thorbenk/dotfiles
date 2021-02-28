@@ -20,6 +20,10 @@ if ! nvim --version &> /dev/null ; then
     echo "install neovim"
     exit
 fi
+if ! nvim --version &> /dev/null ; then
+    echo "install neovim"
+    exit
+fi
 
 git submodule init
 git submodule update
