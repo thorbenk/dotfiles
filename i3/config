@@ -30,7 +30,7 @@ font pango:monospace 8
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec konsole
+bindsym $mod+Return exec konsole --hide-menubar
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -168,6 +168,30 @@ mode "$mode_display" {
 # Declare here the shortcut to bring the display selection menu
 bindsym $mod+m mode "$mode_display"
 
+# Gaps
+for_window [class="^.*"] border pixel 5
+gaps inner 10
+gaps outer 0
+# smart_gaps on
+set $mode_gaps Toggle gaps: (1) pretty (2) functional (3) off
+bindsym $mod+g mode "$mode_gaps"
+mode "$mode_gaps" {
+    bindsym 1 mode "default", gaps inner all set 20, gaps outer all set 0
+    bindsym 2 mode "default", gaps inner all set 10, gaps outer all set 0
+    bindsym 3 mode "default", gaps inner all set 0, gaps outer all set 0
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+# class                 border  backgr. text    indicator child_border
+client.focused          #333333 #333333 #ffffff #2e9ef4   #222222
+client.focused_inactive #222222 #222222 #ffffff #484e50   #222222
+client.unfocused        #222222 #222222 #888888 #292d2e   #222222
+client.urgent           #2f343a #900000 #ffffff #900000   #900000
+client.placeholder      #000000 #0c0c0c #ffffff #000000   #0c0c0c
+client.background       #ffffff
+
+
+
 exec --no-startup-id dunst
 
 exec_always --no-startup-id feh --no-fehbg --bg-fill ~/code/dotfiles/wallpaper/perseverance.png &
@@ -175,7 +199,7 @@ exec_always --no-startup-id feh --no-fehbg --bg-fill ~/code/dotfiles/wallpaper/p
 bar {
     font pango:FiraCode Nerd Font Mono, Font Awesome 5 Free 9
     position bottom
-    status_command i3status-rs /home/kroeger/.config/i3/i3status-rs.toml
+    status_command i3status-rs ~/.config/i3/i3status-rs.toml
     colors {
         separator #666666
         background #222222
