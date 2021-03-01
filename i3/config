@@ -1,3 +1,5 @@
+# - alt+space: toggle yakuake like terminal
+#
 # - change focus: hjkl
 # - move focused window mod+shift+{hjkl}
 #
@@ -17,8 +19,12 @@
 #
 # - mod+shift+c: reload
 # - mod+shift+r: restart
-# - mod+shift+space: toggle tiling/floating
-# - mod+space: change focus between tiling/floating windows
+# - mod+shift+y: toggle tiling/floating
+# - mod+y: change focus between tiling/floating windows
+
+# Needed programs / tools
+#
+# xdotool xprop xrandr picom konsole
 
 # mod = Windows Key
 set $mod Mod4
@@ -65,10 +71,10 @@ bindsym $mod+t layout tabbed
 bindsym $mod+e layout toggle split
 
 # toggle tiling / floating
-bindsym $mod+Shift+space floating toggle
+bindsym $mod+Shift+y floating toggle
 
 # change focus between tiling / floating windows
-bindsym $mod+space focus mode_toggle
+bindsym $mod+y focus mode_toggle
 
 # focus the parent container
 bindsym $mod+a focus parent
@@ -176,11 +182,19 @@ client.background       #ffffff
 bindsym $mod+i exec xprop -id $(xdotool getactivewindow) -f ANTIDIM_FLAG 8c -set ANTIDIM_FLAG 1; exec notify-send 'anti-dim set on window'
 bindsym $mod+o exec xprop -id $(xdotool getactivewindow) -remove ANTIDIM_FLAG; exec notify-send 'dim set on window'
 
+bindsym $mod+z exec transset-df -a --min 0.1 --dec 0.1
+bindsym $mod+x exec transset-df -a --inc 0.1
+
 exec --no-startup-id dunst
 exec --no-startup-id "compton -b"
 exec --no-startup-id alttab -pk h -nk l -fg "#d58681" -bg "#4a4a4a" -frame "#eb564d" -t 512x256 -i 64x64
 
 exec_always --no-startup-id feh --no-fehbg --bg-fill ~/code/dotfiles/wallpaper/perseverance.png &
+
+for_window [title="konsoleScratchpad"] move scratchpad
+for_window [title="konsoleScratchpad"] floating enable, border pixel 5, resize set 3600 2000
+bindsym Mod1+space [title="konsoleScratchpad"] scratchpad show; [title="konsoleScratchpad"] move position center
+exec --no-startup-id konsole -p tabtitle='konsoleScratchpad'
 
 bar {
     font pango:FiraCode Nerd Font Mono, Font Awesome 5 Free 9
@@ -197,3 +211,6 @@ bar {
     }
 }
 
+# References:
+#
+# [1] https://confluence.jaytaala.com/display/TKB/My+Manjaro+i3+setup
