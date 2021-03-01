@@ -192,7 +192,7 @@ exec --no-startup-id alttab -pk h -nk l -fg "#d58681" -bg "#4a4a4a" -frame "#eb5
 exec_always --no-startup-id feh --no-fehbg --bg-fill ~/code/dotfiles/wallpaper/perseverance.png &
 
 for_window [title="konsoleScratchpad"] move scratchpad
-for_window [title="konsoleScratchpad"] floating enable, border pixel 5, resize set 3600 2000
+for_window [title="konsoleScratchpad"] floating enable, border pixel 5, resize set 3840 2120
 bindsym Mod1+space [title="konsoleScratchpad"] scratchpad show; [title="konsoleScratchpad"] move position center
 exec --no-startup-id konsole -p tabtitle='konsoleScratchpad'
 
