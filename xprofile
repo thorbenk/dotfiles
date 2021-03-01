@@ -1,0 +1,4 @@
+if [[ $DESKTOP_SESSION == *"i3"* ]]; then
+    # running on i3wm
+    export I_AM_I3=1
+fi

@@ -4,6 +4,7 @@ icons = "awesome5"
 [[block]]
 block = "cpu"
 interval = 1
+format = "{barchart} {utilization}"
 
 [[block]]
 block = "load"
@@ -11,7 +12,32 @@ interval = 1
 format = "{1m}"
 
 [[block]]
+block = "memory"
+format_mem = "{Mug}GB/{MTg}GB"
+format_swap = "{SUg}GB/{STg}GB"
+display_type = "memory"
+icons = true
+clickable = true
+interval = 5
+warning_mem = 80
+warning_swap = 80
+critical_mem = 95
+critical_swap = 95
+
+[[block]]
+block = "nvidia_gpu"
+label = "Quadro"
+show_memory = false
+show_clocks = true
+interval = 3
+
+[[block]]
 block = "sound"
+format = "{output_name} {volume}"
+driver = "pulseaudio"
+on_click = "pavucontrol"
+[block.mappings]
+"alsa_output.pci-0000_00_1f.3.analog-stereo" = "🎧"
 
 [[block]]
 block = "networkmanager"
