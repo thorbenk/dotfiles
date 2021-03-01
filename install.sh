@@ -78,10 +78,12 @@ ln -sfn $PWD/xdg/user-dirs.dirs "$HOME/.config/user-dirs.dirs"
 # i3 and related
 #
 
+mkdir -p $HOME/.config/alacritty
 ln -sfn $PWD/Xresources "$HOME/.Xresources"
 ln -sfn $PWD/i3/config "$HOME/.config/i3/config"
 ln -sfn $PWD/i3/i3status-rs.toml "$HOME/.config/i3/i3status-rs.toml"
 ln -sfn $PWD/xprofile "$HOME/.xprofile"
 ln -sfn $PWD/i3/picom.conf "$HOME/.config/picom.conf"
+ln -sfn $PWD/alacritty.yml "$HOME/.config/alacritty/alacritty.yml"
 
 #./install-cargo-bins.sh
