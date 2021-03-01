@@ -1,3 +1,25 @@
+# - change focus: hjkl
+# - move focused window mod+shift+{hjkl}
+#
+# - mod+a: focus parent
+# - mod+e: layout split
+# - mod+f: toggle fullscreen
+# - mod+g: gaps selection menu
+# - mod+i: anti-dim for window
+# - mod+m: monitor selection menu
+# - mod+o: dim for window allowed
+# - mod+r: resize mode
+# - mod+s: layout stacked
+# - mod+q: quit window
+# - mod+t: layout tabbed
+# - mod+|: split left/right
+# - mod+-: split up/down
+#
+# - mod+shift+c: reload
+# - mod+shift+r: restart
+# - mod+shift+space: toggle tiling/floating
+# - mod+space: change focus between tiling/floating windows
+
 # mod = Windows Key
 set $mod Mod4
 
@@ -14,12 +36,7 @@ bindsym $mod+Return exec konsole --hide-menubar
 # kill focused window
 bindsym $mod+Shift+q kill
 
-# start dmenu (a program launcher)
 bindsym $mod+d exec dmenu_run
-# There also is the (new) i3-dmenu-desktop which only displays applications
-# shipping a .desktop file. It is a wrapper around dmenu, so you need that
-# installed.
-# bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
 
 # change focus
 bindsym $mod+h focus left
@@ -27,28 +44,16 @@ bindsym $mod+j focus down
 bindsym $mod+k focus up
 bindsym $mod+l focus right
 
-# alternatively, you can use the cursor keys:
-bindsym $mod+Left focus left
-bindsym $mod+Down focus down
-bindsym $mod+Up focus up
-bindsym $mod+Right focus right
-
 # move focused window
 bindsym $mod+Shift+h move left
 bindsym $mod+Shift+j move down
 bindsym $mod+Shift+k move up
 bindsym $mod+Shift+l move right
 
-# alternatively, you can use the cursor keys:
-bindsym $mod+Shift+Left move left
-bindsym $mod+Shift+Down move down
-bindsym $mod+Shift+Up move up
-bindsym $mod+Shift+Right move right
-
-# "-" : split in horizontal orientation
+# "|" : split in left/right
 bindsym $mod+bar split h
 
-# "|" : split in vertical orientation
+# "-" : split up/down
 bindsym $mod+minus split v
 
 # "f": enter fullscreen mode for the focused container
@@ -115,21 +120,20 @@ bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
-# resize window (you can also use the mouse for that)
+# resize mode
 mode "resize" {
-        # These bindings trigger as soon as you enter the resize mode
+    # These bindings trigger as soon as you enter the resize mode
 
-        bindsym l resize shrink width 5 px or 5 ppt
-        bindsym j resize grow height 5 px or 5 ppt
-        bindsym k resize shrink height 5 px or 5 ppt
-        bindsym h resize grow width 5 px or 5 ppt
+    bindsym h resize shrink width 5 px or 5 ppt
+    bindsym j resize grow height 5 px or 5 ppt
+    bindsym k resize shrink height 5 px or 5 ppt
+    bindsym l resize grow width 5 px or 5 ppt
 
-        # back to normal: Enter or Escape or $mod+r
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-        bindsym $mod+r mode "default"
+    # back to normal: Enter or Escape or $mod+r
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+r mode "default"
 }
-
 bindsym $mod+r mode "resize"
 
 ## Manual management of external displays
@@ -144,7 +148,6 @@ mode "$mode_display" {
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
-# Declare here the shortcut to bring the display selection menu
 bindsym $mod+m mode "$mode_display"
 
 # Gaps
@@ -169,10 +172,13 @@ client.urgent           #2f343a #900000 #ffffff #900000   #900000
 client.placeholder      #000000 #0c0c0c #ffffff #000000   #0c0c0c
 client.background       #ffffff
 
-
+# window dimming enable or disable (uses xdotool and xprop to set a anti-dim flag, which picom recognises in focus-exclude array)
+bindsym $mod+i exec xprop -id $(xdotool getactivewindow) -f ANTIDIM_FLAG 8c -set ANTIDIM_FLAG 1; exec notify-send 'anti-dim set on window'
+bindsym $mod+o exec xprop -id $(xdotool getactivewindow) -remove ANTIDIM_FLAG; exec notify-send 'dim set on window'
 
 exec --no-startup-id dunst
 exec --no-startup-id "compton -b"
+exec --no-startup-id alttab -pk h -nk l -fg "#d58681" -bg "#4a4a4a" -frame "#eb564d" -t 512x256 -i 64x64
 
 exec_always --no-startup-id feh --no-fehbg --bg-fill ~/code/dotfiles/wallpaper/perseverance.png &
 
