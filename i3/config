@@ -24,7 +24,7 @@
 
 # Needed programs / tools
 #
-# xdotool xprop xrandr picom konsole
+# xdotool xprop xrandr picom konsole alacritty
 
 # mod = Windows Key
 set $mod Mod4
@@ -37,7 +37,8 @@ font pango:FiraCode Nerd Font Mono 8
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec konsole --hide-menubar
+#bindsym $mod+Return exec konsole --hide-menubar
+bindsym $mod+Return exec alacritty
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -191,10 +192,14 @@ exec --no-startup-id alttab -pk h -nk l -fg "#d58681" -bg "#4a4a4a" -frame "#eb5
 
 exec_always --no-startup-id feh --no-fehbg --bg-fill ~/code/dotfiles/wallpaper/perseverance.png &
 
-for_window [title="konsoleScratchpad"] move scratchpad
-for_window [title="konsoleScratchpad"] floating enable, border pixel 5, resize set 3840 2120
-bindsym Mod1+space [title="konsoleScratchpad"] scratchpad show; [title="konsoleScratchpad"] move position center
-exec --no-startup-id konsole -p tabtitle='konsoleScratchpad'
+#for_window [title="konsoleScratchpad"] move scratchpad
+#for_window [title="konsoleScratchpad"] floating enable, border pixel 5, resize set 3840 2120
+#bindsym Mod1+space [title="konsoleScratchpad"] scratchpad show; [title="konsoleScratchpad"] move position center
+#exec --no-startup-id konsole -p tabtitle='konsoleScratchpad'
+
+exec --no-startup-id alacritty --class dropdown &
+bindsym Mod1+space [instance="dropdown"] scratchpad show, move position center
+for_window [instance="dropdown"] floating enable, border pixel 5, resize set 3840 2120, move scratchpad
 
 bar {
     font pango:FiraCode Nerd Font Mono, Font Awesome 5 Free 9
