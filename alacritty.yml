@@ -48,4 +48,6 @@ colors:
     dim_background: '0x2e3439'
     dim_foreground: '0x149678'
     foreground: '0x17a88b'
-
+  cursor:
+    text: '0xffffff'
+    cursor: '0xD8DEE9'

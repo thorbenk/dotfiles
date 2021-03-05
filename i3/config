@@ -1,26 +1,32 @@
 # - alt+space: toggle yakuake like terminal
 #
 # - change focus: hjkl
-# - move focused window mod+shift+{hjkl}
 #
 # - mod+a: focus parent
+# - mod+c: swap workspaces
 # - mod+e: layout split
 # - mod+f: toggle fullscreen
 # - mod+g: gaps selection menu
 # - mod+i: anti-dim for window
 # - mod+m: monitor selection menu
 # - mod+o: dim for window allowed
+# - mod+q: quit window
 # - mod+r: resize mode
 # - mod+s: layout stacked
-# - mod+q: quit window
 # - mod+t: layout tabbed
+# - mod+x: less transparent
+# - mod+y: change focus between tiling/floating windows
+# - mod+z: more transparent
 # - mod+|: split left/right
 # - mod+-: split up/down
 #
+# - mod+Ctrl+<: move output left
+# - mod+Ctrl+>: move output right
+
+# - move+shift+{hjkl}: move focused window
 # - mod+shift+c: reload
 # - mod+shift+r: restart
 # - mod+shift+y: toggle tiling/floating
-# - mod+y: change focus between tiling/floating windows
 
 # Needed programs / tools
 #
@@ -31,7 +37,7 @@ set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango:FiraCode Nerd Font Mono 8
+font pango:Liberation Sans 11
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -172,7 +178,7 @@ mode "$mode_gaps" {
     bindsym Escape mode "default"
 }
 # class                 border  backgr. text    indicator child_border
-client.focused          #333333 #333333 #ffffff #2e9ef4   #222222
+client.focused          #333333 #444444 #ffffff #2e9ef4   #222222
 client.focused_inactive #222222 #222222 #ffffff #484e50   #222222
 client.unfocused        #222222 #222222 #888888 #292d2e   #222222
 client.urgent           #2f343a #900000 #ffffff #900000   #900000
@@ -185,6 +191,12 @@ bindsym $mod+o exec xprop -id $(xdotool getactivewindow) -remove ANTIDIM_FLAG; e
 
 bindsym $mod+z exec transset-df -a --min 0.1 --dec 0.1
 bindsym $mod+x exec transset-df -a --inc 0.1
+
+bindsym $mod+c exec ~/code/dotfiles/i3/i3-display-swap.sh
+
+# move focused workspace between monitors
+bindsym $mod+Ctrl+greater move workspace to output right
+bindsym $mod+Ctrl+less move workspace to output left
 
 exec --no-startup-id dunst
 exec --no-startup-id "compton -b"

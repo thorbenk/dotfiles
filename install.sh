@@ -85,5 +85,4 @@ ln -sfn $PWD/i3/i3status-rs.toml "$HOME/.config/i3/i3status-rs.toml"
 ln -sfn $PWD/xprofile "$HOME/.xprofile"
 ln -sfn $PWD/i3/picom.conf "$HOME/.config/picom.conf"
 ln -sfn $PWD/alacritty.yml "$HOME/.config/alacritty/alacritty.yml"
-
-#./install-cargo-bins.sh
+ln -sfn $PWD/Preferences.sublime-settings "$HOME/.config/sublime-merge/Packages/User/Preferences.sublime-settings"
