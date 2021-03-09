@@ -7,6 +7,13 @@ interval = 1
 format = "{barchart} {utilization}"
 
 [[block]]
+block = "temperature"
+collapsed = false
+#interval = 10
+#format = "{min}° min, {max}° max, {average}° avg"
+#inputs = ["CPUTIN", "SYSTIN"]
+
+[[block]]
 block = "load"
 interval = 1
 format = "{1m}"
