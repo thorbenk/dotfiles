@@ -102,6 +102,7 @@ export PATH=/opt/bin:$HOME/.cargo/bin:$DOTFILES_DIR/bin:$PATH
 if [ -f /usr/share/fzf/key-bindings.zsh ]; then
     # fzf install in Manjaro
     source /usr/share/fzf/key-bindings.zsh
+    source /usr/share/fzf/completion.zsh
 elif [ -f ~/.fzf.zsh ]; then
     # fzf local user install 
     source ~/.fzf.zsh
