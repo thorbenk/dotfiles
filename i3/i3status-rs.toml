@@ -4,7 +4,7 @@ icons = "awesome5"
 [[block]]
 block = "cpu"
 interval = 1
-format = "{barchart} {utilization}"
+format = "{barchart} {utilization} {frequency}"
 
 [[block]]
 block = "temperature"
@@ -20,8 +20,8 @@ format = "{1m}"
 
 [[block]]
 block = "memory"
-format_mem = "{Mug}GB/{MTg}GB"
-format_swap = "{SUg}GB/{STg}GB"
+#format_mem = "{Mug}GB/{MTg}GB"
+#format_swap = "{SUg}GB/{STg}GB"
 display_type = "memory"
 icons = true
 clickable = true
@@ -45,15 +45,11 @@ driver = "pulseaudio"
 on_click = "pavucontrol"
 [block.mappings]
 "alsa_output.pci-0000_00_1f.3.analog-stereo" = "🎧"
+"alsa_output.usb-C-Media_Electronics_Inc._Microsoft_LifeChat_LX-3000-00.analog-stereo" = "🎧"
 
 [[block]]
 block = "networkmanager"
 device_format = "{icon}{ap}"
-
-[[block]]
-block = "battery"
-driver = "upower"
-format = "{percentage}% {time}"
 
 [[block]]
 block = "notify"
