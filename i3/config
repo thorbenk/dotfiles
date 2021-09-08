@@ -24,7 +24,7 @@
 # - mod+Ctrl+<: move output left
 # - mod+Ctrl+>: move output right
 
-# - move+shift+{hjkl}: move focused window
+# - mod+shift+{hjkl}: move focused window
 # - mod+shift+c: reload
 # - mod+shift+r: restart
 # - mod+shift+y: toggle tiling/floating
