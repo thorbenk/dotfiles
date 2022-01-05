@@ -50,11 +50,11 @@ Plug 'joshdick/onedark.vim'
 Plug 'morhetz/gruvbox'
 
 " Eye candy
-Plug 'ryanoasis/vim-devicons' " ???
+Plug 'kyazdani42/nvim-web-devicons'
 Plug 'machakann/vim-highlightedyank'
 Plug 'vim-airline/vim-airline'
-Plug 'mhinz/vim-startify'
 
+let g:sneak#label = 1
 Plug 'justinmk/vim-sneak'
 
 Plug 'farmergreg/vim-lastplace' " open files at the last edited place
@@ -64,14 +64,24 @@ let g:rooter_manual_only = 1
 "              and then switch to it
 Plug 'airblade/vim-rooter'
 
-Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-fugitive'
 Plug 'vim-scripts/Align'
 
 Plug 'dyng/ctrlsf.vim'
+
+" Syntax Highlighting for Jenkinsfile and Dockerfile
+Plug 'ekalinin/Dockerfile.vim'
+au BufNewFile,BufRead *Jenkinsfile setf groovy
+
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'lewis6991/gitsigns.nvim'
 
 " coc.nvim
 " --------
@@ -102,10 +112,12 @@ Plug 'benmills/vimux'
 
 call plug#end()
 " }}}
+
 " Basic settings {{{
 filetype plugin indent on 
 syntax enable
 set backspace=indent,eol,start
+set encoding=UTF-8
 
 set hlsearch
 
@@ -116,9 +128,6 @@ set expandtab
 
 set mouse=a
 set clipboard+=unnamedplus " use system clipboard by default
-
-set colorcolumn=80
-hi ColorColumn ctermbg=red ctermfg=blue
 
 set termguicolors
 
@@ -151,12 +160,44 @@ set autowrite
 " Leader {{{
 " save file with <leader>w
 noremap <Leader>wa :update<CR>
+" }}}
 
-" fzf
-noremap <Leader>f :Files<CR>
-noremap <Leader>r :Rg<CR>
-noremap <Leader>b :Buffers<CR>
-noremap <Leader>h :History:<CR>
+" Telescope {{{
+
+lua << EOF
+local actions = require('telescope.actions')
+require('telescope').setup({
+  defaults = {
+    layout_config = {
+      horizontal = { width = 0.95 },
+    },
+    mappings = {
+      i = {
+        -- do not to enter a normal-like mode when hitting escape
+        -- (and instead exit)
+        ["<esc>"] = actions.close
+      }
+    },
+  },
+})
+EOF
+
+nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
+nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
+nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
+nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
+nnoremap <leader>fo <cmd>lua require('telescope.builtin').oldfiles()<cr>
+nnoremap <leader>fl <cmd>lua require('telescope.builtin').loclist()<cr>
+nnoremap <leader>fj <cmd>lua require('telescope.builtin').jumplist()<cr>
+" nnoremap <leader>fr <cmd>lua require('telescope.builtin').registers()<cr>
+nnoremap <leader>fr <cmd>lua require('telescope.builtin').resume()<cr>
+nnoremap <leader>fq <cmd>lua require('telescope.builtin').quickfix()<cr>
+
+" noremap <leader>f <cmd>Telescope find_files<cr>
+" noremap <Leader>f :Files<CR>
+" noremap <Leader>r :Rg<CR>
+" noremap <Leader>b :Buffers<CR>
+" noremap <Leader>h :History:<CR>
 " }}}
 " Colors {{{
 " color gruvbox
@@ -164,127 +205,10 @@ noremap <Leader>h :History:<CR>
 " set t_Co=256
 
 colorscheme onedark
-" }}}
-" Backup files {{{
-set nobackup
-set nowritebackup
-set noswapfile
-" }}}
-" Window management {{{
-"
-" Alt+Shift+{hjkl} to resize windows
-:nnoremap <A-S-h> :vertical resize +1<CR>
-:nnoremap <A-S-j> :resize -1<CR>
-:nnoremap <A-S-k> :resize +1<CR>
-:nnoremap <A-S-l> :vertical resize -1<CR>
-" }}}
-" NeoVim {{{
-if has('nvim')
-    tnoremap <silent> <m-h> <C-\><C-n>:TmuxNavigateLeft<cr>
-    tnoremap <silent> <m-j> <C-\><C-n>:TmuxNavigateDown<cr>
-    tnoremap <silent> <m-k> <C-\><C-n>:TmuxNavigateUp<cr>
-    tnoremap <silent> <m-l> <C-\><C-n>:TmuxNavigateRight<cr>
-    
-    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-    let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 
-    " Enter and leave insert mode when switch to/from terminal buffer
-    autocmd BufWinEnter,WinEnter term://* startinsert
-    autocmd BufLeave term://* stopinsert
+set colorcolumn=80
+highlight ColorColumn guibg=#21242b guifg=#9f9f9f
 
-    " Save a handle to terminal as global variable
-    augroup Terminal
-      au!
-      au TermOpen * let g:last_terminal_job_id = b:terminal_job_id
-    augroup END
-
-    " For rust let F6 save current file, then run 'cargo build' in terminal
-    function! SendLinesToTerminal(lines)
-      exe ":write" 
-      call jobsend(g:last_terminal_job_id, add(a:lines, ''))
-    endfunction
-    command! RunCargoBuild call SendLinesToTerminal(['clear && cargo build'])
-    nnoremap <silent> <f6> :RunCargoBuild<cr>
-endif
-" }}}
-" Standard vim {{{
-if !has('nvim')
-    " Tweaks for togglecursor
-    set timeout timeoutlen=1000 ttimeoutlen=50
-endif
-" }}}
-" gvim {{{
-if has('gui')
-    set guioptions-=m  "remove menu bar
-    set guioptions-=T  "remove toolbar
-    set guioptions-=r  "remove right-hand scroll bar
-    set guioptions-=L  "remove left-hand scroll bar
-endif
-
-if exists('g:neovide')
-    " set guifont=DejaVuSansMono:h22
-    set guifont=NotoMono:h22
-endif
-
-" }}}
-" Ignore files {{{
-set wildignore+=*/.git/*,*/.svn/*
-set wildignore+=*.so,*.swp,*.swo
-set wildignore+=*/target/debug*,*/target/release/*
-set wildignore+=Cargo.lock
-" }}}
-" vim-sneak {{{
-"let g:sneak#label = 1
-" }}}
-" fzf {{{
-" :nnoremap <c-k> :Files<CR>
-" :nnoremap <c-b> :Buffers<CR>
-" :nnoremap <c-f> :Rg<CR>
-" }}}
-" Neovim Remote {{{
-" pip3 install neovim-remote
-" }}}
-" Rust Make {{{
-
-autocmd BufRead,BufNewFile Cargo.toml,Cargo.lock,*.rs compiler cargo
-
-au FileType rust compiler cargo
-
-let g:racer_cmd = "/opt/racer/target/release/racer"
-
-" This uses the vim-dispatch plugin to run ':make build'
-" (which translates into 'cargo build' for rust projects)
-" _in the background_.
-"
-" It opens the quickfix window (when there are errors only, warnings
-" don't count).
-" To jump to error, either 
-"  - Select a line in the quickfix window and hit <CR> to jump
-"  - :cfirst, :cn
-"
-:nnoremap <F1> :wa<bar>:Make build<CR>
-
-" Alternatively, this would the build _synchronously_
-" :nnoremap <F1> :wa<CR>:make build<CR>
-" }}}
-" Misc {{{
-" Save all buffers when window loses focus
-:au FocusLost * silent! :wa
-" save when switching buffers etc.
-
-set incsearch
-set ignorecase
-set smartcase
-set gdefault
-
-" Search results centered please
-nnoremap <silent> n nzz
-nnoremap <silent> N Nzz
-nnoremap <silent> * *zz
-nnoremap <silent> # #zz
-nnoremap <silent> g* g*zz
-
-" }}}
 " Window dimming {{{
 " Background colors for active vs inactive windows
 " (note: needs `termguicolors` set to on
