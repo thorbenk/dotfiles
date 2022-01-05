@@ -19,12 +19,12 @@ export ZSH=$DOTFILES_DIR/oh-my-zsh
 export ZSH_THEME="half-life"
 export CASE_SENSITIVE="false" # case-insesitive completion
 export DISABLE_AUTO_UPDATE="true" # no weekly update checks
-plugins=(git svn colored-man-pages ssh-agent)
+plugins=(git svn colored-man-pages ssh-agent zsh-autosuggestions)
 source $ZSH/oh-my-zsh.sh
 
 #--- zsh --------------------------------------------------------------------
 
-unsetopt auto_name_dirs #do not replace path with environment variables
+#unsetopt auto_name_dirs #do not replace path with environment variables
 
 #http://en.gentoo-wiki.com/wiki/Zsh
 autoload -U compinit
@@ -38,7 +38,7 @@ bindkey '^[[3~' delete-char
 #http://yountlabs.com/automation/disable-autocorrect-in-zsh/
 unsetopt correct_all
 
-setopt NO_SHARE_HISTORY
+# setopt NO_SHARE_HISTORY
 
 #--- fzf ------------------------------------------------------------------
 
