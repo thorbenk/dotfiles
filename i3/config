@@ -1,7 +1,6 @@
 # - alt+space: toggle yakuake like terminal
 #
-# - change focus: hjkl
-#
+# - mod+{hjkl}: change focus
 # - mod+a: focus parent
 # - mod+c: swap workspaces
 # - mod+e: layout split
@@ -92,9 +91,9 @@ bindsym $mod+a focus parent
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
-set $ws1 "1"
-set $ws2 "2"
-set $ws3 "3"
+set $ws1 "1 chat"
+set $ws2 "2 web"
+set $ws3 "3 dev"
 set $ws4 "4"
 set $ws5 "5"
 set $ws6 "6"
@@ -157,6 +156,9 @@ set $mode_display Ext Screen (v) External Monitor ON, (h) External Monitor OFF
 mode "$mode_display" {
     bindsym v exec --no-startup-id xrandr --output DP-1-0.2 --auto --right-of eDP-1, mode "default"
     bindsym h exec --no-startup-id xrandr --output HDMI-2 --auto --off, mode "default"
+    
+    #bindsym v exec --no-startup-id xrandr --output HDMI-1-0 --auto --right-of eDP-1, mode "default"
+    #bindsym h exec --no-startup-id xrandr --output HDMI-1-0 --auto --off, mode "default"
 
     # back to normal: Enter or Escape
     bindsym Return mode "default"
@@ -165,26 +167,26 @@ mode "$mode_display" {
 bindsym $mod+m mode "$mode_display"
 
 # Gaps
-for_window [class="^.*"] border pixel 5
-gaps inner 10
-gaps outer 0
-# smart_gaps on
-set $mode_gaps Toggle gaps: (1) pretty (2) functional (3) off
-bindsym $mod+g mode "$mode_gaps"
-mode "$mode_gaps" {
-    bindsym 1 mode "default", gaps inner all set 20, gaps outer all set 0
-    bindsym 2 mode "default", gaps inner all set 10, gaps outer all set 0
-    bindsym 3 mode "default", gaps inner all set 0, gaps outer all set 0
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
-}
-# class                 border  backgr. text    indicator child_border
-client.focused          #333333 #444444 #ffffff #2e9ef4   #222222
-client.focused_inactive #222222 #222222 #ffffff #484e50   #222222
-client.unfocused        #222222 #222222 #888888 #292d2e   #222222
-client.urgent           #2f343a #900000 #ffffff #900000   #900000
-client.placeholder      #000000 #0c0c0c #ffffff #000000   #0c0c0c
-client.background       #ffffff
+## for_window [class="^.*"] border pixel 5
+## gaps inner 10
+## gaps outer 0
+## # smart_gaps on
+## set $mode_gaps Toggle gaps: (1) pretty (2) functional (3) off
+## bindsym $mod+g mode "$mode_gaps"
+## mode "$mode_gaps" {
+##     bindsym 1 mode "default", gaps inner all set 20, gaps outer all set 0
+##     bindsym 2 mode "default", gaps inner all set 10, gaps outer all set 0
+##     bindsym 3 mode "default", gaps inner all set 0, gaps outer all set 0
+##     bindsym Return mode "default"
+##     bindsym Escape mode "default"
+## }
+## # class                 border  backgr. text    indicator child_border
+## client.focused          #333333 #444444 #ffffff #2e9ef4   #22222
+## client.focused_inactive #222222 #222222 #ffffff #484e50   #222222
+## client.unfocused        #222222 #222222 #888888 #292d2e   #222222
+## client.urgent           #2f343a #900000 #ffffff #900000   #900000
+## client.placeholder      #000000 #0c0c0c #ffffff #000000   #0c0c0c
+## client.background       #ffffff
 
 # window dimming enable or disable (uses xdotool and xprop to set a anti-dim flag, which picom recognises in focus-exclude array)
 bindsym $mod+i exec xprop -id $(xdotool getactivewindow) -f ANTIDIM_FLAG 8c -set ANTIDIM_FLAG 1; exec notify-send 'anti-dim set on window'
@@ -205,6 +207,8 @@ exec --no-startup-id dunst
 exec --no-startup-id "compton -b"
 exec --no-startup-id alttab -pk h -nk l -fg "#d58681" -bg "#4a4a4a" -frame "#eb564d" -t 512x256 -i 64x64
 
+exec --no-startup-id setxkbmap -layout us -option caps:escape
+
 exec_always --no-startup-id feh --no-fehbg --bg-fill ~/code/dotfiles/wallpaper/perseverance.png &
 
 #for_window [title="konsoleScratchpad"] move scratchpad
@@ -214,7 +218,12 @@ exec_always --no-startup-id feh --no-fehbg --bg-fill ~/code/dotfiles/wallpaper/p
 
 exec --no-startup-id alacritty --class dropdown &
 bindsym Mod1+space [instance="dropdown"] scratchpad show, move position center
-for_window [instance="dropdown"] floating enable, border pixel 5, resize set 3840 2120, move scratchpad
+for_window [instance="dropdown"] floating enable, border pixel 15, resize set 3830 2110, move scratchpad
+
+for_window [class="Firefox"] border normal
+
+#for_window [class="^Squish IDE$" name="^Control Bar $"] floating enable
+for_window [title="^Control Bar $"] floating enable
 
 bar {
     font pango:FiraCode Nerd Font Mono, Font Awesome 5 Free 9
