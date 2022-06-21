@@ -1,5 +1,5 @@
-export EDITOR="nvim"
-export VISUAL="nvim"
+export EDITOR="/opt/nvim/nvim.appimage"
+export VISUAL="/opt/nvim/nvim.appimage"
 
 export NVIM_LISTEN_ADDRESS="/tmp/nvimsocket"
 
@@ -38,7 +38,7 @@ bindkey '^[[3~' delete-char
 #http://yountlabs.com/automation/disable-autocorrect-in-zsh/
 unsetopt correct_all
 
-# setopt NO_SHARE_HISTORY
+setopt NO_SHARE_HISTORY
 
 #--- fzf ------------------------------------------------------------------
 
@@ -49,7 +49,8 @@ export FZF_DEFAULT_COMMAND="rg --files"
 
 # http://matt.blissett.me.uk/linux/zsh/zshrc
 
-alias 'vim=nvim'
+alias 'vim=/opt/nvim/nvim.appimage'
+alias 'nvim=/opt/nvim/nvim.appimage'
 alias 'l=ls'
 alias 'll=ls -lh'
 alias 'kw=kwrite'
