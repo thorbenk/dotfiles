@@ -13,41 +13,129 @@ font:
     style: Bold Italic
   size: 9
 
-colors:
-  bright:
-    black: '0x7f8c8d'
-    blue: '0x3daee9'
-    cyan: '0x16a085'
-    green: '0x55a649'
-    magenta: '0x8e44ad'
-    red: '0xc0392b'
-    white: '0xffffff'
-    yellow: '0xfdbc4b'
-  dim:
-    black: '0x2e3439'
-    blue: '0x1b668f'
-    cyan: '0x186c60'
-    green: '0x32642c'
-    magenta: '0x614a73'
-    red: '0x783228'
-    white: '0x63686d'
-    yellow: '0xb65619'
-  normal:
-    black: '0x1e2229'
-    blue: '0x1d99f3'
-    cyan: '0x1abc9c'
-    green: '0x44853a'
-    magenta: '0x9b59b6'
-    red: '0xed1515'
-    white: '0xfcfcfc'
-    yellow: '0xf67400'
-  primary:
-    background: '0x1e2229'
-    bright_background: '0x0d0f11'
-    bright_foreground: '0x00bc96'
-    dim_background: '0x2e3439'
-    dim_foreground: '0x149678'
-    foreground: '0x17a88b'
-  cursor:
-    text: '0xffffff'
-    cursor: '0xD8DEE9'
+schemes:
+  konsole: &konsole
+    bright:
+      black: '0x7f8c8d'
+      blue: '0x3daee9'
+      cyan: '0x16a085'
+      green: '0x55a649'
+      magenta: '0x8e44ad'
+      red: '0xc0392b'
+      white: '0xffffff'
+      yellow: '0xfdbc4b'
+    dim:
+      black: '0x2e3439'
+      blue: '0x1b668f'
+      cyan: '0x186c60'
+      green: '0x32642c'
+      magenta: '0x614a73'
+      red: '0x783228'
+      white: '0x63686d'
+      yellow: '0xb65619'
+    normal:
+      black: '0x1e2229'
+      blue: '0x1d99f3'
+      cyan: '0x1abc9c'
+      green: '0x44853a'
+      magenta: '0x9b59b6'
+      red: '0xed1515'
+      white: '0xfcfcfc'
+      yellow: '0xf67400'
+    primary:
+      background: '0x1e2229'
+      bright_background: '0x0d0f11'
+      bright_foreground: '0x00bc96'
+      dim_background: '0x2e3439'
+      dim_foreground: '0x149678'
+      foreground: '0x17a88b'
+    cursor:
+      text: '0xffffff'
+      cursor: '0xD8DEE9'
+
+  ubuntu: &ubuntu
+    # Default colors
+    primary:
+      background: '#300a24'
+      foreground: '#eeeeec'
+  
+    # Normal colors
+    normal:
+      black:   '#2e3436'
+      red:     '#cc0000'
+      green:   '#4e9a06'
+      yellow:  '#c4a000'
+      blue:    '#3465a4'
+      magenta: '#75507b'
+      cyan:    '#06989a'
+      white:   '#d3d7cf'
+  
+    # Bright colors
+    bright:
+      black:   '#555753'
+      red:     '#ef2929'
+      green:   '#8ae234'
+      yellow:  '#fce94f'
+      blue:    '#729fcf'
+      magenta: '#ad7fa8'
+      cyan:    '#34e2e2'
+      white:   '#eeeeec'
+
+  tomorrow_night: &tomorrow_night
+    # Default colors
+    primary:
+      background: '#1d1f21'
+      foreground: '#c5c8c6'
+
+    # Colors the cursor will use if `custom_cursor_colors` is true
+    cursor:
+      text: '#1d1f21'
+      cursor: '#ffffff'
+
+    # Normal colors
+    normal:
+      black:   '#1d1f21'
+      red:     '#cc6666'
+      green:   '#b5bd68'
+      yellow:  '#e6c547'
+      blue:    '#81a2be'
+      magenta: '#b294bb'
+      cyan:    '#70c0ba'
+      white:   '#373b41'
+
+    # Bright colors
+    bright:
+      black:   '#666666'
+      red:     '#ff3334'
+      green:   '#9ec400'
+      yellow:  '#f0c674'
+      blue:    '#81a2be'
+      magenta: '#b77ee0'
+      cyan:    '#54ced6'
+      white:   '#282a2e'
+
+  # The 'Dark dimmed' colorscheme from Github.
+  github: &github
+    primary:
+      background: '#2d333b'
+      foreground: '#adbac7'
+    normal:
+      black:   '#2d333b'
+      red:     '#f47067'
+      green:   '#8ddb8c'
+      yellow:  '#f69d50'
+      blue:    '#6cb6ff'
+      magenta: '#dcbdfb'
+      cyan:    '#96d0ff'
+      white:   '#adbac7'
+    bright:
+      black:   '#768390'
+      red:     '#f47067'
+      green:   '#8ddb8c'
+      yellow:  '#f69d50'
+      blue:    '#6cb6ff'
+      magenta: '#dcbdfb'
+      cyan:    '#96d0ff'
+      white:   '#adbac7'
+
+colors: *github
