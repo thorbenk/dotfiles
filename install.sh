@@ -20,10 +20,6 @@ if ! nvim --version &> /dev/null ; then
     echo "install neovim"
     exit
 fi
-if ! nvim --version &> /dev/null ; then
-    echo "install neovim"
-    exit
-fi
 
 git submodule init
 git submodule update
@@ -37,9 +33,7 @@ ln -sfn $PWD/zprofile $HOME/.zprofile
 #
 # vim
 #
-ln -sfn $PWD/vimrc $HOME/.vimrc
-ln -sfn "$PWD/vim" "$HOME/.vim"
-ln -sfn "$PWD/vim" "$HOME/.config/nvim"
+ln -sfn "$PWD/nvim" "$HOME/.config/nvim"
 
 
 #
@@ -50,10 +44,10 @@ ln -sfn $PWD/tmux $HOME/.tmux
 export TMUX_PLUGIN_MANAGER_PATH='$HOME/.tmux/plugins/'
 ~/.tmux/plugins/tpm/bin/install_plugins
 
-nvim +'PlugInstall --sync' +qa
-nvim +'PlugUpdate --sync' +qa
-nvim +'CocInstall coc-python' +qa
-nvim +'CocInstall coc-clangd' +qa
+# nvim +'PlugInstall --sync' +qa
+# nvim +'PlugUpdate --sync' +qa
+# nvim +'CocInstall coc-python' +qa
+# nvim +'CocInstall coc-clangd' +qa
 
 #cd ~/.tmux/plugins/tmux-thumbs
 #cargo build --release
