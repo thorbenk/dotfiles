@@ -11,6 +11,13 @@ After reading (parts) of the manual, here are some notes:
 
 - Jump to topic: `C-]`, back via `C-o`
 
+## C++
+
+```
+set makeprg=ninja\ -C\ /bath/to/builddir
+:make
+```
+
 ## usr_20.txt
 
 - Editing in command line
