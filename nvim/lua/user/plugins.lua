@@ -167,6 +167,22 @@ return packer.startup(function(use)
 
 	use("voldikss/vim-floaterm")
 
+	use({
+		"nvim-neotest/neotest",
+		requires = {
+			"nvim-lua/plenary.nvim",
+			"nvim-treesitter/nvim-treesitter",
+			"antoinemadec/FixCursorHold.nvim",
+		},
+	})
+
+	use({
+		"nvim-neotest/neotest-python",
+		requires = {
+			"nvim-neotest/neotest",
+		},
+	})
+
 	-- use {
 	--   "sunjon/shade.nvim"
 	-- }

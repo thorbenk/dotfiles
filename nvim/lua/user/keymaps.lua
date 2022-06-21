@@ -92,7 +92,12 @@ wk.register({
 		},
 		h = {
 			name = "+harpoon",
-			h = { "<cmd>:lua require('harpoon.ui').toggle_quick_menu()<cr>", "toggle menu", noremap = true, silent = true },
+			h = {
+				"<cmd>:lua require('harpoon.ui').toggle_quick_menu()<cr>",
+				"toggle menu",
+				noremap = true,
+				silent = true,
+			},
 			a = { "<cmd>:lua require('harpoon.mark').add_file()<cr>", "add file", noremap = true, silent = true },
 			n = { "<cmd>:lua require('harpoon.ui').nav_next()<cr>", "nav next", noremap = true, silent = true },
 			n = { "<cmd>:lua require('harpoon.ui').nav_prev()<cr>", "nav prev", noremap = true, silent = true },
@@ -100,6 +105,26 @@ wk.register({
 			["2"] = { "<cmd>:lua require('harpoon.ui').nav_file(2)<cr>", "nav 2", noremap = true, silent = true },
 			["3"] = { "<cmd>:lua require('harpoon.ui').nav_file(3)<cr>", "nav 3", noremap = true, silent = true },
 			["4"] = { "<cmd>:lua require('harpoon.ui').nav_file(4)<cr>", "nav 4", noremap = true, silent = true },
+		},
+		t = {
+			name = "+test",
+			r = {
+				name = "run",
+				n = { "<cmd>:lua require('neotest').run.run()<cr>", "nearest", noremap = true, silent = true },
+				c = {
+					"<cmd>:lua require('neotest').run.run(vim.fn.expand('%'))<cr>",
+					"current file",
+					noremap = true,
+					silent = true,
+				},
+			},
+			c = { "<cmd>:lua require('neotest').output.open()<cr>", "open output", noremap = true, silent = true },
+			s = {
+				name = "summary",
+				o = { "<cmd>:lua require('neotest').summary.open()<cr>", "open", noremap = true, silent = true },
+				c = { "<cmd>:lua require('neotest').summary.close()<cr>", "close", noremap = true, silent = true },
+				t = { "<cmd>:lua require('neotest').summary.toggle()<cr>", "toggle", noremap = true, silent = true },
+			},
 		},
 	},
 })

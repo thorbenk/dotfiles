@@ -16,4 +16,5 @@ require("user.null_ls")
 require("user.trouble")
 require("user.floatterm")
 require("user.feline")
+require("user.neotest")
 -- require "user.shade"
