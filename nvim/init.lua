@@ -17,4 +17,5 @@ require("user.trouble")
 require("user.floatterm")
 -- require("user.feline")
 require("user.neotest")
+require("user.true-zen")
 -- require "user.shade"

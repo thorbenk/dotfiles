@@ -80,7 +80,10 @@ wk.register({
 			noremap = true,
 			silent = true,
 		},
-		z = { "<cmd>lua require('zen-mode').toggle({})<cr>", "zen mode", noremap = true, silent = true },
+		z = {
+      name = "+zen",
+      f = { "<cmd>TZFocus<cr>", "focus", noremap = true, silent = true },
+    },
 		x = {
 			name = "+trouble",
 			x = { "<cmd>Trouble<cr>", "trouble", noremap = true, silent = true },

@@ -152,18 +152,6 @@ return packer.startup(function(use)
 		"folke/trouble.nvim",
 	})
 
-	use({
-		"folke/zen-mode.nvim",
-		config = function()
-			require("zen-mode").setup({
-				window = {
-					width = 1,
-					height = 1,
-				},
-			})
-		end,
-	})
-
 	use("nvie/vim-flake8")
 
 	use("ThePrimeagen/harpoon")
@@ -186,6 +174,7 @@ return packer.startup(function(use)
 		},
 	})
 
+  use("Pocco81/true-zen.nvim")
 	-- use {
 	--   "sunjon/shade.nvim"
 	-- }
