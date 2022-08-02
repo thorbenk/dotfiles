@@ -79,7 +79,7 @@ return packer.startup(function(use)
 	-- Telescope
 	use("nvim-telescope/telescope.nvim")
 	use({
-		"nvim-telescope/telescope-fzf-native.nvim",
+    "natecraddock/telescope-zf-native.nvim",
 		requires = {
 			"nvim-telescope/telescope.nvim",
 		},
@@ -122,8 +122,11 @@ return packer.startup(function(use)
 	use("jose-elias-alvarez/null-ls.nvim")
 
 	-- Status line
+	-- use({
+	-- 	"feline-nvim/feline.nvim",
+	-- })
 	use({
-		"feline-nvim/feline.nvim",
+		"nvim-lualine/lualine.nvim",
 	})
 
 	-- Bufferline

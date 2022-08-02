@@ -9,12 +9,12 @@ require("user.telescope")
 require("user.treesitter")
 require("user.nvim-tree")
 require("user.gitsigns")
--- require "user.lualine"
+require "user.lualine"
 require("user.bufferline")
 require("user.whichkey")
 require("user.null_ls")
 require("user.trouble")
 require("user.floatterm")
-require("user.feline")
+-- require("user.feline")
 require("user.neotest")
 -- require "user.shade"

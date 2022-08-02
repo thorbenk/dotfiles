@@ -79,5 +79,5 @@ telescope.setup({
 	},
 })
 
-telescope.load_extension("fzf")
+telescope.load_extension("zf-native")
 telescope.load_extension("harpoon")

@@ -47,6 +47,7 @@ wk.register({
 				silent = true,
 			},
 			e = { "<cmd>lua require 'telescope.builtin'.symbols()<cr>", "emojis", noremap = true, silent = true },
+			G = { "<cmd>lua require 'telescope.builtin'.symbols{sources = {'gitmoji'}}<cr>", "gitmoji", noremap = true, silent = true },
 			E = { "<cmd>lua require 'telescope.builtin'.registers()<cr>", "registers", noremap = true, silent = true },
 			f = {
 				"<cmd>lua require 'telescope.builtin'.find_files(require('telescope.themes').get_ivy({ previewer = false, layout_config = { width = 0.75 } }))<cr>",
