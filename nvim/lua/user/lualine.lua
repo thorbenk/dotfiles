@@ -7,15 +7,14 @@ lualine.setup({
 	options = {
 		icons_enabled = true,
 		theme = "auto",
-		component_separators = { left = "", right = "" },
-		section_separators = { left = "", right = "" },
 		disabled_filetypes = {},
 		always_divide_middle = true,
 	},
 	sections = {
-		lualine_a = { "mode" },
-		lualine_b = { "branch", "diff", "diagnostics" },
-		lualine_c = {
+    lualine_a = { 'g:zen_is_zoomed' },
+		lualine_b = { "mode" },
+		lualine_c = { "branch", "diff", "diagnostics" },
+		lualine_d = {
 			{ "filename", path = 1 },
 			"require'lsp-status'.status()",
 		},
@@ -26,7 +25,7 @@ lualine.setup({
 	inactive_sections = {
 		lualine_a = {},
 		lualine_b = {},
-		lualine_c = { "filename" },
+		lualine_d = { "filename" },
 		lualine_x = { "location" },
 		lualine_y = {},
 		lualine_z = {},

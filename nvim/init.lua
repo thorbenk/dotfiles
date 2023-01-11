@@ -19,3 +19,4 @@ require("user.floatterm")
 require("user.neotest")
 require("user.true-zen")
 -- require "user.shade"
+require("user.treesitter-textobjects")

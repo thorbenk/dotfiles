@@ -1,7 +1,7 @@
 {
 	"theme": "Merge Dark.sublime-theme",
 	"expand_merge_commits_by_default": true,
-	"ui_scale": 2,
+	"ui_scale": 1,
 	"font_face": "FiraCode",
 	"font_size": 8,
 	"diff_style": "side-by-side",
