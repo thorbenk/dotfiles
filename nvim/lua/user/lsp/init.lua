@@ -30,6 +30,7 @@ lspconfig.pyright.setup({
 })
 
 lspconfig.clangd.setup({
+  -- cmd = {"clangd", "--query-driver=/usr/bin/arm-none-eabi-g++"},
 	on_attach = require("user.lsp.handlers").on_attach,
 	capabilities = vim.tbl_extend("keep", require("user.lsp.handlers").capabilities, lsp_status.capabilities),
 	handlers = lsp_status.extensions.clangd.setup(),

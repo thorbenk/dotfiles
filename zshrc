@@ -1,5 +1,11 @@
-export EDITOR="/opt/nvim/nvim.appimage"
-export VISUAL="/opt/nvim/nvim.appimage"
+if [ -f /usr/share/fzf/key-bindings.zsh ]; then
+  NVIM="/opt/nvim/nvim.appimage"
+else
+  NVIM="nvim"
+fi
+
+export EDITOR=$NVIM
+export VISUAL=$NVIM
 
 export NVIM_LISTEN_ADDRESS="/tmp/nvimsocket"
 
@@ -49,8 +55,8 @@ export FZF_DEFAULT_COMMAND="rg --files"
 
 # http://matt.blissett.me.uk/linux/zsh/zshrc
 
-alias 'vim=/opt/nvim/nvim.appimage'
-alias 'nvim=/opt/nvim/nvim.appimage'
+alias "vim=$NVIM"
+# alias 'nvim=/opt/nvim/nvim.appimage'
 alias 'l=ls'
 alias 'll=ls -lh'
 alias 'kw=kwrite'
@@ -96,6 +102,7 @@ alias plssh="z ssh-add ~/.ssh/id_rsa"
 # export CMAKE_LOCAL_INSTALL_PREFIX_PATH="$LOCAL_INSTALL_PREFIX"
 
 #export PYTHONPATH=$DOTFILES_DIR/pytk:$PYTHONPATH
+#
 export PATH=/opt/bin:$HOME/.cargo/bin:$DOTFILES_DIR/bin:$PATH
 
 [ -f ~/.zshrc.user ] && source ~/.zshrc.user
@@ -109,4 +116,4 @@ elif [ -f ~/.fzf.zsh ]; then
     source ~/.fzf.zsh
 fi
 
-export PATH="$HOME/.local/bin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+export PATH="$HOME/.local/bin:$HOME/local/bin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
