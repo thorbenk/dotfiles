@@ -79,7 +79,7 @@ return packer.startup(function(use)
 	-- Telescope
 	use("nvim-telescope/telescope.nvim")
 	use({
-    "natecraddock/telescope-zf-native.nvim",
+		"natecraddock/telescope-zf-native.nvim",
 		requires = {
 			"nvim-telescope/telescope.nvim",
 		},
@@ -97,7 +97,7 @@ return packer.startup(function(use)
 		"nvim-treesitter/nvim-treesitter",
 		run = ":TSUpdate",
 	})
-  use('nvim-treesitter/nvim-treesitter-textobjects')
+	use("nvim-treesitter/nvim-treesitter-textobjects")
 
 	-- Comment
 	use({
@@ -175,7 +175,7 @@ return packer.startup(function(use)
 		},
 	})
 
-  use("Pocco81/true-zen.nvim")
+	use("Pocco81/true-zen.nvim")
 	-- use {
 	--   "sunjon/shade.nvim"
 	-- }

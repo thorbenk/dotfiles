@@ -11,11 +11,11 @@ end
 local tree_cb = nvim_tree_config.nvim_tree_callback
 
 nvim_tree.setup({
-  actions = {
-    open_file = {
-      resize_window = false,
-    },
-  },
+	actions = {
+		open_file = {
+			resize_window = false,
+		},
+	},
 	disable_netrw = true,
 	hijack_netrw = true,
 	open_on_setup = false,
@@ -51,8 +51,8 @@ nvim_tree.setup({
 		timeout = 500,
 	},
 	view = {
-    adaptive_size = false,
-    preserve_window_proportions = true,
+		adaptive_size = false,
+		preserve_window_proportions = true,
 		width = 30,
 		height = 30,
 		hide_root_folder = false,

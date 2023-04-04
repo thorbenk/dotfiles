@@ -1,5 +1,6 @@
 if [ -f /usr/share/fzf/key-bindings.zsh ]; then
-  NVIM="/opt/nvim/nvim.appimage"
+  # NVIM="/opt/nvim/nvim.appimage"
+  NVIM="nvim"
 else
   NVIM="nvim"
 fi
@@ -56,7 +57,6 @@ export FZF_DEFAULT_COMMAND="rg --files"
 # http://matt.blissett.me.uk/linux/zsh/zshrc
 
 alias "vim=$NVIM"
-# alias 'nvim=/opt/nvim/nvim.appimage'
 alias 'l=ls'
 alias 'll=ls -lh'
 alias 'kw=kwrite'
@@ -101,8 +101,6 @@ alias plssh="z ssh-add ~/.ssh/id_rsa"
 # export CMAKE_LIBRARY_PATH="$LOCAL_INSTALL_PREFIX/lib"
 # export CMAKE_LOCAL_INSTALL_PREFIX_PATH="$LOCAL_INSTALL_PREFIX"
 
-#export PYTHONPATH=$DOTFILES_DIR/pytk:$PYTHONPATH
-#
 export PATH=/opt/bin:$HOME/.cargo/bin:$DOTFILES_DIR/bin:$PATH
 
 [ -f ~/.zshrc.user ] && source ~/.zshrc.user
@@ -117,3 +115,5 @@ elif [ -f ~/.fzf.zsh ]; then
 fi
 
 export PATH="$HOME/.local/bin:$HOME/local/bin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+
+GCM_CREDENTIAL_STORE=secretservice

@@ -11,7 +11,7 @@ lualine.setup({
 		always_divide_middle = true,
 	},
 	sections = {
-    lualine_a = { 'g:zen_is_zoomed' },
+		lualine_a = { "g:zen_is_zoomed" },
 		lualine_b = { "mode" },
 		lualine_c = { "branch", "diff", "diagnostics" },
 		lualine_d = {
