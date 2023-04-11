@@ -6,6 +6,8 @@ end
 
 onedark.setup()
 
+vim.cmd.colorscheme("catppuccin-macchiato")
+
 -- vim.cmd([[
 -- hi ActiveWindow guibg=#282C34
 -- hi InactiveWindow guibg=#191c21

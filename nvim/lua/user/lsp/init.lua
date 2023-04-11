@@ -27,6 +27,7 @@ lspconfig.pyright.setup({
 				extraPaths = {
 					"/w/src/deeplearningcore/",
 					"/w/src/diecastingcreator/",
+					"/w/src/ml_toolbox/",
 				},
 			},
 		},

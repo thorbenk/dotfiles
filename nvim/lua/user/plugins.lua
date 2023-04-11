@@ -51,6 +51,7 @@ return packer.startup(function(use)
 	-- use "joshdick/onedark.vim"
 	use("ful1e5/onedark.nvim")
 	use("lunarvim/darkplus.nvim")
+	use({ "catppuccin/nvim", as = "catppuccin" })
 
 	use("tpope/vim-repeat")
 	use("tpope/vim-unimpaired")
@@ -179,6 +180,15 @@ return packer.startup(function(use)
 	-- use {
 	--   "sunjon/shade.nvim"
 	-- }
+
+	use({ "stevearc/dressing.nvim" })
+	use({ "rcarriga/nvim-notify" })
+	use({
+		"stevearc/overseer.nvim",
+		config = function()
+			require("overseer").setup()
+		end,
+	})
 
 	-- Automatically set up your configuration after cloning packer.nvim
 	-- Put this at the end after all plugins
