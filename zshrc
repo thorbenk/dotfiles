@@ -26,7 +26,9 @@ export ZSH=$DOTFILES_DIR/oh-my-zsh
 export ZSH_THEME="half-life"
 export CASE_SENSITIVE="false" # case-insesitive completion
 export DISABLE_AUTO_UPDATE="true" # no weekly update checks
-plugins=(git svn colored-man-pages ssh-agent zsh-autosuggestions)
+
+# copybuffer: adds the ctrl-o keyboard shortcut to copy the current text in the command line to the system clipboard
+plugins=(git svn colored-man-pages ssh-agent zsh-autosuggestions copybuffer)
 source $ZSH/oh-my-zsh.sh
 
 #--- zsh --------------------------------------------------------------------
