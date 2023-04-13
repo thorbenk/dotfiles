@@ -97,7 +97,13 @@ return {
 	"Pocco81/true-zen.nvim",
 
 	{ "stevearc/dressing.nvim" },
-	{ "rcarriga/nvim-notify" },
+	{
+		"rcarriga/nvim-notify",
+		config = function()
+			vim.notify = require("notify")
+			require("notify").setup({})
+		end,
+	},
 
 	{
 		"klen/nvim-config-local",
