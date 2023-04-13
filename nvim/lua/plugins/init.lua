@@ -24,8 +24,8 @@ return {
 	"hrsh7th/cmp-nvim-lua",
 
 	-- snippets
-	-- "L3MON4D3/LuaSnip", --snippet engine
-	-- "rafamadriz/friendly-snippets", -- a bunch of snippets to use
+	"L3MON4D3/LuaSnip", --snippet engine
+	"rafamadriz/friendly-snippets", -- a bunch of snippets to use
 
 	-- LSP
 	"neovim/nvim-lspconfig", -- enable LSP
@@ -65,7 +65,6 @@ return {
 	"jose-elias-alvarez/null-ls.nvim",
 
 	-- Bufferline
-	"akinsho/bufferline.nvim",
 	"moll/vim-bbye",
 
 	-- Toggleterm
@@ -110,7 +109,6 @@ return {
 	},
 
 	"Pocco81/true-zen.nvim",
-	"sunjon/shade.nvim",
 
 	{ "stevearc/dressing.nvim" },
 	{ "rcarriga/nvim-notify" },
