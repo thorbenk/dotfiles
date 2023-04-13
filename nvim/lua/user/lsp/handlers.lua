@@ -88,7 +88,7 @@ local function lsp_keymaps(bufnr)
 					silent = true,
 				},
 				f = {
-					"<cmd>lua vim.lsp.buf.formatting_sync()<cr>",
+					"<cmd>lua vim.lsp.buf.format()<cr>",
 					"format",
 					noremap = true,
 					silent = true,
