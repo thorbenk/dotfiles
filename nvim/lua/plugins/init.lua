@@ -65,12 +65,6 @@ return {
 	"nvim-lua/lsp-status.nvim",
 	"jose-elias-alvarez/null-ls.nvim",
 
-	-- Status line
-	-- use({
-	-- 	"feline-nvim/feline.nvim",
-	-- })
-	"nvim-lualine/lualine.nvim",
-
 	-- Bufferline
 	"akinsho/bufferline.nvim",
 	"moll/vim-bbye",
