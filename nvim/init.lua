@@ -19,20 +19,16 @@ vim.g.maplocalleader = " "
 
 require("lazy").setup("plugins")
 
--- require("user.plugins")
 require("user.keymaps")
 require("user.toggleterm")
 require("user.colorscheme")
 require("user.cmp")
 require("user.lsp")
-require("user.telescope")
 require("user.treesitter")
 require("user.whichkey")
 require("user.null_ls")
 require("user.trouble")
 require("user.floatterm")
--- require("user.feline")
 require("user.neotest")
 require("user.true-zen")
--- require "user.shade"
 require("user.treesitter-textobjects")

@@ -32,20 +32,6 @@ return {
 	-- "ray-x/lsp_signature.nvim", # TODO
 
 	-- Telescope
-	"nvim-telescope/telescope.nvim",
-	{
-		"natecraddock/telescope-zf-native.nvim",
-		dependencies = {
-			"nvim-telescope/telescope.nvim",
-		},
-	},
-	{
-		"nvim-telescope/telescope-symbols.nvim",
-		dependencies = {
-			"nvim-telescope/telescope.nvim",
-		},
-	},
-
 	-- Treesitter
 	{
 		"nvim-treesitter/nvim-treesitter",
