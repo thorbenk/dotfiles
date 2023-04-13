@@ -25,7 +25,7 @@ keymap("n", "<C-k>", ":TmuxNavigateUp<cr>", opts)
 keymap("n", "<C-l>", ":TmuxNavigateRight<cr>", opts)
 keymap("n", "<C-\\>", ":TmuxNavigatePrevious<cr>", opts)
 -- toggle left explorer
-keymap("n", "<leader>e", ":NvimTreeToggle<cr>", opts)
+keymap("n", "<leader>e", ":Neotree toggle<cr>", opts)
 -- Resize with arrows
 keymap("n", "<A-h>", ":TmuxResizeLeft<cr>", opts)
 keymap("n", "<A-j>", ":TmuxResizeDown<cr>", opts)

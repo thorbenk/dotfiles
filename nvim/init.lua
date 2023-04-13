@@ -11,6 +11,8 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
+
 require("lazy").setup({
 	"nvim-lua/popup.nvim", -- An implementation of the Popup API from vim in Neovim
 	"nvim-lua/plenary.nvim", -- Useful lua functions used by lots of plugins
@@ -75,9 +77,15 @@ require("lazy").setup({
 		end,
 	},
 
-	-- Tree
-	"kyazdani42/nvim-web-devicons",
-	"kyazdani42/nvim-tree.lua",
+	{
+		"nvim-neo-tree/neo-tree.nvim",
+		branch = "v2.x",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+			"MunifTanjim/nui.nvim",
+		},
+	},
 
 	-- Gitsigns
 	{
@@ -108,14 +116,14 @@ require("lazy").setup({
 
 	{
 		"goolord/alpha-nvim",
-		dependencies = { "kyazdani42/nvim-web-devicons" },
+		dependencies = { "nvim-tree/nvim-web-devicons" },
 		config = function()
 			require("alpha").setup(require("alpha.themes.startify").config)
 		end,
 	},
 
 	{
-		dependencies = "kyazdani42/nvim-web-devicons",
+		dependencies = "nvim-tree/nvim-web-devicons",
 		"folke/trouble.nvim",
 	},
 
@@ -163,7 +171,7 @@ require("user.cmp")
 require("user.lsp")
 require("user.telescope")
 require("user.treesitter")
-require("user.nvim-tree")
+require("user.neo-tree")
 require("user.gitsigns")
 require("user.lualine")
 require("user.bufferline")
