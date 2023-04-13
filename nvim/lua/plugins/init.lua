@@ -6,7 +6,6 @@ return {
 	-- use "joshdick/onedark.vim"
 	"ful1e5/onedark.nvim",
 	"lunarvim/darkplus.nvim",
-	{ "catppuccin/nvim", name = "catppuccin" },
 
 	"tpope/vim-repeat",
 	"tpope/vim-unimpaired",
