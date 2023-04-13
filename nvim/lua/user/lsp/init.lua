@@ -8,8 +8,9 @@ if not status_ok then
 	return
 end
 
+-- TODO
 -- Keep popup with signature help open
-require("lsp_signature").setup()
+-- require("lsp_signature").setup()
 
 require("user.lsp.handlers").setup()
 
