@@ -98,17 +98,13 @@ return {
 
 	{ "stevearc/dressing.nvim" },
 	{ "rcarriga/nvim-notify" },
-	{
-		"stevearc/overseer.nvim",
-		config = function()
-			require("overseer").setup()
-		end,
-	},
 
 	{
 		"klen/nvim-config-local",
 		config = function()
-			require("config-local").setup({})
+			require("config-local").setup({
+				config_files = { ".nvim.lua" },
+			})
 		end,
 	},
 }

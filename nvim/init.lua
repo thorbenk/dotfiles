@@ -1,3 +1,7 @@
+require("user.options")
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
 	vim.fn.system({
@@ -10,12 +14,6 @@ if not vim.loop.fs_stat(lazypath) then
 	})
 end
 vim.opt.rtp:prepend(lazypath)
-
-vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
-
-require("user.options")
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
 
 require("lazy").setup("plugins")
 
