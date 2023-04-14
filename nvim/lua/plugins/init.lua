@@ -24,14 +24,6 @@ return {
 
 	-- Telescope
 	-- Treesitter
-	{
-		"nvim-treesitter/nvim-treesitter",
-		opts = {
-			ensure_installed = { "all" },
-		},
-	},
-	"nvim-treesitter/nvim-treesitter-textobjects",
-
 	-- Comment
 	{
 		"numToStr/Comment.nvim",
