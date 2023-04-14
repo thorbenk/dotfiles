@@ -140,8 +140,6 @@ keymap("n", "<leader>qo", ":copen<cr>", opts)
 keymap("n", "<leader>qc", ":cclose<cr>", opts)
 -- Saving
 keymap("n", "<leader>s", ":wa<cr>", opts)
--- Buffers
-keymap("n", "<leader>bc", ":%bdelete|edit#|bdelete#<cr>", opts) -- close all other buffers
 
 -- Insert
 -- Press jk fast to enter

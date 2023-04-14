@@ -35,28 +35,8 @@ return {
 	-- Treesitter
 	{
 		"nvim-treesitter/nvim-treesitter",
-		build = ":TSUpdate all",
 		opts = {
-			ensure_installed = {
-				"bash",
-				"c",
-				"help",
-				"html",
-				"javascript",
-				"json",
-				"lua",
-				"luadoc",
-				"luap",
-				"markdown",
-				"markdown_inline",
-				"python",
-				"query",
-				"regex",
-				"tsx",
-				"typescript",
-				"vim",
-				"yaml",
-			},
+			ensure_installed = { "all" },
 		},
 	},
 	"nvim-treesitter/nvim-treesitter-textobjects",
@@ -71,9 +51,6 @@ return {
 
 	"nvim-lua/lsp-status.nvim",
 	"jose-elias-alvarez/null-ls.nvim",
-
-	-- Bufferline
-	"moll/vim-bbye",
 
 	-- Toggleterm
 	"akinsho/toggleterm.nvim",
