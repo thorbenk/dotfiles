@@ -53,6 +53,7 @@ return {
 				on_attach = require("plugins.lsp.handlers").on_attach,
 				capabilities = vim.tbl_extend(
 					"keep",
+					{ offsetEncoding = { "utf-16" } },
 					require("plugins.lsp.handlers").capabilities,
 					lsp_status.capabilities
 				),
