@@ -89,11 +89,6 @@ return {
 		end,
 	},
 
-	{
-		dependencies = "nvim-tree/nvim-web-devicons",
-		"folke/trouble.nvim",
-	},
-
 	-- "nvie/vim-flake8", # TODO
 
 	"ThePrimeagen/harpoon",
