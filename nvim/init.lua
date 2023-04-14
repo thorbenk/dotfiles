@@ -17,15 +17,15 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup("plugins")
 
+vim.cmd.colorscheme("catppuccin-macchiato")
+
 require("user.keymaps")
 require("user.toggleterm")
-require("user.colorscheme")
 require("user.cmp")
 require("user.lsp")
 require("user.treesitter")
 require("user.whichkey")
 require("user.null_ls")
-require("user.trouble")
 require("user.floatterm")
 require("user.neotest")
 require("user.true-zen")

@@ -87,16 +87,6 @@ wk.register({
 			name = "+zen",
 			f = { "<cmd>TZFocus<cr>", "focus", noremap = true, silent = true },
 		},
-		x = {
-			name = "+trouble",
-			x = { "<cmd>Trouble<cr>", "trouble", noremap = true, silent = true },
-			t = { "<cmd>TroubleToggle<cr>", "trouble toggle", noremap = true, silent = true },
-			w = { "<cmd>Trouble workspace_diagnostics<cr>", "workspace diagnostics", noremap = true, silent = true },
-			d = { "<cmd>Trouble document_diagnostics<cr>", "document diagnostics", noremap = true, silent = true },
-			l = { "<cmd>Trouble loclist<cr>", "loclist", noremap = true, silent = true },
-			q = { "<cmd>Trouble quickfix<cr>", "quickfix", noremap = true, silent = true },
-			r = { "<cmd>Trouble lsp_references<cr>", "quickfix", noremap = true, silent = true },
-		},
 		h = {
 			name = "+harpoon",
 			h = {
