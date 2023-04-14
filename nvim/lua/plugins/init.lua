@@ -27,9 +27,6 @@ return {
 		end,
 	},
 
-	"nvim-lua/lsp-status.nvim",
-	"jose-elias-alvarez/null-ls.nvim",
-
 	-- Toggleterm
 	"akinsho/toggleterm.nvim",
 

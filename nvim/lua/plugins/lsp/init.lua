@@ -7,6 +7,7 @@ return {
 				opts = {},
 				lazy = false,
 			},
+			"nvim-lua/lsp-status.nvim",
 			{ "hrsh7th/nvim-cmp", version = false }, -- The completion plugin
 			"hrsh7th/cmp-buffer", -- buffer completions
 			"hrsh7th/cmp-path", -- path completions
