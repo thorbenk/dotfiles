@@ -2,9 +2,18 @@ return {
 	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
-			"ray-x/lsp_signature.nvim",
-			opts = {},
-			lazy = false,
+			{
+				"ray-x/lsp_signature.nvim",
+				opts = {},
+				lazy = false,
+			},
+			{ "hrsh7th/nvim-cmp", version = false }, -- The completion plugin
+			"hrsh7th/cmp-buffer", -- buffer completions
+			"hrsh7th/cmp-path", -- path completions
+			"hrsh7th/cmp-cmdline", -- cmdline completions
+			"saadparwaiz1/cmp_luasnip", -- snippet completions
+			"hrsh7th/cmp-nvim-lsp",
+			"hrsh7th/cmp-nvim-lua",
 		},
 		config = function()
 			-- vim.lsp.set_log_level("debug")

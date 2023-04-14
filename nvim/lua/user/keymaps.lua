@@ -22,8 +22,6 @@ keymap("n", "<C-j>", ":TmuxNavigateDown<cr>", opts)
 keymap("n", "<C-k>", ":TmuxNavigateUp<cr>", opts)
 keymap("n", "<C-l>", ":TmuxNavigateRight<cr>", opts)
 keymap("n", "<C-\\>", ":TmuxNavigatePrevious<cr>", opts)
--- toggle left explorer
-keymap("n", "<leader>e", ":Neotree toggle<cr>", opts)
 -- Resize with arrows
 keymap("n", "<A-h>", ":TmuxResizeLeft<cr>", opts)
 keymap("n", "<A-j>", ":TmuxResizeDown<cr>", opts)
@@ -36,47 +34,6 @@ keymap("n", "<S-h>", ":bprevious<CR>", opts)
 local wk = require("which-key")
 wk.register({
 	["<leader>"] = {
-		f = {
-			name = "+file",
-			b = {
-				"<cmd>lua require 'telescope.builtin'.buffers(require('telescope.themes').get_ivy({ previewer = false, layout_config = { width = 0.75 } }))<cr>",
-				"buffers",
-				noremap = true,
-				silent = true,
-			},
-			e = { "<cmd>lua require 'telescope.builtin'.symbols()<cr>", "emojis", noremap = true, silent = true },
-			G = {
-				"<cmd>lua require 'telescope.builtin'.symbols{sources = {'gitmoji'}}<cr>",
-				"gitmoji",
-				noremap = true,
-				silent = true,
-			},
-			E = { "<cmd>lua require 'telescope.builtin'.registers()<cr>", "registers", noremap = true, silent = true },
-			f = {
-				"<cmd>lua require 'telescope.builtin'.find_files(require('telescope.themes').get_ivy({ previewer = false, layout_config = { width = 0.75 } }))<cr>",
-				"files",
-				noremap = true,
-				silent = true,
-			},
-			g = {
-				"<cmd>lua require 'telescope.builtin'.live_grep(require('telescope.themes').get_ivy({ previewer = false, layout_config = { width = 0.75 } }))<cr>",
-				"live grep",
-				noremap = true,
-				silent = true,
-			},
-			w = {
-				"<cmd>lua require 'telescope.builtin'.grep_string(require('telescope.themes').get_ivy({ previewer = false, layout_config = { width = 0.75 } }))<cr>",
-				"grep string",
-				noremap = true,
-				silent = true,
-			},
-			h = { "<cmd>lua require 'telescope.builtin'.help_tags()<cr>", "help tags", noremap = true, silent = true },
-			j = { "<cmd>lua require 'telescope.builtin'.jumplist()<cr>", "jumplist", noremap = true, silent = true },
-			l = { "<cmd>lua require 'telescope.builtin'.loclist()<cr>", "loclist", noremap = true, silent = true },
-			r = { "<cmd>lua require 'telescope.builtin'.resume()<cr>", "resume", noremap = true, silent = true },
-			q = { "<cmd>lua require 'telescope.builtin'.quickfix()<cr>", "quickfix", noremap = true, silent = true },
-			m = { "<cmd>Telescope harpoon marks<cr>", "harpoon marks", noremap = true, silent = true },
-		},
 		m = {
 			"<cmd>Make<cr>",
 			"Make",
@@ -89,19 +46,6 @@ wk.register({
 		},
 		h = {
 			name = "+harpoon",
-			h = {
-				"<cmd>:lua require('harpoon.ui').toggle_quick_menu()<cr>",
-				"toggle menu",
-				noremap = true,
-				silent = true,
-			},
-			a = { "<cmd>:lua require('harpoon.mark').add_file()<cr>", "add file", noremap = true, silent = true },
-			n = { "<cmd>:lua require('harpoon.ui').nav_next()<cr>", "nav next", noremap = true, silent = true },
-			n = { "<cmd>:lua require('harpoon.ui').nav_prev()<cr>", "nav prev", noremap = true, silent = true },
-			["1"] = { "<cmd>:lua require('harpoon.ui').nav_file(1)<cr>", "nav 1", noremap = true, silent = true },
-			["2"] = { "<cmd>:lua require('harpoon.ui').nav_file(2)<cr>", "nav 2", noremap = true, silent = true },
-			["3"] = { "<cmd>:lua require('harpoon.ui').nav_file(3)<cr>", "nav 3", noremap = true, silent = true },
-			["4"] = { "<cmd>:lua require('harpoon.ui').nav_file(4)<cr>", "nav 4", noremap = true, silent = true },
 		},
 		t = {
 			name = "+test",
