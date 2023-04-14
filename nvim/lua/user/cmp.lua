@@ -119,6 +119,11 @@ cmp.setup({
 		{ name = "luasnip" },
 		{ name = "path" },
 	},
+	experimental = {
+		ghost_text = {
+			hl_group = "LspCodeLens",
+		},
+	},
 })
 
 cmp.setup.cmdline(":", {

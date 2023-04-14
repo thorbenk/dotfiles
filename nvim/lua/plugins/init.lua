@@ -15,7 +15,7 @@ return {
 	"RyanMillerC/better-vim-tmux-resizer",
 
 	-- cmp plugins
-	"hrsh7th/nvim-cmp", -- The completion plugin
+	{ "hrsh7th/nvim-cmp", version = false }, -- The completion plugin
 	"hrsh7th/cmp-buffer", -- buffer completions
 	"hrsh7th/cmp-path", -- path completions
 	"hrsh7th/cmp-cmdline", -- cmdline completions
@@ -35,7 +35,29 @@ return {
 	-- Treesitter
 	{
 		"nvim-treesitter/nvim-treesitter",
-		build = ":TSUpdate",
+		build = ":TSUpdate all",
+		opts = {
+			ensure_installed = {
+				"bash",
+				"c",
+				"help",
+				"html",
+				"javascript",
+				"json",
+				"lua",
+				"luadoc",
+				"luap",
+				"markdown",
+				"markdown_inline",
+				"python",
+				"query",
+				"regex",
+				"tsx",
+				"typescript",
+				"vim",
+				"yaml",
+			},
+		},
 	},
 	"nvim-treesitter/nvim-treesitter-textobjects",
 

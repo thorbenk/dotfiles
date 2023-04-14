@@ -1,6 +1,7 @@
 return {
 	{
 		"nvim-telescope/telescope.nvim",
+		version = "*",
 		config = function()
 			require("telescope").setup({})
 		end,
