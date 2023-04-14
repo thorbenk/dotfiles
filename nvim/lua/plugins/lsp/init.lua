@@ -1,12 +1,19 @@
 return {
 	{
 		"neovim/nvim-lspconfig",
+		dependencies = {
+			"ray-x/lsp_signature.nvim",
+			opts = {},
+			lazy = false,
+		},
 		config = function()
-			local lspconfig = require("lspconfig")
-      require("plugins.lsp.handlers").setup()
-      local lsp_status = require("lsp-status")
+			-- vim.lsp.set_log_level("debug")
 
-      lsp_status.register_progress()
+			local lspconfig = require("lspconfig")
+			require("plugins.lsp.handlers").setup()
+			local lsp_status = require("lsp-status")
+
+			lsp_status.register_progress()
 
 			lspconfig.pyright.setup({
 				on_attach = require("plugins.lsp.handlers").on_attach,
