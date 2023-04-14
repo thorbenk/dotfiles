@@ -4,7 +4,7 @@ return {
 
 	-- colors
 	-- use "joshdick/onedark.vim"
-	"ful1e5/onedark.nvim",
+	"navarasu/onedark.nvim",
 	"lunarvim/darkplus.nvim",
 
 	"tpope/vim-repeat",
@@ -19,12 +19,7 @@ return {
 	"rafamadriz/friendly-snippets", -- a bunch of snippets to use
 
 	-- LSP
-	"neovim/nvim-lspconfig", -- enable LSP
-	-- "ray-x/lsp_signature.nvim", # TODO
 
-	-- Telescope
-	-- Treesitter
-	-- Comment
 	{
 		"numToStr/Comment.nvim",
 		config = function()
@@ -48,10 +43,6 @@ return {
 			require("alpha").setup(require("alpha.themes.startify").config)
 		end,
 	},
-
-	-- "nvie/vim-flake8", # TODO
-
-	-- "voldikss/vim-floaterm",
 
 	{
 		"nvim-neotest/neotest",
