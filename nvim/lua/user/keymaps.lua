@@ -34,16 +34,16 @@ keymap("n", "<S-h>", ":bprevious<CR>", opts)
 local wk = require("which-key")
 wk.register({
 	["<leader>"] = {
-		m = {
-			"<cmd>Make<cr>",
-			"Make",
-			noremap = true,
-			silent = true,
-		},
-		z = {
-			name = "+zen",
-			f = { "<cmd>TZFocus<cr>", "focus", noremap = true, silent = true },
-		},
+		-- m = {
+		-- 	"<cmd>Make<cr>",
+		-- 	"Make",
+		-- 	noremap = true,
+		-- 	silent = true,
+		-- },
+		-- z = {
+		-- 	name = "+zen",
+		-- 	f = { "<cmd>TZFocus<cr>", "focus", noremap = true, silent = true },
+		-- },
 		h = {
 			name = "+harpoon",
 		},
@@ -73,7 +73,8 @@ wk.register({
 keymap("n", "<leader>qo", ":copen<cr>", opts)
 keymap("n", "<leader>qc", ":cclose<cr>", opts)
 -- Saving
-keymap("n", "<leader>s", ":wa<cr>", opts)
+
+-- keymap("n", "<leader>s", ":wa<cr>", opts)
 
 -- Insert
 -- Press jk fast to enter

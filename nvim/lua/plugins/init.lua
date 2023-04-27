@@ -4,12 +4,14 @@ return {
 
 	-- colors
 	-- use "joshdick/onedark.vim"
-	"navarasu/onedark.nvim",
-	"lunarvim/darkplus.nvim",
-
-	"tpope/vim-repeat",
-	"tpope/vim-unimpaired",
-	"tpope/vim-dispatch",
+	{
+		lazy = true,
+		"navarasu/onedark.nvim",
+	},
+	{
+		lazy = true,
+		"lunarvim/darkplus.nvim",
+	},
 
 	"christoomey/vim-tmux-navigator",
 	"RyanMillerC/better-vim-tmux-resizer",
@@ -19,13 +21,6 @@ return {
 	"rafamadriz/friendly-snippets", -- a bunch of snippets to use
 
 	-- LSP
-
-	{
-		"numToStr/Comment.nvim",
-		config = function()
-			require("Comment").setup()
-		end,
-	},
 
 	-- Toggleterm
 	"akinsho/toggleterm.nvim",
