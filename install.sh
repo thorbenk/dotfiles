@@ -22,10 +22,22 @@ if ! clangd --version &> /dev/null ; then
     echo "install clangd"
     exit
 fi
+
+if ! g++ --version &> /dev/null ; then
+    echo "install g++"
+    exit
+fi
+
+if ! curl --version &> /dev/null ; then
+    echo "install curl"
+    exit
+fi
+
 if ! tmux -V &> /dev/null ; then
     echo "install tmux"
     exit
 fi
+
 if ! nvim --version &> /dev/null ; then
     echo "install neovim"
     exit
@@ -64,11 +76,6 @@ ln -sfn $PWD/tmux $HOME/.tmux
 export TMUX_PLUGIN_MANAGER_PATH='$HOME/.tmux/plugins/'
 ~/.tmux/plugins/tpm/bin/install_plugins
 
-# nvim +'PlugInstall --sync' +qa
-# nvim +'PlugUpdate --sync' +qa
-# nvim +'CocInstall coc-python' +qa
-# nvim +'CocInstall coc-clangd' +qa
-
 #cd ~/.tmux/plugins/tmux-thumbs
 #cargo build --release
 #cd -
@@ -76,17 +83,17 @@ export TMUX_PLUGIN_MANAGER_PATH='$HOME/.tmux/plugins/'
 #
 # vscode
 #
-mkdir -p "$HOME/.config/Code - Insiders/User"
-ln -sfn $PWD/vscode/settings.json "$HOME/.config/Code - Insiders/User"
-
-mkdir -p "$HOME/.config/Code/User"
-ln -sfn $PWD/vscode/settings.json "$HOME/.config/Code/User"
+# mkdir -p "$HOME/.config/Code - Insiders/User"
+# ln -sfn $PWD/vscode/settings.json "$HOME/.config/Code - Insiders/User"
+# 
+# mkdir -p "$HOME/.config/Code/User"
+# ln -sfn $PWD/vscode/settings.json "$HOME/.config/Code/User"
 
 
 #
 # other
 #
-ln -sfn $PWD/xdg/user-dirs.dirs "$HOME/.config/user-dirs.dirs"
+# ln -sfn $PWD/xdg/user-dirs.dirs "$HOME/.config/user-dirs.dirs"
 
 #
 # i3 and related

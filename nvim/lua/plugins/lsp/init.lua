@@ -3,6 +3,16 @@ return {
 		"neovim/nvim-lspconfig",
 		dependencies = {
 			{
+				"williamboman/mason.nvim",
+				opts = {
+					log_level = vim.log.levels.TRACE,
+					ensure_installed = {
+						"debugpy",
+					},
+				},
+			},
+			"williamboman/mason-lspconfig.nvim",
+			{
 				"ray-x/lsp_signature.nvim",
 				opts = {},
 				lazy = false,
@@ -22,6 +32,18 @@ return {
 			local lspconfig = require("lspconfig")
 			require("plugins.lsp.handlers").setup()
 			local lsp_status = require("lsp-status")
+
+			local mason_lspconfig = require("mason-lspconfig")
+			mason_lspconfig.setup({
+				ensure_installed = {
+					"pyright",
+					"clangd",
+					"lua_ls",
+					"jsonls",
+					"taplo",
+					"yamlls",
+				},
+			})
 
 			lsp_status.register_progress()
 
@@ -59,6 +81,14 @@ return {
 				),
 				handlers = lsp_status.extensions.clangd.setup(),
 			})
+
+			lspconfig.lua_ls.setup({})
+
+			lspconfig.jsonls.setup({})
+
+			lspconfig.taplo.setup({})
+
+			lspconfig.yamlls.setup({})
 		end,
 	},
 }

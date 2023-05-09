@@ -29,7 +29,7 @@ export DISABLE_AUTO_UPDATE="true" # no weekly update checks
 
 # copybuffer: adds the ctrl-o keyboard shortcut to copy the current text in the command line to the system clipboard
 # copypath:   copies the path of given directory or file to the system clipboard
-plugins=(git svn colored-man-pages ssh-agent zsh-autosuggestions copybuffer copypath)
+plugins=(git svn colored-man-pages ssh-agent copybuffer copypath pyenv)
 source $ZSH/oh-my-zsh.sh
 
 #--- zsh --------------------------------------------------------------------
@@ -115,8 +115,9 @@ if [ -f /usr/share/fzf/key-bindings.zsh ]; then
 elif [ -f ~/.fzf.zsh ]; then
     # fzf local user install 
     source ~/.fzf.zsh
+    export PATH=$HOME/.fzf/bin:$PATH
 fi
 
 export PATH="$HOME/.local/bin:$HOME/local/bin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
-GCM_CREDENTIAL_STORE=secretservice
+export GCM_CREDENTIAL_STORE="secretservice"
