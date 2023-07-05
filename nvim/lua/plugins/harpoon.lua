@@ -1,5 +1,6 @@
 return {
 	{
+    enabled = false,
 		"ThePrimeagen/harpoon",
 		keys = {
 			{ "<leader>hh", "<cmd>:lua require('harpoon.ui').toggle_quick_menu()<cr>", desc = "toggle menu" },

@@ -29,13 +29,13 @@ return {
 	"RyanMillerC/better-vim-tmux-resizer",
 
 	-- snippets
-	"L3MON4D3/LuaSnip", --snippet engine
-	"rafamadriz/friendly-snippets", -- a bunch of snippets to use
+	-- "L3MON4D3/LuaSnip", --snippet engine
+	-- "rafamadriz/friendly-snippets", -- a bunch of snippets to use
 
 	-- LSP
 
 	-- Toggleterm
-	"akinsho/toggleterm.nvim",
+	-- "akinsho/toggleterm.nvim",
 
 	-- Whichkey
 	"folke/which-key.nvim",
@@ -49,6 +49,7 @@ return {
 	},
 
 	{
+    enabled = false,
 		"nvim-neotest/neotest",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
@@ -64,7 +65,7 @@ return {
 		},
 	},
 
-	"Pocco81/true-zen.nvim",
+	-- "Pocco81/true-zen.nvim",
 
 	{ "stevearc/dressing.nvim" },
 	{

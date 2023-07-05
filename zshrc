@@ -29,7 +29,7 @@ export DISABLE_AUTO_UPDATE="true" # no weekly update checks
 
 # copybuffer: adds the ctrl-o keyboard shortcut to copy the current text in the command line to the system clipboard
 # copypath:   copies the path of given directory or file to the system clipboard
-plugins=(git svn colored-man-pages ssh-agent copybuffer copypath pyenv)
+plugins=(git svn colored-man-pages ssh-agent copybuffer copypath pyenv dotenv)
 source $ZSH/oh-my-zsh.sh
 
 #--- zsh --------------------------------------------------------------------

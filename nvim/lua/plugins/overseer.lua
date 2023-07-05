@@ -5,6 +5,9 @@ return {
 			"rcarriga/nvim-notify",
 			"stevearc/dressing.nvim",
 		},
+		keys = {
+			{ "<leader>or", "<cmd>:OverseerRun<cr>", desc = "Overseer run" },
+		},
 		config = function()
 			require("overseer").setup()
 
