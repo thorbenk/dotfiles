@@ -10,6 +10,13 @@ if ! wget --version &> /dev/null ; then
     echo "install wget"
     exit
 fi
+
+# for nvim / mason / pyright
+if ! npm --version &> /dev/null ; then
+    echo "install npm"
+    exit
+fi
+
 if ! fzf --version &> /dev/null ; then
     echo "install fzf"
     exit

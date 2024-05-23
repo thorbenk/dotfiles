@@ -104,7 +104,7 @@ alias plssh="z ssh-add ~/.ssh/id_rsa"
 # export CMAKE_LIBRARY_PATH="$LOCAL_INSTALL_PREFIX/lib"
 # export CMAKE_LOCAL_INSTALL_PREFIX_PATH="$LOCAL_INSTALL_PREFIX"
 
-export PATH=/opt/bin:$HOME/.cargo/bin:$DOTFILES_DIR/bin:$PATH
+export PATH=$HOME/.cargo/bin:$DOTFILES_DIR/bin:$PATH
 
 [ -f ~/.zshrc.user ] && source ~/.zshrc.user
 
@@ -118,6 +118,6 @@ elif [ -f ~/.fzf.zsh ]; then
     export PATH=$HOME/.fzf/bin:$PATH
 fi
 
-export PATH="$HOME/.local/bin:$HOME/local/bin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 export GCM_CREDENTIAL_STORE="secretservice"

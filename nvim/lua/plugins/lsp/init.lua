@@ -51,7 +51,12 @@ return {
 				opts = {},
 				lazy = false,
 			},
-			"nvim-lua/lsp-status.nvim",
+      {
+        'linrongbin16/lsp-progress.nvim',
+        config = function()
+          require('lsp-progress').setup()
+        end
+      },
 			{
         "hrsh7th/nvim-cmp", version = false,
         opts = function(_, opts)
@@ -162,7 +167,6 @@ return {
 
 			local lspconfig = require("lspconfig")
 			require("plugins.lsp.handlers").setup()
-			local lsp_status = require("lsp-status")
 
 			local mason_lspconfig = require("mason-lspconfig")
 			mason_lspconfig.setup({
@@ -173,15 +177,8 @@ return {
 				},
 			})
 
-			lsp_status.register_progress()
-
 			lspconfig.pyright.setup({
 				on_attach = require("plugins.lsp.handlers").on_attach,
-				capabilities = vim.tbl_extend(
-					"keep",
-					require("plugins.lsp.handlers").capabilities,
-					lsp_status.capabilities
-				),
 				settings = {
 					python = {
 						analysis = {
@@ -210,10 +207,8 @@ return {
 				capabilities = vim.tbl_extend(
 					"keep",
 					{ offsetEncoding = { "utf-16" } },
-					require("plugins.lsp.handlers").capabilities,
-					lsp_status.capabilities
-				),
-				handlers = lsp_status.extensions.clangd.setup(),
+					require("plugins.lsp.handlers").capabilities
+				)
 			})
 
 			lspconfig.lua_ls.setup({})
