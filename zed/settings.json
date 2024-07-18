@@ -1,0 +1,31 @@
+{
+  "theme": "One Dark",
+  "ui_font_size": 12,
+  "buffer_font_size": 12,
+  "vim_mode": true,
+  "cursor_blink": false,
+  "inlay_hints": {
+    "enabled": true
+  },
+  "ui_font_family": "FiraCode Nerd Font Mono",
+  "buffer_font_family": "FiraCode Nerd Font Mono",
+  "autosave": "on_focus_change",
+  "languages": {
+    "Python": {
+      "format_on_save": {
+        "external": {
+          "command": "/w/src/ml-meta/.venv/bin/black",
+          "arguments": ["-"]
+        }
+      }
+    }
+  },
+  "lsp": {
+    "clangd": {
+      "binary": {
+        "path": "/usr/bin/clangd-17",
+        "arguments": []
+      }
+    }
+  }
+}

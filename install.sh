@@ -88,6 +88,13 @@ export TMUX_PLUGIN_MANAGER_PATH='$HOME/.tmux/plugins/'
 #cd -
 
 #
+# zed
+#
+ln -sfn $PWD/zed/tasks.json $HOME/.config/zed/tasks.json
+ln -sfn $PWD/zed/settings.json $HOME/.config/zed/settings.json
+ln -sfn $PWD/zed/keymap.json $HOME/.config/zed/keymap.json
+
+#
 # vscode
 #
 # mkdir -p "$HOME/.config/Code - Insiders/User"
