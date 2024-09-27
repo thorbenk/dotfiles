@@ -1,4 +1,11 @@
 {
+  "assistant": {
+    "default_model": {
+      "provider": "copilot_chat",
+      "model": "gpt-4o"
+    },
+    "version": "2"
+  },
   "theme": "One Dark",
   "ui_font_size": 12,
   "buffer_font_size": 12,
@@ -7,25 +14,72 @@
   "inlay_hints": {
     "enabled": true
   },
+  "file_scan_exclusions": [
+    "**/*.min.js",
+    "__pycache__",
+    ".git",
+    ".venv",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache"
+  ],
   "ui_font_family": "FiraCode Nerd Font Mono",
   "buffer_font_family": "FiraCode Nerd Font Mono",
+  "tabs": {
+    "file_icons": true,
+    "git_status": false
+  },
   "autosave": "on_focus_change",
+  "use_autoclose": false,
   "languages": {
     "Python": {
       "format_on_save": {
         "external": {
-          "command": "/w/src/ml-meta/.venv/bin/black",
-          "arguments": ["-"]
+          "command": "~/.local/share/uv/tools/ruff/bin/ruff",
+          "arguments": ["format", "-"]
         }
-      }
+      },
+      "language_servers": ["basedpyright", "!pyright"]
     }
   },
   "lsp": {
     "clangd": {
       "binary": {
-        "path": "/usr/bin/clangd-17",
+        "path": "/usr/bin/clangd-18",
         "arguments": []
       }
+    },
+    "basedpyright": {
+      "settings": {
+        "basedpyright.disableOrganizeImports": true,
+        "basedpyright.analysis": {
+          "diagnosticMode": "workspace",
+          "typeCheckingMode": "standard"
+        },
+        "python": {
+          "pythonPath": ".venv/bin/python"
+        }
+      }
     }
+  },
+  "journal": {
+    "hour_format": "hour24"
+  },
+  "preview_tabs": {
+    "enabled": true
+  },
+  "search": {
+    "case_sensitive": false,
+    "regex": true
+  },
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false
+  },
+  "terminal": {
+    "font_family": "FiraCode Nerd Font Mono",
+    "copy_on_select": true,
+    "line_height": "standard",
+    "detect_venv": "off"
   }
 }
