@@ -10,7 +10,12 @@
   "ui_font_size": 12,
   "buffer_font_size": 12,
   "vim_mode": true,
+  "relative_line_numbers": false,
   "cursor_blink": false,
+  "indent_guides": {
+    "enabled": true,
+    "coloring": "indent_aware"
+  },
   "inlay_hints": {
     "enabled": true
   },
@@ -80,6 +85,14 @@
     "font_family": "FiraCode Nerd Font Mono",
     "copy_on_select": true,
     "line_height": "standard",
-    "detect_venv": "off"
+    "detect_venv": "off",
+    "shell": "system",
+    "env": {
+      "EDITOR": "zed --wait",
+      "TERM": "xterm-256color"
+    }
+  },
+  "file_finder": {
+    "window_width": "xlarge"
   }
 }

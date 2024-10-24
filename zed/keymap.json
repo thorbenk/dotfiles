@@ -1,4 +1,14 @@
 [
+  // Empty pane, set of keybindings that are available when there is no active editor
+  {
+    "context": "EmptyPane || SharedScreen",
+    "bindings": {
+      // Open file finder
+      "space space": "file_finder::Toggle",
+      // Open recent project
+      "space f p": "projects::OpenRecent"
+    }
+  },
   {
     "context": "Dock",
     "bindings": {
@@ -24,21 +34,42 @@
         }
       ],
       "f4": "editor::SwitchSourceHeader",
-      "alt-e": "workspace::ToggleLeftDock"
+      "alt-l": "workspace::ToggleLeftDock",
+      "alt-r": "workspace::ToggleRightDock",
+      "alt-b": "workspace::ToggleBottomDock"
     }
   },
   {
     "context": "Terminal",
     "bindings": {
-      "ctrl-b": "terminal_panel::ToggleFocus"
+      "ctrl-o": ["terminal::SendKeystroke", "ctrl-o"],
+      // "Home": "terminal_panel::ToggleFocus",
+      // "End": ["terminal::SendKeystroke", "bla ^[[OF"],
+      "ctrl-b": "terminal_panel::ToggleFocus",
+      "ctrl-h": ["workspace::ActivatePaneInDirection", "Left"],
+      "ctrl-l": ["workspace::ActivatePaneInDirection", "Right"],
+      "ctrl-k": ["workspace::ActivatePaneInDirection", "Up"],
+      "ctrl-j": ["workspace::ActivatePaneInDirection", "Down"]
+    }
+  },
+  {
+    "context": "Editor && vim_mode == normal && !VimWaiting && !menu",
+    "bindings": {
+      // put key-bindings here if you want them to work only in normal mode
+      // Window movement bindings
+      // Ctrl jklk to move between panes
+      "ctrl-h": ["workspace::ActivatePaneInDirection", "Left"],
+      "ctrl-l": ["workspace::ActivatePaneInDirection", "Right"],
+      "ctrl-k": ["workspace::ActivatePaneInDirection", "Up"],
+      "ctrl-j": ["workspace::ActivatePaneInDirection", "Down"]
     }
   },
   {
     "context": "VimControl && !menu",
     "bindings": {
       "space f": "file_finder::Toggle",
-      "space s": "project_symbols::Toggle",
-      "space c": "pane::CloseInactiveItems",
+      "space s": "outline::Toggle",
+      "space S": "project_symbols::Toggle",
       "space z": "workspace::ToggleZoom",
       "space o o ": "outline_panel::ToggleFocus",
       "ctrl-b": "terminal_panel::ToggleFocus",
@@ -47,7 +78,15 @@
         "shift esc : new center terminal enter lazygit enter"
       ],
       "] b": "pane::ActivateNextItem",
-      "[ b": "pane::ActivatePrevItem"
+      "[ b": "pane::ActivatePrevItem",
+      "] d": "editor::GoToDiagnostic",
+      "[ d": "editor::GoToPrevDiagnostic",
+      // + Buffers
+      "space b a": "pane::CloseAllItems", // (b)uffer close (a)ll
+      "space b d": "pane::CloseActiveItem", // (b)uffer (d)elete
+      "space b o": "pane::CloseInactiveItems", // (b)uffer (o)ther
+      "space b e": "pane::RevealInProjectPanel",
+      "space b f": "editor::RevealInFileManager"
     }
   }
 ]

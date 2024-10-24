@@ -10,3 +10,15 @@
 [submodule "tmux/plugins/tmux-thumbs"]
 	path = tmux/plugins/tmux-thumbs
 	url = https://github.com/fcsonline/tmux-thumbs
+[submodule "zsh/zsh-autosuggestions"]
+	path = zsh/plugins/zsh-autosuggestions
+	url = https://github.com/zsh-users/zsh-autosuggestions
+[submodule "zsh/plugins/zsh-syntax-highlighting"]
+	path = zsh/plugins/zsh-syntax-highlighting
+	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
+[submodule "zsh/plugins/zsh-you-should-use"]
+	path = zsh/plugins/zsh-you-should-use
+	url = https://github.com/MichaelAquilina/zsh-you-should-use.git
+[submodule "zsh/plugins/zsh-bat"]
+	path = zsh/plugins/zsh-bat
+	url = https://github.com/fdellwing/zsh-bat.git
