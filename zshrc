@@ -37,7 +37,8 @@ export ZSH_THEME="half-life"
 # export CASE_SENSITIVE="false" # case-insensitive completion
 # export DISABLE_AUTO_UPDATE="true" # no weekly update checks
 
-plugins=(git colored-man-pages ssh-agent copypath pyenv dotenv zsh-autosuggestions zsh-syntax-highlighting zsh-you-should-use zsh-bat)
+plugins=(git ssh-agent copypath dotenv zsh-autosuggestions zsh-syntax-highlighting zsh-you-should-use)
+# colored-man-pages  zsh-bat
 source $ZSH/oh-my-zsh.sh
 
 # copybuffer: adds the ctrl-o keyboard shortcut to copy the current text in the command line to the system clipboard

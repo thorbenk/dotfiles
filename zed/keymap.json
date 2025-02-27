@@ -12,10 +12,10 @@
   {
     "context": "Dock",
     "bindings": {
-      "ctrl-w h": ["workspace::ActivatePaneInDirection", "Left"],
-      "ctrl-w l": ["workspace::ActivatePaneInDirection", "Right"],
-      "ctrl-w k": ["workspace::ActivatePaneInDirection", "Up"],
-      "ctrl-w j": ["workspace::ActivatePaneInDirection", "Down"]
+      "ctrl-w h": "workspace::ActivatePaneLeft",
+      "ctrl-w l": "workspace::ActivatePaneRight",
+      "ctrl-w k": "workspace::ActivatePaneUp",
+      "ctrl-w j": "workspace::ActivatePaneDown"
     }
   },
   {
@@ -42,14 +42,16 @@
   {
     "context": "Terminal",
     "bindings": {
-      "ctrl-o": ["terminal::SendKeystroke", "ctrl-o"],
+      "ctrl-o": ["terminal::SendKeystroke", "ctrl-o"], // zsh config: copy current command line
+      "ctrl-t": ["terminal::SendKeystroke", "ctrl-t"], // zsh config: copy current command line
+      "alt-f": ["terminal::SendKeystroke", "alt-f"], // tmux config: thumbs
       // "Home": "terminal_panel::ToggleFocus",
       // "End": ["terminal::SendKeystroke", "bla ^[[OF"],
       "ctrl-b": "terminal_panel::ToggleFocus",
-      "ctrl-h": ["workspace::ActivatePaneInDirection", "Left"],
-      "ctrl-l": ["workspace::ActivatePaneInDirection", "Right"],
-      "ctrl-k": ["workspace::ActivatePaneInDirection", "Up"],
-      "ctrl-j": ["workspace::ActivatePaneInDirection", "Down"]
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-l": "workspace::ActivatePaneRight",
+      "ctrl-k": "workspace::ActivatePaneUp",
+      "ctrl-j": "workspace::ActivatePaneDown"
     }
   },
   {
@@ -58,15 +60,18 @@
       // put key-bindings here if you want them to work only in normal mode
       // Window movement bindings
       // Ctrl jklk to move between panes
-      "ctrl-h": ["workspace::ActivatePaneInDirection", "Left"],
-      "ctrl-l": ["workspace::ActivatePaneInDirection", "Right"],
-      "ctrl-k": ["workspace::ActivatePaneInDirection", "Up"],
-      "ctrl-j": ["workspace::ActivatePaneInDirection", "Down"]
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-l": "workspace::ActivatePaneRight",
+      "ctrl-k": "workspace::ActivatePaneUp",
+      "ctrl-j": "workspace::ActivatePaneDown"
     }
   },
   {
     "context": "VimControl && !menu",
     "bindings": {
+      "space t r": "task::Rerun",
+      "space a a": "assistant::NewChat",
+      "space a i": "assistant::InlineAssist",
       "space f": "file_finder::Toggle",
       "space s": "outline::Toggle",
       "space S": "project_symbols::Toggle",
@@ -86,7 +91,8 @@
       "space b d": "pane::CloseActiveItem", // (b)uffer (d)elete
       "space b o": "pane::CloseInactiveItems", // (b)uffer (o)ther
       "space b e": "pane::RevealInProjectPanel",
-      "space b f": "editor::RevealInFileManager"
+      "space b f": "editor::RevealInFileManager",
+      "space b p": "pane::TogglePinTab"
     }
   }
 ]
