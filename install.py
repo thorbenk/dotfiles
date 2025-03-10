@@ -16,18 +16,21 @@ import zipfile
 import os
 import sys
 import tempfile
+import platform
 
 PWD = Path(__file__).parent
 LOCAL_BIN = Path(os.path.expanduser("~/.local/bin"))
 LOCAL_BIN.mkdir(parents=True, exist_ok=True)
 
-FD_URL = "https://github.com/sharkdp/fd/releases/download/v10.2.0/fd-v10.2.0-x86_64-unknown-linux-gnu.tar.gz"
-LAZYGIT_URL = "https://github.com/jesseduffield/lazygit/releases/download/v0.47.2/lazygit_0.47.2_Linux_x86_64.tar.gz"
-DIFFTASTIC_URL = "https://github.com/Wilfred/difftastic/releases/download/0.63.0/difft-x86_64-unknown-linux-gnu.tar.gz"
-HYPERFINE_URL = "https://github.com/sharkdp/hyperfine/releases/download/v1.19.0/hyperfine-v1.19.0-x86_64-unknown-linux-gnu.tar.gz"
-BAT_URL = "https://github.com/sharkdp/bat/releases/download/v0.25.0/bat-v0.25.0-x86_64-unknown-linux-gnu.tar.gz"
-DELTA_URL = "https://github.com/dandavison/delta/releases/download/0.18.2/delta-0.18.2-x86_64-unknown-linux-gnu.tar.gz"
-NVIM_URL = "https://github.com/neovim/neovim/releases/download/v0.10.4/nvim-linux-x86_64.appimage"
+ARCH = platform.machine()
+
+FD_URL = f"https://github.com/sharkdp/fd/releases/download/v10.2.0/fd-v10.2.0-{ARCH}-unknown-linux-gnu.tar.gz"
+LAZYGIT_URL = f"https://github.com/jesseduffield/lazygit/releases/download/v0.47.2/lazygit_0.47.2_Linux_{ARCH}.tar.gz"
+DIFFTASTIC_URL = f"https://github.com/Wilfred/difftastic/releases/download/0.63.0/difft-{ARCH}-unknown-linux-gnu.tar.gz"
+HYPERFINE_URL = f"https://github.com/sharkdp/hyperfine/releases/download/v1.19.0/hyperfine-v1.19.0-{ARCH}-unknown-linux-gnu.tar.gz"
+BAT_URL = f"https://github.com/sharkdp/bat/releases/download/v0.25.0/bat-v0.25.0-{ARCH}-unknown-linux-gnu.tar.gz"
+DELTA_URL = f"https://github.com/dandavison/delta/releases/download/0.18.2/delta-0.18.2-{ARCH}-unknown-linux-gnu.tar.gz"
+NVIM_URL = f"https://github.com/neovim/neovim/releases/download/v0.10.4/nvim-linux-{ARCH}.appimage"
 
 def download_with_progress(url, fname):
     def reporthook(block_num, block_size, total_size):
