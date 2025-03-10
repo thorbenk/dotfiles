@@ -23,14 +23,14 @@ export DOTFILES_DIR=$HOME/code/dotfiles
 export ZSH=$HOME/.zsh
 export ZSH_CUSTOM=$DOTFILES_DIR/zsh
 
-
 # history
 export HISTFILE=$HOME/.zsh/.zsh_history
 export HISTSIZE=10000
 export SAVEHIST=10000
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_FIND_NO_DUPS
-setopt NO_SHARE_HISTORY
+
+#--- oh-my-zsh ---------------------------------------------------------------
 
 export ZSH=$DOTFILES_DIR/oh-my-zsh
 export ZSH_THEME="half-life"
@@ -38,11 +38,14 @@ export ZSH_THEME="half-life"
 # export DISABLE_AUTO_UPDATE="true" # no weekly update checks
 
 plugins=(git ssh-agent copypath dotenv zsh-autosuggestions zsh-syntax-highlighting zsh-you-should-use)
-# colored-man-pages  zsh-bat
+# colored-man-pages zsh-bat
 source $ZSH/oh-my-zsh.sh
 
-# copybuffer: adds the ctrl-o keyboard shortcut to copy the current text in the command line to the system clipboard
-# see https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/copybuffer/copybuffer.plugin.zsh
+#--- zsh copybuffer plugin ---------------------------------------------------
+
+# copybuffer: adds the ctrl-o keyboard shortcut to copy the current text in
+#             the command line to the system clipboard.
+# https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/copybuffer/copybuffer.plugin.zsh
 copybuffer () {
   printf "%s" "$BUFFER" | wl-copy
 }
@@ -51,7 +54,9 @@ bindkey -M emacs "^O" copybuffer
 bindkey -M viins "^O" copybuffer
 bindkey -M vicmd "^O" copybuffer
 
-#--- zsh --------------------------------------------------------------------
+#--- zsh extra settings ------------------------------------------------------
+
+setopt NO_SHARE_HISTORY
 
 #unsetopt auto_name_dirs #do not replace path with environment variables
 
@@ -111,18 +116,7 @@ alias plssh="z ssh-add ~/.ssh/id_rsa"
 
 #--- paths ------------------------------------------------------------------
 
-#important: in PATH, we have a 'make' scripts with call 'objmake'
-#so we can make with srcdir != builddir
-#http://blogs.kde.org/node/2559
-
-# export PATH=$LOCAL_INSTALL_PREFIX/bin:$PATH
-# export PYTHONPATH="$LOCAL_INSTALL_PREFIX/lib/python/site-packages:$PYTHONPATH"
-# export CMAKE_INSTALL_LOCAL_INSTALL_PREFIX="$LOCAL_INSTALL_PREFIX"
-# export CMAKE_INCLUDE_PATH="$LOCAL_INSTALL_PREFIX/include"
-# export CMAKE_LIBRARY_PATH="$LOCAL_INSTALL_PREFIX/lib"
-# export CMAKE_LOCAL_INSTALL_PREFIX_PATH="$LOCAL_INSTALL_PREFIX"
-
-export PATH=$HOME/.cargo/bin:$DOTFILES_DIR/bin:$PATH
+export PATH=$DOTFILES_DIR/bin:$PATH
 
 [ -f ~/.zshrc.user ] && source ~/.zshrc.user
 
@@ -140,7 +134,9 @@ export PATH="$HOME/.local/bin:$PATH"
 
 export GCM_CREDENTIAL_STORE="secretservice"
 
-source "$HOME/.cargo/env"
+if [ -f "$HOME/.cargo/env" ]; then
+    source "$HOME/.cargo/env"
+fi
 
 alias zed="env DRI_PRIME=pci-0000_01_00_0 __VK_LAYER_NV_optimus=NVIDIA_only __GLX_VENDOR_LIBRARY_NAME=nvidia /w/src/3rdparty/zed/target/release/cli"
 
