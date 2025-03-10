@@ -5,6 +5,7 @@ import dataclasses
 import contextlib
 from typing import Generator
 from colorama import Fore
+from urllib.parse import urlparse
 from typing import Callable
 import re
 import shutil
@@ -26,6 +27,7 @@ DIFFTASTIC_URL = "https://github.com/Wilfred/difftastic/releases/download/0.63.0
 HYPERFINE_URL = "https://github.com/sharkdp/hyperfine/releases/download/v1.19.0/hyperfine-v1.19.0-x86_64-unknown-linux-gnu.tar.gz"
 BAT_URL = "https://github.com/sharkdp/bat/releases/download/v0.25.0/bat-v0.25.0-x86_64-unknown-linux-gnu.tar.gz"
 DELTA_URL = "https://github.com/dandavison/delta/releases/download/0.18.2/delta-0.18.2-x86_64-unknown-linux-gnu.tar.gz"
+NVIM_URL = "https://github.com/neovim/neovim/releases/download/v0.10.4/nvim-linux-x86_64.appimage"
 
 def download_with_progress(url, fname):
     def reporthook(block_num, block_size, total_size):
@@ -84,6 +86,27 @@ def install_fonts():
 
     subprocess.run(["fc-cache", "-f", "-v"], cwd=local_fonts)
 
+def chmod_x(fname: Path):
+    current_permissions = os.stat(fname).st_mode
+    new_permissions = current_permissions | 0o111
+    os.chmod(fname, new_permissions)
+
+
+def install_nvim():
+    with tempfile.TemporaryDirectory() as tmpdir:
+        fname = os.path.basename(urlparse(NVIM_URL).path)
+        fpath = tmpdir + "/" + fname
+        download_with_progress(NVIM_URL, fpath)
+        shutil.copy(fpath, LOCAL_BIN / fname)
+
+        local_bin_nvim_appimg = LOCAL_BIN / fname
+        chmod_x(local_bin_nvim_appimg)
+
+        local_bin_nvim = LOCAL_BIN / "nvim"
+        ensure_symlink(local_bin_nvim_appimg, local_bin_nvim)
+        chmod_x(local_bin_nvim)
+
+
 def install_lazygit():
     with extract_and_download(LAZYGIT_URL) as tmpdir:
         lazygit_binary = tmpdir / "lazygit"
@@ -123,6 +146,11 @@ def install_hyperfine():
         subprocess.call(f"ls {tmpdir}", shell=True)
         assert bin.exists()
         shutil.copy(bin, LOCAL_BIN)
+
+def nvim_version(version_output: str):
+    match = re.search(r"NVIM v(\d+\.\d+\.\d+)", version_output)
+    assert match
+    return match.group(1)
 
 def fd_version(version_output: str):
     match = re.search(r"(\d+\.\d+\.\d+)", version_output)
@@ -167,6 +195,7 @@ def ensure_symlink(src: Path, dst: Path):
         print(Fore.GREEN + f"symlink {src} -> {dst} already exists" + Fore.RESET)
     else:
         print(f"creating symlink {src} -> {dst}")
+        dst.symlink_to(src)
 
 def main():
     if not query_fira_code_fonts():
@@ -182,7 +211,7 @@ def main():
         "fzf": Check(cmd=["fzf", "--version"], lines=1),
         "rg": Check(cmd=["rg", "--version"], lines=1),
         "tmux": Check(cmd=["tmux", "-V"], lines=1),
-        "nvim": Check(cmd=["nvim", "--version"], lines=1),
+        "nvim": Check(cmd=["nvim", "--version"], lines=1, extract_version=nvim_version, install=install_nvim),
         "lazygit": Check(cmd=["lazygit", "--version"], lines=1, extract_version=lazygit_version, install=install_lazygit),
         "difft": Check(cmd=["difft", "--version"], lines=1, install=install_difftastic),
         "fd": Check(cmd=["fd", "--version"], lines=1, extract_version=fd_version, install=install_fd),
