@@ -25,12 +25,12 @@ LOCAL_BIN.mkdir(parents=True, exist_ok=True)
 ARCH = platform.machine()
 
 FD_URL = f"https://github.com/sharkdp/fd/releases/download/v10.2.0/fd-v10.2.0-{ARCH}-unknown-linux-gnu.tar.gz"
-LAZYGIT_URL = f"https://github.com/jesseduffield/lazygit/releases/download/v0.47.2/lazygit_0.47.2_Linux_{ARCH}.tar.gz"
+LAZYGIT_URL = f"https://github.com/jesseduffield/lazygit/releases/download/v0.47.2/lazygit_0.47.2_Linux_{ARCH if ARCH == 'x86_64' else 'arm64'}.tar.gz"
 DIFFTASTIC_URL = f"https://github.com/Wilfred/difftastic/releases/download/0.63.0/difft-{ARCH}-unknown-linux-gnu.tar.gz"
 HYPERFINE_URL = f"https://github.com/sharkdp/hyperfine/releases/download/v1.19.0/hyperfine-v1.19.0-{ARCH}-unknown-linux-gnu.tar.gz"
 BAT_URL = f"https://github.com/sharkdp/bat/releases/download/v0.25.0/bat-v0.25.0-{ARCH}-unknown-linux-gnu.tar.gz"
 DELTA_URL = f"https://github.com/dandavison/delta/releases/download/0.18.2/delta-0.18.2-{ARCH}-unknown-linux-gnu.tar.gz"
-NVIM_URL = f"https://github.com/neovim/neovim/releases/download/v0.10.4/nvim-linux-{ARCH}.appimage"
+NVIM_URL = f"https://github.com/neovim/neovim/releases/download/v0.10.4/nvim-linux-{ARCH if ARCH == 'x86_64' else 'arm64'}.appimage"
 
 def download_with_progress(url, fname):
     def reporthook(block_num, block_size, total_size):
@@ -38,7 +38,11 @@ def download_with_progress(url, fname):
         progress = downloaded / total_size * 100
         sys.stdout.write(f"\rDownloading {url}: {progress:.2f}%")
         sys.stdout.flush()
-    urllib.request.urlretrieve(url, fname, reporthook)
+    try:
+        urllib.request.urlretrieve(url, fname, reporthook)
+    except urllib.error.HTTPError as e:
+        print(f"Download failed for {url}")
+        raise
     sys.stdout.write("\n")
 
 def mkpath(s: str) -> Path:
@@ -124,28 +128,28 @@ def install_difftastic():
 
 def install_fd():
     with extract_and_download(FD_URL) as tmpdir:
-        bin = Path(tmpdir) / "fd-v10.2.0-x86_64-unknown-linux-gnu" / "fd"
+        bin = Path(tmpdir) / f"fd-v10.2.0-{ARCH}-unknown-linux-gnu" / "fd"
         subprocess.call(f"ls {tmpdir}", shell=True)
         assert bin.exists()
         shutil.copy(bin, LOCAL_BIN)
 
 def install_delta():
     with extract_and_download(DELTA_URL) as tmpdir:
-        bin = Path(tmpdir) / "delta-0.18.2-x86_64-unknown-linux-gnu" / "delta"
+        bin = Path(tmpdir) / f"delta-0.18.2-{ARCH}-unknown-linux-gnu" / "delta"
         subprocess.call(f"ls {tmpdir}", shell=True)
         assert bin.exists()
         shutil.copy(bin, LOCAL_BIN)
 
 def install_bat():
     with extract_and_download(BAT_URL) as tmpdir:
-        bin = Path(tmpdir) /  "bat-v0.25.0-x86_64-unknown-linux-gnu" / "bat"
+        bin = Path(tmpdir) /  f"bat-v0.25.0-{ARCH}-unknown-linux-gnu" / "bat"
         subprocess.call(f"ls {tmpdir}", shell=True)
         assert bin.exists()
         shutil.copy(bin, LOCAL_BIN)
 
 def install_hyperfine():
     with extract_and_download(HYPERFINE_URL) as tmpdir:
-        bin = Path(tmpdir) / "hyperfine-v1.19.0-x86_64-unknown-linux-gnu" / "hyperfine"
+        bin = Path(tmpdir) / f"hyperfine-v1.19.0-{ARCH}-unknown-linux-gnu" / "hyperfine"
         subprocess.call(f"ls {tmpdir}", shell=True)
         assert bin.exists()
         shutil.copy(bin, LOCAL_BIN)
