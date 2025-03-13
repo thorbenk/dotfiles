@@ -174,6 +174,11 @@ def delta_version(version_output: str):
     assert match
     return match.group(1)
 
+def basedpyright_version(version_output: str):
+    match = re.search(r"basedpyright (\d+\.\d+\.\d+)", version_output)
+    assert match
+    return match.group(1)
+
 def hyperfine_version(version_output: str):
     match = re.search(r"(\d+\.\d+\.\d+)", version_output)
     assert match
@@ -225,6 +230,7 @@ def main():
         "hyperfine": Check(cmd=["hyperfine", "--version"], lines=1, extract_version=hyperfine_version, install=install_hyperfine),
         "bat": Check(cmd=["bat", "--version"], lines=1, extract_version=bat_version, install=install_bat),
         "delta": Check(cmd=["delta", "--version"], lines=1, extract_version=delta_version, install=install_delta),
+        "basedpyright": Check(cmd=["basedpyright", "--version"], lines=1, extract_version=basedpyright_version),
     }
 
     M = max(len(name) for name in required.keys())
