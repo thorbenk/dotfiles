@@ -1,4 +1,5 @@
 {
+  "use_system_path_prompts": false,
   "assistant": {
     "default_model": {
       "provider": "copilot_chat",

@@ -83,16 +83,21 @@
         "shift esc : new center terminal enter lazygit enter"
       ],
       "] b": "pane::ActivateNextItem",
-      "[ b": "pane::ActivatePrevItem",
+      "[ b": "pane::ActivatePreviousItem",
       "] d": "editor::GoToDiagnostic",
-      "[ d": "editor::GoToPrevDiagnostic",
+      "[ d": "editor::GoToPreviousDiagnostic",
       // + Buffers
       "space b a": "pane::CloseAllItems", // (b)uffer close (a)ll
       "space b d": "pane::CloseActiveItem", // (b)uffer (d)elete
       "space b o": "pane::CloseInactiveItems", // (b)uffer (o)ther
       "space b e": "pane::RevealInProjectPanel",
       "space b f": "editor::RevealInFileManager",
-      "space b p": "pane::TogglePinTab"
+      "space b p": "pane::TogglePinTab",
+      // + Git
+      "space g s": "git::ToggleStaged",
+      "space g c": "git::Commit",
+      "space g t": "git_panel::ToggleFocus",
+      "space g d": "git::Diff"
     }
   }
 ]
