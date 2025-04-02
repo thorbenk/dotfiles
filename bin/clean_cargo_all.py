@@ -10,6 +10,7 @@ Find all project directories containg a `Cargo.toml` and run
 import os
 import sys
 
+
 def find_dirs_with_file(root_dir, file_name):
     result = []
     for root, dirs, files in os.walk(root_dir):
@@ -17,11 +18,13 @@ def find_dirs_with_file(root_dir, file_name):
             result.append(root)
     return sorted(result)
 
+
 def make_clean_cargo_cmd(root_dir):
     dirs = find_dirs_with_file(root_dir, "Cargo.toml")
     cmds = list(map(lambda d: "cd %s && cargo clean" % d, dirs))
     cmds.append("cd %s" % os.getcwd())
     return " && \\\n".join(cmds)
+
 
 if __name__ == "__main__":
     root_dir = sys.argv[1]

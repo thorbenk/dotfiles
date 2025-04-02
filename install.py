@@ -32,12 +32,14 @@ BAT_URL = f"https://github.com/sharkdp/bat/releases/download/v0.25.0/bat-v0.25.0
 DELTA_URL = f"https://github.com/dandavison/delta/releases/download/0.18.2/delta-0.18.2-{ARCH}-unknown-linux-gnu.tar.gz"
 NVIM_URL = f"https://github.com/neovim/neovim/releases/download/v0.10.4/nvim-linux-{ARCH if ARCH == 'x86_64' else 'arm64'}.appimage"
 
+
 def download_with_progress(url, fname):
     def reporthook(block_num, block_size, total_size):
         downloaded = block_num * block_size
         progress = downloaded / total_size * 100
         sys.stdout.write(f"\rDownloading {url}: {progress:.2f}%")
         sys.stdout.flush()
+
     try:
         urllib.request.urlretrieve(url, fname, reporthook)
     except urllib.error.HTTPError as e:
@@ -45,8 +47,10 @@ def download_with_progress(url, fname):
         raise
     sys.stdout.write("\n")
 
+
 def mkpath(s: str) -> Path:
     return Path(os.path.expanduser(s))
+
 
 @contextlib.contextmanager
 def extract_and_download(url: str) -> Generator[Path, None, None]:
@@ -57,9 +61,10 @@ def extract_and_download(url: str) -> Generator[Path, None, None]:
             with tarfile.open(fname, "r:gz") as tar:
                 tar.extractall(path=tmpdir, filter="data")
         elif fname.endswith(".zip"):
-            with zipfile.ZipFile(fname, 'r') as zip_ref:
+            with zipfile.ZipFile(fname, "r") as zip_ref:
                 zip_ref.extractall(tmpdir)
         yield Path(tmpdir)
+
 
 def run(cmd: list[str]):
     try:
@@ -70,6 +75,7 @@ def run(cmd: list[str]):
         return ""
     return r.stdout.decode("utf-8")
 
+
 @dataclasses.dataclass
 class Check:
     cmd: list[str]
@@ -77,8 +83,11 @@ class Check:
     extract_version: Callable[[str], str] | None = None
     install: Callable[[], None] | None = None
 
+
 def install_fonts():
-    url = "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/FiraCode.zip"
+    url = (
+        "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/FiraCode.zip"
+    )
     zip_path = "FiraCode.zip"
     local_fonts = Path(os.path.expanduser("~/.local/share/fonts"))
     print(local_fonts)
@@ -86,12 +95,13 @@ def install_fonts():
 
     urllib.request.urlretrieve(url, zip_path)
 
-    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+    with zipfile.ZipFile(zip_path, "r") as zip_ref:
         zip_ref.extractall(local_fonts)
 
     os.remove(zip_path)
 
     subprocess.run(["fc-cache", "-f", "-v"], cwd=local_fonts)
+
 
 def chmod_x(fname: Path):
     current_permissions = os.stat(fname).st_mode
@@ -120,11 +130,13 @@ def install_lazygit():
         assert lazygit_binary.exists()
         shutil.copy(lazygit_binary, LOCAL_BIN)
 
+
 def install_difftastic():
     with extract_and_download(DIFFTASTIC_URL) as tmpdir:
         bin = Path(tmpdir) / "difft"
         assert bin.exists()
         shutil.copy(bin, LOCAL_BIN)
+
 
 def install_fd():
     with extract_and_download(FD_URL) as tmpdir:
@@ -133,6 +145,7 @@ def install_fd():
         assert bin.exists()
         shutil.copy(bin, LOCAL_BIN)
 
+
 def install_delta():
     with extract_and_download(DELTA_URL) as tmpdir:
         bin = Path(tmpdir) / f"delta-0.18.2-{ARCH}-unknown-linux-gnu" / "delta"
@@ -140,12 +153,14 @@ def install_delta():
         assert bin.exists()
         shutil.copy(bin, LOCAL_BIN)
 
+
 def install_bat():
     with extract_and_download(BAT_URL) as tmpdir:
-        bin = Path(tmpdir) /  f"bat-v0.25.0-{ARCH}-unknown-linux-gnu" / "bat"
+        bin = Path(tmpdir) / f"bat-v0.25.0-{ARCH}-unknown-linux-gnu" / "bat"
         subprocess.call(f"ls {tmpdir}", shell=True)
         assert bin.exists()
         shutil.copy(bin, LOCAL_BIN)
+
 
 def install_hyperfine():
     with extract_and_download(HYPERFINE_URL) as tmpdir:
@@ -154,53 +169,65 @@ def install_hyperfine():
         assert bin.exists()
         shutil.copy(bin, LOCAL_BIN)
 
+
 def nvim_version(version_output: str):
     match = re.search(r"NVIM v(\d+\.\d+\.\d+)", version_output)
     assert match
     return match.group(1)
+
 
 def fd_version(version_output: str):
     match = re.search(r"(\d+\.\d+\.\d+)", version_output)
     assert match
     return match.group(1)
 
+
 def bat_version(version_output: str):
     match = re.search(r"bat (\d+\.\d+\.\d+)", version_output)
     assert match
     return match.group(1)
+
 
 def delta_version(version_output: str):
     match = re.search(r"delta (\d+\.\d+\.\d+)", version_output)
     assert match
     return match.group(1)
 
+
 def basedpyright_version(version_output: str):
     match = re.search(r"basedpyright (\d+\.\d+\.\d+)", version_output)
     assert match
     return match.group(1)
+
 
 def hyperfine_version(version_output: str):
     match = re.search(r"(\d+\.\d+\.\d+)", version_output)
     assert match
     return match.group(1)
 
+
 def lazygit_version(version_output: str):
     match = re.search(r"version=(\d+\.\d+\.\d+)", version_output)
     assert match
     return match.group(1)
+
 
 def curl_version(version_output: str):
     match = re.search(r"curl (\d+\.\d+\.\d+)", version_output)
     assert match
     return match.group(1)
 
+
 def query_fira_code_fonts():
-    result = subprocess.run(["fc-list", ":family"], capture_output=True, text=True, check=True).stdout
+    result = subprocess.run(
+        ["fc-list", ":family"], capture_output=True, text=True, check=True
+    ).stdout
     fira_code_fonts = [line for line in result.splitlines() if "FiraCode" in line]
     if fira_code_fonts:
         print(Fore.GREEN + "FiraCode fonts found" + Fore.RESET)
         return True
     return False
+
 
 def ensure_symlink(src: Path, dst: Path):
     if dst.exists() and dst.is_symlink() and dst.resolve() == src:
@@ -208,6 +235,7 @@ def ensure_symlink(src: Path, dst: Path):
     else:
         print(f"creating symlink {src} -> {dst}")
         dst.symlink_to(src)
+
 
 def main():
     if not query_fira_code_fonts():
@@ -223,14 +251,48 @@ def main():
         "fzf": Check(cmd=["fzf", "--version"], lines=1),
         "rg": Check(cmd=["rg", "--version"], lines=1),
         "tmux": Check(cmd=["tmux", "-V"], lines=1),
-        "nvim": Check(cmd=["nvim", "--version"], lines=1, extract_version=nvim_version, install=install_nvim),
-        "lazygit": Check(cmd=["lazygit", "--version"], lines=1, extract_version=lazygit_version, install=install_lazygit),
+        "nvim": Check(
+            cmd=["nvim", "--version"],
+            lines=1,
+            extract_version=nvim_version,
+            install=install_nvim,
+        ),
+        "lazygit": Check(
+            cmd=["lazygit", "--version"],
+            lines=1,
+            extract_version=lazygit_version,
+            install=install_lazygit,
+        ),
         "difft": Check(cmd=["difft", "--version"], lines=1, install=install_difftastic),
-        "fd": Check(cmd=["fd", "--version"], lines=1, extract_version=fd_version, install=install_fd),
-        "hyperfine": Check(cmd=["hyperfine", "--version"], lines=1, extract_version=hyperfine_version, install=install_hyperfine),
-        "bat": Check(cmd=["bat", "--version"], lines=1, extract_version=bat_version, install=install_bat),
-        "delta": Check(cmd=["delta", "--version"], lines=1, extract_version=delta_version, install=install_delta),
-        "basedpyright": Check(cmd=["basedpyright", "--version"], lines=1, extract_version=basedpyright_version),
+        "fd": Check(
+            cmd=["fd", "--version"],
+            lines=1,
+            extract_version=fd_version,
+            install=install_fd,
+        ),
+        "hyperfine": Check(
+            cmd=["hyperfine", "--version"],
+            lines=1,
+            extract_version=hyperfine_version,
+            install=install_hyperfine,
+        ),
+        "bat": Check(
+            cmd=["bat", "--version"],
+            lines=1,
+            extract_version=bat_version,
+            install=install_bat,
+        ),
+        "delta": Check(
+            cmd=["delta", "--version"],
+            lines=1,
+            extract_version=delta_version,
+            install=install_delta,
+        ),
+        "basedpyright": Check(
+            cmd=["basedpyright", "--version"],
+            lines=1,
+            extract_version=basedpyright_version,
+        ),
     }
 
     M = max(len(name) for name in required.keys())
@@ -250,7 +312,7 @@ def main():
         else:
             r = run(cmd.cmd)
             lines = r.splitlines()
-            version_str = ", ".join(lines[:cmd.lines])
+            version_str = ", ".join(lines[: cmd.lines])
             if cmd.extract_version:
                 version_str = cmd.extract_version(version_str)
             print(Fore.GREEN + f"{name:<{M}} : {version_str}" + Fore.RESET)
@@ -263,9 +325,17 @@ def main():
     ensure_symlink(PWD / "tmux.conf", mkpath("~/.tmux.conf"))
     ensure_symlink(PWD / "tmux", mkpath("~/.tmux"))
 
+    ZED_CONFIG = Path(os.path.expanduser("~/.config/zed"))
+
+    ZED_CONFIG.mkdir(exist_ok=True, parents=True)
+
+    ensure_symlink(PWD / "zed/settings.json", ZED_CONFIG / "settings.json")
+    ensure_symlink(PWD / "zed/keymap.json", ZED_CONFIG / "keymap.json")
+
     if failed:
         print("Check failed.")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

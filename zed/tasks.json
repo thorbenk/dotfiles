@@ -6,5 +6,13 @@
     "env": {},
     "use_new_terminal": true,
     "allow_concurrent_runs": false
+  },
+  {
+    "label": "build",
+    "command": "ninja -C /w/rel/vgsm/master vgtrainer20252",
+    "args": [],
+    "env": {},
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false
   }
 ]
