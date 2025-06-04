@@ -141,3 +141,4 @@ fi
 alias zed="env DRI_PRIME=pci-0000_01_00_0 __VK_LAYER_NV_optimus=NVIDIA_only __GLX_VENDOR_LIBRARY_NAME=nvidia /w/src/3rdparty/zed/target/release/cli"
 
 # eval "$(starship init zsh)"
+

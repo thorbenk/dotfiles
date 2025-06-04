@@ -1,21 +1,22 @@
 [
-  // Empty pane, set of keybindings that are available when there is no active editor
   {
-    "context": "EmptyPane || SharedScreen",
     "bindings": {
-      // Open file finder
-      "space space": "file_finder::Toggle",
-      // Open recent project
-      "space f p": "projects::OpenRecent"
+      "ctrl-o": "pane::GoBack"
+    }
+  },
+  {
+    "context": "ProjectPanel",
+    "bindings": {
+      "cmd-o": "workspace::Open"
     }
   },
   {
     "context": "Dock",
     "bindings": {
-      "ctrl-w h": "workspace::ActivatePaneLeft",
-      "ctrl-w l": "workspace::ActivatePaneRight",
-      "ctrl-w k": "workspace::ActivatePaneUp",
-      "ctrl-w j": "workspace::ActivatePaneDown"
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-l": "workspace::ActivatePaneRight",
+      "ctrl-k": "workspace::ActivatePaneUp",
+      "ctrl-j": "workspace::ActivatePaneDown"
     }
   },
   {
@@ -60,6 +61,8 @@
       // put key-bindings here if you want them to work only in normal mode
       // Window movement bindings
       // Ctrl jklk to move between panes
+      "space space": "file_finder::Toggle",
+      "space f p": "projects::OpenRecent",
       "ctrl-h": "workspace::ActivatePaneLeft",
       "ctrl-l": "workspace::ActivatePaneRight",
       "ctrl-k": "workspace::ActivatePaneUp",
@@ -70,9 +73,7 @@
     "context": "VimControl && !menu",
     "bindings": {
       "space t r": "task::Rerun",
-      "space a a": "assistant::NewChat",
       "space a i": "assistant::InlineAssist",
-      "space f": "file_finder::Toggle",
       "space s": "outline::Toggle",
       "space S": "project_symbols::Toggle",
       "space z": "workspace::ToggleZoom",
@@ -98,6 +99,17 @@
       "space g c": "git::Commit",
       "space g t": "git_panel::ToggleFocus",
       "space g d": "git::Diff"
+    }
+  },
+  {
+    "context": "MessageEditor > Editor",
+    "bindings": {
+      "enter": "editor::Newline",
+      "cmd-enter": "agent::Chat",
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-l": "workspace::ActivatePaneRight",
+      "ctrl-k": "workspace::ActivatePaneUp",
+      "ctrl-j": "workspace::ActivatePaneDown"
     }
   }
 ]
