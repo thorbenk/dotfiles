@@ -1,7 +1,9 @@
 [
   {
     "bindings": {
-      "ctrl-o": "pane::GoBack"
+      "ctrl-o": "pane::GoBack",
+      "ctrl+alt+f4": "debugger::Start",
+      "f4": "editor::SwitchSourceHeader"
     }
   },
   {
@@ -34,7 +36,6 @@
           "task_name": "run"
         }
       ],
-      "f4": "editor::SwitchSourceHeader",
       "alt-l": "workspace::ToggleLeftDock",
       "alt-r": "workspace::ToggleRightDock",
       "alt-b": "workspace::ToggleBottomDock"
@@ -72,8 +73,6 @@
   {
     "context": "VimControl && !menu",
     "bindings": {
-      "space t r": "task::Rerun",
-      "space a i": "assistant::InlineAssist",
       "space s": "outline::Toggle",
       "space S": "project_symbols::Toggle",
       "space z": "workspace::ToggleZoom",
@@ -87,6 +86,11 @@
       "[ b": "pane::ActivatePreviousItem",
       "] d": "editor::GoToDiagnostic",
       "[ d": "editor::GoToPreviousDiagnostic",
+      // + Task
+      "space t r": "task::Rerun",
+      "space t s": "task::Spawn",
+      // + AI
+      "space a i": "assistant::InlineAssist",
       // + Buffers
       "space b a": "pane::CloseAllItems", // (b)uffer close (a)ll
       "space b d": "pane::CloseActiveItem", // (b)uffer (d)elete
@@ -104,12 +108,19 @@
   {
     "context": "MessageEditor > Editor",
     "bindings": {
-      "enter": "editor::Newline",
-      "cmd-enter": "agent::Chat",
+      // "enter": "editor::Newline",
+      // "cmd-enter": "agent::Chat",
       "ctrl-h": "workspace::ActivatePaneLeft",
       "ctrl-l": "workspace::ActivatePaneRight",
       "ctrl-k": "workspace::ActivatePaneUp",
       "ctrl-j": "workspace::ActivatePaneDown"
+    }
+  },
+  {
+    "context": "vim_mode == normal || vim_mode == visual",
+    "bindings": {
+      "s": "vim::PushSneak",
+      "shift-s": "vim::PushSneakBackward"
     }
   }
 ]
