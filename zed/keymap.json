@@ -45,8 +45,9 @@
     "context": "Terminal",
     "bindings": {
       "ctrl-o": ["terminal::SendKeystroke", "ctrl-o"], // zsh config: copy current command line
-      "ctrl-t": ["terminal::SendKeystroke", "ctrl-t"], // zsh config: copy current command line
+      "ctrl-t": ["terminal::SendKeystroke", "ctrl-t"],
       "alt-f": ["terminal::SendKeystroke", "alt-f"], // tmux config: thumbs
+      //
       // "Home": "terminal_panel::ToggleFocus",
       // "End": ["terminal::SendKeystroke", "bla ^[[OF"],
       "ctrl-b": "terminal_panel::ToggleFocus",
