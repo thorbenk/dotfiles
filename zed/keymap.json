@@ -72,7 +72,7 @@
     }
   },
   {
-    "context": "VimControl && !menu",
+    "context": "Pane",
     "bindings": {
       "space s": "outline::Toggle",
       "space S": "project_symbols::Toggle",
@@ -92,10 +92,11 @@
       "space t s": "task::Spawn",
       // + AI
       "space a i": "assistant::InlineAssist",
+      "space a q": "agent::AddSelectionToThread",
       // + Buffers
       "space b a": "pane::CloseAllItems", // (b)uffer close (a)ll
       "space b d": "pane::CloseActiveItem", // (b)uffer (d)elete
-      "space b o": "pane::CloseInactiveItems", // (b)uffer (o)ther
+      "space b o": "pane::CloseOtherItems", // (b)uffer (o)ther
       "space b e": "pane::RevealInProjectPanel",
       "space b f": "editor::RevealInFileManager",
       "space b p": "pane::TogglePinTab",

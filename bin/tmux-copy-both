@@ -1,0 +1,139 @@
+#!/usr/bin/env bash
+#
+# tmux-copy-both
+#
+# Copy piped stdin text to BOTH:
+#   - Wayland/X11 clipboard (CLIPBOARD)
+#   - Wayland/X11 primary selection (PRIMARY)
+# with graceful fallbacks (xclip, xsel, OSC 52).
+#
+# Intended usage (in tmux.conf):
+#   bind-key -T copy-mode-vi y send -X copy-pipe-and-cancel "~/.dotfiles/bin/tmux-copy-both"
+#   bind-key -T copy-mode-vi MouseDragEnd1Pane send -X copy-pipe-and-cancel "~/.dotfiles/bin/tmux-copy-both"
+#
+# Behavior priority:
+#   1. wl-copy (Wayland)  (two invocations: clipboard + primary)
+#   2. xclip  (clipboard + primary)
+#   3. xsel   (clipboard + primary)
+#   4. OSC 52 escape sequence (if /dev/tty available)
+#
+# Notes:
+# - wl-copy blocks until the compositor reads; we invoke it twice independently.
+# - Primary selection is what middle-click pastes (X11 concept, many Wayland compositors emulate it).
+# - If only OSC 52 is available, middle-click (PRIMARY) won't work; only the normal clipboard (Ctrl+V) will.
+# - Trailing newline is trimmed to match your previous `wl-copy -n` usage; set TMUX_COPY_TRIM_NEWLINE=0 to disable.
+#
+# Env overrides:
+#   TMUX_COPY_MAX        Max bytes to copy (default 200000). Larger inputs are truncated (still valid).
+#   TMUX_COPY_TRIM_NEWLINE  (default 1) trim a single trailing newline.
+#   TMUX_COPY_SILENT     If set to 1, suppress status message.
+#
+
+set -euo pipefail
+
+MAX_BYTES="${TMUX_COPY_MAX:-200000}"
+TRIM_NEWLINE="${TMUX_COPY_TRIM_NEWLINE:-1}"
+SILENT="${TMUX_COPY_SILENT:-0}"
+
+# Read stdin (bounded)
+# We store in a variable for reuse across multiple copy commands.
+# Use LC_ALL=C to avoid locale surprises.
+data="$(dd bs=1 count="$MAX_BYTES" 2>/dev/null | LC_ALL=C cat)"
+
+# If truncated (input larger than MAX_BYTES) we could append an ellipsis marker
+# but that would corrupt exact copy semantics; instead we leave raw truncation.
+# Optionally detect more data available:
+if [ -t 0 ]; then
+  : # No pipe; probably misuse.
+fi
+
+if [ "$TRIM_NEWLINE" = "1" ]; then
+  # Remove exactly one trailing newline if present
+  data="${data%$'\n'}"
+fi
+
+have() { command -v "$1" >/dev/null 2>&1; }
+
+copy_with_wl() {
+  printf "%s" "$data" | wl-copy --trim-newline
+  # Primary (may be ignored if compositor lacks it)
+  printf "%s" "$data" | wl-copy --primary --trim-newline
+}
+
+copy_with_xclip() {
+  printf "%s" "$data" | xclip -selection clipboard
+  printf "%s" "$data" | xclip -selection primary
+}
+
+copy_with_xsel() {
+  printf "%s" "$data" | xsel --clipboard --input
+  printf "%s" "$data" | xsel --primary --input
+}
+
+osc52_copy() {
+  # OSC 52 sequence: ESC ] 52 ; c ; base64 BEL
+  # Some terminals require a size cap (~100k). We'll just slice to MAX_BYTES already.
+  # Use /dev/tty so it reaches the terminal outside tmux pipe capture.
+  local b64
+  # Use base64 -w 0 (GNU) or -b 0 (some) or fall back.
+  if base64 --help 2>&1 | grep -q -- "-w"; then
+    b64="$(printf "%s" "$data" | base64 -w0)"
+  else
+    b64="$(printf "%s" "$data" | base64)"
+    b64="${b64//$'\n'/}" # strip newlines
+  fi
+  # BEL (\a) terminator preferred; ST (\e\\) also accepted.
+  if [ -w /dev/tty ]; then
+    printf "\033]52;c;%s\a" "$b64" > /dev/tty
+  else
+    # Fallback to stdout (less reliable inside tmux copy-pipe)
+    printf "\033]52;c;%s\a" "$b64"
+  fi
+}
+
+status_msg() {
+  [ "$SILENT" = "1" ] && return 0
+  # tmux display-message path: emit special marker tmux can show? Simpler: write to stderr (tmux ignores in pane).
+  local tool="$1"
+  {
+    printf "[tmux-copy-both] Copied %d bytes via %s" "${#data}" "$tool"
+    if [ "${#data}" -ge "$MAX_BYTES" ]; then
+      printf " (truncated at %d bytes)" "$MAX_BYTES"
+    fi
+    printf "\n"
+  } >&2
+}
+
+main() {
+  if [ -z "$data" ]; then
+    status_msg "empty-input"
+    exit 0
+  fi
+
+  if have wl-copy; then
+    if copy_with_wl 2>/dev/null; then
+      status_msg "wl-copy"
+      return
+    fi
+  fi
+
+  if have xclip; then
+    if copy_with_xclip 2>/dev/null; then
+      status_msg "xclip"
+      return
+    fi
+  fi
+
+  if have xsel; then
+    if copy_with_xsel 2>/dev/null; then
+      status_msg "xsel"
+      return
+    fi
+  fi
+
+  # Last resort
+  osc52_copy
+  status_msg "OSC52"
+}
+
+main "$@"
