@@ -1,0 +1,83 @@
+- defaults:
+    link:
+      create: true
+      relink: true
+
+- clean:
+    - ~/.config
+
+- shell:
+    - description: Checking for required dependencies
+      command: |
+        set -e
+        MISSING_DEPS=""
+        
+        command -v zsh >/dev/null 2>&1 || MISSING_DEPS="${MISSING_DEPS}zsh "
+        command -v wget >/dev/null 2>&1 || MISSING_DEPS="${MISSING_DEPS}wget "
+        command -v npm >/dev/null 2>&1 || MISSING_DEPS="${MISSING_DEPS}npm "
+        command -v fzf >/dev/null 2>&1 || MISSING_DEPS="${MISSING_DEPS}fzf "
+        command -v rg >/dev/null 2>&1 || MISSING_DEPS="${MISSING_DEPS}ripgrep "
+        command -v clangd >/dev/null 2>&1 || MISSING_DEPS="${MISSING_DEPS}clangd "
+        command -v g++ >/dev/null 2>&1 || MISSING_DEPS="${MISSING_DEPS}g++ "
+        command -v curl >/dev/null 2>&1 || MISSING_DEPS="${MISSING_DEPS}curl "
+        command -v tmux >/dev/null 2>&1 || MISSING_DEPS="${MISSING_DEPS}tmux "
+        command -v nvim >/dev/null 2>&1 || MISSING_DEPS="${MISSING_DEPS}neovim "
+        
+        if [ -n "$MISSING_DEPS" ]; then
+          echo "Error: Missing required dependencies: $MISSING_DEPS"
+          echo "Please install the missing packages and try again."
+          exit 1
+        fi
+        echo "All required dependencies are installed."
+      stdout: true
+      stderr: true
+
+    - description: Installing FiraCode Nerd Font
+      command: |
+        if [ ! -f FiraCode.zip ]; then
+          echo "Downloading FiraCode Nerd Font..."
+          wget https://github.com/ryanoasis/nerd-fonts/releases/download/v2.2.2/FiraCode.zip
+          mkdir -p ~/.local/share/fonts
+          BASEDIR=$(pwd)
+          cd ~/.local/share/fonts
+          unzip "$BASEDIR/FiraCode.zip"
+          cd "$BASEDIR"
+          fc-cache -fv
+          echo "FiraCode Nerd Font installed successfully."
+        else
+          echo "FiraCode.zip already exists, skipping download."
+        fi
+      stdout: true
+      stderr: true
+
+    - [git submodule update --init --recursive, Initializing git submodules]
+
+- link:
+    # ZSH configuration
+    ~/.zshrc: zshrc
+    ~/.zprofile: zprofile
+
+    # Neovim configuration
+    ~/.config/nvim: nvim
+
+    # Tmux configuration
+    ~/.tmux.conf: tmux.conf
+    ~/.tmux: tmux
+
+    # Zed editor configuration
+    ~/.config/zed/tasks.json: zed/tasks.json
+    ~/.config/zed/settings.json: zed/settings.json
+    ~/.config/zed/keymap.json: zed/keymap.json
+
+- shell:
+    - description: Installing tmux plugins
+      command: |
+        if [ -f ~/.tmux/plugins/tpm/bin/install_plugins ]; then
+          export TMUX_PLUGIN_MANAGER_PATH='$HOME/.tmux/plugins/'
+          ~/.tmux/plugins/tpm/bin/install_plugins
+          echo "Tmux plugins installed successfully."
+        else
+          echo "Warning: tmux plugin manager (tpm) not found. Please ensure git submodules are initialized."
+        fi
+      stdout: true
+      stderr: true

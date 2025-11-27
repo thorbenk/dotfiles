@@ -1,15 +1,16 @@
 # Installation
 
 ```
-git clone https://github.com/thorbenk/dotfiles
-git submodule init
-git submodule update
-
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install
 
+git clone https://github.com/thorbenk/dotfiles
 cd dotfiles
-./make-symlinks.sh
+git submodule init
+git submodule update
+
+cd dotfiles
+./install
 
 vim +PlugInstall +qall
 
@@ -27,4 +28,3 @@ wrt. the defaults. Consider deleting the previously generated directories
 - [Vim](vim.md)
 - [T570](t570.md)
 - [command line](cmdline.md)
-

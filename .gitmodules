@@ -22,3 +22,7 @@
 [submodule "zsh/plugins/zsh-bat"]
 	path = zsh/plugins/zsh-bat
 	url = https://github.com/fdellwing/zsh-bat.git
+[submodule "dotbot"]
+	path = dotbot
+	url = https://github.com/anishathalye/dotbot
+	ignore = dirty
