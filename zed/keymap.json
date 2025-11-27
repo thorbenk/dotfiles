@@ -68,16 +68,22 @@
       "ctrl-h": "workspace::ActivatePaneLeft",
       "ctrl-l": "workspace::ActivatePaneRight",
       "ctrl-k": "workspace::ActivatePaneUp",
-      "ctrl-j": "workspace::ActivatePaneDown"
+      "ctrl-j": "workspace::ActivatePaneDown",
+      "space p": "vim::Paste",
+      "space P": ["vim::Paste", { "before": true }]
     }
   },
   {
-    "context": "Pane",
+    "context": "GitPanel",
+    "bindings": {}
+  },
+  {
+    "context": "VimControl && !menu",
+    // Put key bindings here if you want them to work in normal & visual mode.
     "bindings": {
       "space s": "outline::Toggle",
       "space S": "project_symbols::Toggle",
       "space z": "workspace::ToggleZoom",
-      "space o o ": "outline_panel::ToggleFocus",
       "ctrl-b": "terminal_panel::ToggleFocus",
       "space g g": [
         "workspace::SendKeystrokes",
@@ -87,6 +93,12 @@
       "[ b": "pane::ActivatePreviousItem",
       "] d": "editor::GoToDiagnostic",
       "[ d": "editor::GoToPreviousDiagnostic",
+      // + Open
+      "space o o": "outline_panel::ToggleFocus",
+      "space o p": "project_panel::ToggleFocus",
+      "space o g": "git_panel::ToggleFocus",
+      "space o e": "editor::ToggleFocus",
+      "space o d": "diagnostics::Deploy",
       // + Task
       "space t r": "task::Rerun",
       "space t s": "task::Spawn",
