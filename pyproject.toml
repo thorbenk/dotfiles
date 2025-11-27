@@ -7,15 +7,35 @@ requires-python = ">=3.12"
 dependencies = ["colorama>=0.4.6"]
 
 [dependency-groups]
-dev = ["types-colorama>=0.4.15.20240311"]
+dev = [
+  "types-colorama>=0.4.15.20240311",
+  "types-PyYAML>=6.0.12.20240917",
+  "mypy>=1.0.0",
+]
 
 [tool.ruff]
 exclude = [
   "oh-my-zsh",
-  "tmux/plugns/tmux-thumb",
-  "tmux/plu,ins/tpm",
+  "tmux/plugins/tmux-thumb",
+  "tmux/plugins/tpm",
   "zsh/plugins/zsh-autosuggestions",
   "zsh/plugins/zsh-bat",
   "zsh/plugins/zsh-syntax-highlighting",
   "zsh/plugins/zsh-you-should-use",
 ]
+
+[tool.mypy]
+exclude = [
+  "dotbot/",
+  "oh-my-zsh/",
+  "tmux/",
+  "zsh/plugins/",
+  "nvim/",
+  "nvim-terminal-edit.py",
+  "konsole-colors-to-alacritty.py",
+  "compile_nvim.sh",
+]
+
+[[tool.mypy.overrides]]
+module = "install"
+ignore_missing_imports = false

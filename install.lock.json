@@ -1,0 +1,67 @@
+{
+  "fd": {
+    "version": "10.3.0",
+    "tag": "v10.3.0",
+    "url": "https://github.com/sharkdp/fd/releases/download/v10.3.0/fd-v10.3.0-x86_64-unknown-linux-gnu.tar.gz",
+    "repo": "sharkdp/fd",
+    "binary_name": "fd",
+    "extract_dir": "fd-v10.3.0-x86_64-unknown-linux-gnu"
+  },
+  "lazygit": {
+    "version": "0.56.0",
+    "tag": "v0.56.0",
+    "url": "https://github.com/jesseduffield/lazygit/releases/download/v0.56.0/lazygit_0.56.0_linux_x86_64.tar.gz",
+    "repo": "jesseduffield/lazygit",
+    "binary_name": "lazygit"
+  },
+  "difftastic": {
+    "version": "0.67.0",
+    "tag": "0.67.0",
+    "url": "https://github.com/Wilfred/difftastic/releases/download/0.67.0/difft-x86_64-unknown-linux-gnu.tar.gz",
+    "repo": "Wilfred/difftastic",
+    "binary_name": "difft"
+  },
+  "hyperfine": {
+    "version": "1.20.0",
+    "tag": "v1.20.0",
+    "url": "https://github.com/sharkdp/hyperfine/releases/download/v1.20.0/hyperfine-v1.20.0-x86_64-unknown-linux-gnu.tar.gz",
+    "repo": "sharkdp/hyperfine",
+    "binary_name": "hyperfine",
+    "extract_dir": "hyperfine-v1.20.0-x86_64-unknown-linux-gnu"
+  },
+  "bat": {
+    "version": "0.26.0",
+    "tag": "v0.26.0",
+    "url": "https://github.com/sharkdp/bat/releases/download/v0.26.0/bat-v0.26.0-x86_64-unknown-linux-gnu.tar.gz",
+    "repo": "sharkdp/bat",
+    "binary_name": "bat",
+    "extract_dir": "bat-v0.26.0-x86_64-unknown-linux-gnu"
+  },
+  "delta": {
+    "version": "0.18.2",
+    "tag": "0.18.2",
+    "url": "https://github.com/dandavison/delta/releases/download/0.18.2/delta-0.18.2-x86_64-unknown-linux-gnu.tar.gz",
+    "repo": "dandavison/delta",
+    "binary_name": "delta",
+    "extract_dir": "delta-0.18.2-x86_64-unknown-linux-gnu"
+  },
+  "nvim": {
+    "version": "0.11.5",
+    "tag": "v0.11.5",
+    "url": "https://github.com/neovim/neovim/releases/download/v0.11.5/nvim-linux-x86_64.appimage",
+    "repo": "neovim/neovim",
+    "binary_name": "nvim-linux-x86_64.appimage"
+  },
+  "firacode": {
+    "version": "3.4.0",
+    "tag": "v3.4.0",
+    "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/FiraCode.zip",
+    "repo": "ryanoasis/nerd-fonts"
+  },
+  "difft": {
+    "version": "0.67.0",
+    "tag": "0.67.0",
+    "url": "https://github.com/Wilfred/difftastic/releases/download/0.67.0/difft-x86_64-unknown-linux-gnu.tar.gz",
+    "repo": "Wilfred/difftastic"
+  }
+}
