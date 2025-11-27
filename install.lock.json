@@ -58,6 +58,12 @@
     "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/FiraCode.zip",
     "repo": "ryanoasis/nerd-fonts"
   },
+  "iosevkaterm": {
+    "version": "3.4.0",
+    "tag": "v3.4.0",
+    "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/IosevkaTerm.zip",
+    "repo": "ryanoasis/nerd-fonts"
+  },
   "difft": {
     "version": "0.67.0",
     "tag": "0.67.0",

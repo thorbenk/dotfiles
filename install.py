@@ -81,6 +81,10 @@ GITHUB_RELEASES = {
         repo="ryanoasis/nerd-fonts",
         asset_pattern="FiraCode.zip",
     ),
+    "iosevkaterm": GitHubRelease(
+        repo="ryanoasis/nerd-fonts",
+        asset_pattern="IosevkaTerm.zip",
+    ),
     "difft": GitHubRelease(
         repo="Wilfred/difftastic",
         asset_pattern="difft-{arch}-unknown-linux-gnu.tar.gz",
@@ -262,27 +266,42 @@ class Check:
     install: Callable[[], None] | None = None
 
 
-def install_fonts():
+def install_font(font_name: str):
+    """Install a single Nerd Font from the lock file."""
     lock = load_lock_file()
 
-    if "firacode" not in lock:
-        print("FiraCode not found in lock file")
-        return
+    if font_name not in lock:
+        print(f"{font_name} not found in lock file")
+        return False
 
-    url = lock["firacode"]["url"]
-    zip_path = "FiraCode.zip"
+    url = lock[font_name]["url"]
+    zip_filename = os.path.basename(urlparse(url).path)
     local_fonts = Path(os.path.expanduser("~/.local/share/fonts"))
-    print(local_fonts)
     local_fonts.mkdir(parents=True, exist_ok=True)
 
-    download_with_progress(url, zip_path)
+    print(f"Installing {font_name} font...")
+    download_with_progress(url, zip_filename)
 
-    with zipfile.ZipFile(zip_path, "r") as zip_ref:
+    with zipfile.ZipFile(zip_filename, "r") as zip_ref:
         zip_ref.extractall(local_fonts)
 
-    os.remove(zip_path)
+    os.remove(zip_filename)
+    return True
 
-    subprocess.run(["fc-cache", "-f", "-v"], cwd=local_fonts)
+
+def install_fonts():
+    """Install all configured Nerd Fonts."""
+    fonts_to_install = ["firacode", "iosevkaterm"]
+
+    any_installed = False
+    for font in fonts_to_install:
+        if install_font(font):
+            any_installed = True
+
+    if any_installed:
+        local_fonts = Path(os.path.expanduser("~/.local/share/fonts"))
+        print("Refreshing font cache...")
+        subprocess.run(["fc-cache", "-f", "-v"], cwd=local_fonts)
 
 
 def chmod_x(fname: Path):
@@ -406,15 +425,55 @@ def difftastic_version(version_output: str):
     return match.group(1)
 
 
-def query_fira_code_fonts():
+def get_installed_font_version(font_name: str) -> str | None:
+    """Extract the Nerd Fonts version from an installed font file."""
+    local_fonts = Path(os.path.expanduser("~/.local/share/fonts"))
+
+    # Map lock file names to font file patterns
+    font_patterns = {
+        "firacode": "FiraCode*NerdFont-Regular.ttf",
+        "iosevkaterm": "IosevkaTerm*NerdFont-Regular.ttf",
+    }
+
+    if font_name not in font_patterns:
+        return None
+
+    # Find a font file for this font family
+    font_files = list(local_fonts.glob(font_patterns[font_name]))
+    if not font_files:
+        return None
+
+    # Extract version from font file using strings
+    result = subprocess.run(
+        ["strings", str(font_files[0])],
+        capture_output=True,
+        text=True
+    )
+
+    for line in result.stdout.splitlines():
+        if line.startswith("Version") and "Nerd Fonts" in line:
+            # Extract version like "3.4.0" from "Version 6.002;Nerd Fonts 3.4.0"
+            parts = line.split("Nerd Fonts")
+            if len(parts) > 1:
+                return parts[1].strip()
+
+    return None
+
+
+def query_fonts_installed(font_patterns: list[str]) -> bool:
+    """Check if fonts matching any of the patterns are installed."""
     result = subprocess.run(
         ["fc-list", ":family"], capture_output=True, text=True, check=True
     ).stdout
-    fira_code_fonts = [line for line in result.splitlines() if "FiraCode" in line]
-    if fira_code_fonts:
-        print(Fore.GREEN + "FiraCode fonts found" + Fore.RESET)
-        return True
-    return False
+
+    for pattern in font_patterns:
+        matching_fonts = [line for line in result.splitlines() if pattern in line]
+        if matching_fonts:
+            print(Fore.GREEN + f"{pattern} fonts found" + Fore.RESET)
+        else:
+            return False
+
+    return True
 
 
 def ensure_symlink(src: Path, dst: Path):
@@ -464,17 +523,31 @@ def check_versions():
     not_installed = []
 
     for name, info in sorted(lock.items()):
-        if name == "firacode":
-            continue  # Skip font check
-
         locked_version = info.get("version", "unknown")
+
+        # Check font versions
+        if name in ["firacode", "iosevkaterm"]:
+            installed_version = get_installed_font_version(name)
+
+            if installed_version is None:
+                not_installed.append(name)
+                print(f"{Fore.RED}{name:<{M}}{Fore.RESET} : NOT INSTALLED (locked: v{locked_version})")
+                continue
+
+            if installed_version == locked_version:
+                up_to_date.append(name)
+                print(f"{Fore.GREEN}{name:<{M}}{Fore.RESET} : v{installed_version} ✓")
+            else:
+                outdated.append(name)
+                print(f"{Fore.YELLOW}{name:<{M}}{Fore.RESET} : v{installed_version} → v{locked_version}")
+            continue
 
         # Try to get installed version
         if name in ["nvim", "lazygit", "difft", "fd", "hyperfine", "bat", "delta"]:
             cmd_map = {
                 "nvim": (["nvim", "--version"], nvim_version),
                 "lazygit": (["lazygit", "--version"], lazygit_version),
-                "difft": (["difft", "--version"], None),
+                "difft": (["difft", "--version"], difftastic_version),
                 "fd": (["fd", "--version"], fd_version),
                 "hyperfine": (["hyperfine", "--version"], hyperfine_version),
                 "bat": (["bat", "--version"], bat_version),
@@ -548,7 +621,9 @@ def main():
         print("Run with --update-lock to create it")
         sys.exit(1)
 
-    if not query_fira_code_fonts():
+    # Check if fonts are installed
+    required_fonts = ["FiraCode", "IosevkaTerm"]
+    if not query_fonts_installed(required_fonts):
         install_fonts()
 
     lock = load_lock_file()
