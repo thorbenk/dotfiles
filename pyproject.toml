@@ -25,12 +25,14 @@ exclude = [
 ]
 
 [tool.mypy]
+strict = false
 exclude = [
   "dotbot/",
   "oh-my-zsh/",
   "tmux/",
   "zsh/plugins/",
   "nvim/",
+  "bin/",
   "nvim-terminal-edit.py",
   "konsole-colors-to-alacritty.py",
   "compile_nvim.sh",
@@ -38,4 +40,4 @@ exclude = [
 
 [[tool.mypy.overrides]]
 module = "install"
-ignore_missing_imports = false
+strict = true

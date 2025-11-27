@@ -3,7 +3,7 @@
 import subprocess
 import dataclasses
 import contextlib
-from typing import Generator
+from typing import Generator, TypedDict, Any, cast, NotRequired
 from colorama import Fore
 from urllib.parse import urlparse
 from typing import Callable
@@ -26,6 +26,26 @@ LOCAL_BIN.mkdir(parents=True, exist_ok=True)
 
 ARCH = platform.machine()
 LOCK_FILE = PWD / "install.lock.json"
+
+
+class PackageInfo(TypedDict):
+    version: str
+    tag: str
+    url: str
+    repo: str
+    binary_name: NotRequired[str]
+    extract_dir: NotRequired[str]
+
+
+class GitHubAsset(TypedDict):
+    name: str
+    browser_download_url: str
+
+
+class GitHubReleaseData(TypedDict):
+    tag_name: str
+    assets: list[GitHubAsset]
+    tarball_url: str
 
 
 @dataclasses.dataclass(frozen=True)
@@ -92,7 +112,7 @@ GITHUB_RELEASES = {
 }
 
 
-def get_arch_alt():
+def get_arch_alt() -> str:
     """Convert x86_64 to x86_64, aarch64 to arm64, etc."""
     match ARCH:
         case "x86_64":
@@ -103,7 +123,7 @@ def get_arch_alt():
             return ARCH
 
 
-def fetch_latest_release(repo: str) -> dict:
+def fetch_latest_release(repo: str) -> GitHubReleaseData:
     """Fetch the latest release info from GitHub API."""
     url = f"https://api.github.com/repos/{repo}/releases/latest"
     print(f"Fetching latest release for {repo}...")
@@ -113,7 +133,7 @@ def fetch_latest_release(repo: str) -> dict:
 
     try:
         with urllib.request.urlopen(request) as response:
-            return json.loads(response.read().decode())
+            return cast(GitHubReleaseData, json.loads(response.read().decode()))
     except urllib.error.HTTPError as e:
         print(f"Error fetching release for {repo}: {e}")
         raise
@@ -130,7 +150,7 @@ def extract_version_from_tag(tag: str, pattern: str | None = None) -> str:
     return tag.lstrip('v')
 
 
-def find_matching_asset(assets: list[dict], pattern: str, version: str) -> str | None:
+def find_matching_asset(assets: list[GitHubAsset], pattern: str, version: str) -> str | None:
     """Find asset URL matching the pattern for current architecture."""
     arch_alt = get_arch_alt()
 
@@ -148,9 +168,9 @@ def find_matching_asset(assets: list[dict], pattern: str, version: str) -> str |
     return None
 
 
-def update_lock_file():
+def update_lock_file() -> None:
     """Fetch latest releases and update the lock file."""
-    lock_data = {}
+    lock_data: dict[str, PackageInfo] = {}
 
     for name, release_info in GITHUB_RELEASES.items():
         try:
@@ -206,17 +226,17 @@ def update_lock_file():
     print(f"\nLock file updated: {LOCK_FILE}")
 
 
-def load_lock_file() -> dict:
+def load_lock_file() -> dict[str, PackageInfo]:
     if not LOCK_FILE.exists():
         print(f"Lock file not found. Run with --update-lock to create it.")
         sys.exit(1)
 
     with open(LOCK_FILE) as f:
-        return json.load(f)
+        return cast(dict[str, PackageInfo], json.load(f))
 
 
-def download_with_progress(url, fname):
-    def reporthook(block_num, block_size, total_size):
+def download_with_progress(url: str, fname: str) -> None:
+    def reporthook(block_num: int, block_size: int, total_size: int) -> None:
         downloaded = block_num * block_size
         progress = downloaded / total_size * 100 if total_size > 0 else 0
         sys.stdout.write(f"\rDownloading {url}: {progress:.2f}%")
@@ -248,7 +268,7 @@ def extract_and_download(url: str) -> Generator[Path, None, None]:
         yield Path(tmpdir)
 
 
-def run(cmd: list[str]):
+def run(cmd: list[str]) -> str:
     try:
         r = subprocess.run(cmd, capture_output=True)
     except FileNotFoundError:
@@ -266,7 +286,7 @@ class Check:
     install: Callable[[], None] | None = None
 
 
-def install_font(font_name: str):
+def install_font(font_name: str) -> bool:
     """Install a single Nerd Font from the lock file."""
     lock = load_lock_file()
 
@@ -274,7 +294,8 @@ def install_font(font_name: str):
         print(f"{font_name} not found in lock file")
         return False
 
-    url = lock[font_name]["url"]
+    package_info = lock[font_name]
+    url = package_info["url"]
     zip_filename = os.path.basename(urlparse(url).path)
     local_fonts = Path(os.path.expanduser("~/.local/share/fonts"))
     local_fonts.mkdir(parents=True, exist_ok=True)
@@ -289,7 +310,7 @@ def install_font(font_name: str):
     return True
 
 
-def install_fonts():
+def install_fonts() -> None:
     """Install all configured Nerd Fonts."""
     fonts_to_install = ["firacode", "iosevkaterm"]
 
@@ -304,13 +325,13 @@ def install_fonts():
         subprocess.run(["fc-cache", "-f", "-v"], cwd=local_fonts)
 
 
-def chmod_x(fname: Path):
+def chmod_x(fname: Path) -> None:
     current_permissions = os.stat(fname).st_mode
     new_permissions = current_permissions | 0o111
     os.chmod(fname, new_permissions)
 
 
-def install_from_lock(package_name: str):
+def install_from_lock(package_name: str) -> None:
     lock = load_lock_file()
 
     if package_name not in lock:
@@ -371,55 +392,55 @@ def install_from_lock(package_name: str):
 
 
 
-def nvim_version(version_output: str):
+def nvim_version(version_output: str) -> str:
     match = re.search(r"NVIM v(\d+\.\d+\.\d+)", version_output)
     assert match
     return match.group(1)
 
 
-def fd_version(version_output: str):
+def fd_version(version_output: str) -> str:
     match = re.search(r"(\d+\.\d+\.\d+)", version_output)
     assert match
     return match.group(1)
 
 
-def bat_version(version_output: str):
+def bat_version(version_output: str) -> str:
     match = re.search(r"bat (\d+\.\d+\.\d+)", version_output)
     assert match
     return match.group(1)
 
 
-def delta_version(version_output: str):
+def delta_version(version_output: str) -> str:
     match = re.search(r"delta (\d+\.\d+\.\d+)", version_output)
     assert match
     return match.group(1)
 
 
-def basedpyright_version(version_output: str):
+def basedpyright_version(version_output: str) -> str:
     match = re.search(r"basedpyright (\d+\.\d+\.\d+)", version_output)
     assert match
     return match.group(1)
 
 
-def hyperfine_version(version_output: str):
+def hyperfine_version(version_output: str) -> str:
     match = re.search(r"(\d+\.\d+\.\d+)", version_output)
     assert match
     return match.group(1)
 
 
-def lazygit_version(version_output: str):
+def lazygit_version(version_output: str) -> str:
     match = re.search(r"version=(\d+\.\d+\.\d+)", version_output)
     assert match
     return match.group(1)
 
 
-def curl_version(version_output: str):
+def curl_version(version_output: str) -> str:
     match = re.search(r"curl (\d+\.\d+\.\d+)", version_output)
     assert match
     return match.group(1)
 
 
-def difftastic_version(version_output: str):
+def difftastic_version(version_output: str) -> str:
     match = re.search(r"Difftastic (\d+\.\d+\.\d+)", version_output)
     assert match
     return match.group(1)
@@ -476,7 +497,7 @@ def query_fonts_installed(font_patterns: list[str]) -> bool:
     return True
 
 
-def ensure_symlink(src: Path, dst: Path):
+def ensure_symlink(src: Path, dst: Path) -> None:
     if dst.exists() and dst.is_symlink() and dst.resolve() == src:
         print(Fore.GREEN + f"symlink {dst} -> {src} already exists" + Fore.RESET)
     else:
@@ -487,7 +508,7 @@ def ensure_symlink(src: Path, dst: Path):
         dst.symlink_to(src)
 
 
-def show_lock_file():
+def show_lock_file() -> None:
     """Display lock file contents in a readable format."""
     if not LOCK_FILE.exists():
         print(f"Lock file not found at {LOCK_FILE}")
@@ -509,7 +530,7 @@ def show_lock_file():
     print()
 
 
-def check_versions():
+def check_versions() -> None:
     """Compare installed versions with lock file versions."""
     lock = load_lock_file()
 
@@ -544,7 +565,7 @@ def check_versions():
 
         # Try to get installed version
         if name in ["nvim", "lazygit", "difft", "fd", "hyperfine", "bat", "delta"]:
-            cmd_map = {
+            cmd_map: dict[str, tuple[list[str], Callable[[str], str] | None]] = {
                 "nvim": (["nvim", "--version"], nvim_version),
                 "lazygit": (["lazygit", "--version"], lazygit_version),
                 "difft": (["difft", "--version"], difftastic_version),
@@ -563,7 +584,7 @@ def check_versions():
                     print(f"{Fore.RED}{name:<{M}}{Fore.RESET} : NOT INSTALLED (locked: v{locked_version})")
                     continue
 
-                if extract_fn:
+                if extract_fn is not None:
                     installed_version = extract_fn(output.splitlines()[0])
                 else:
                     installed_version = output.strip().split()[0]
@@ -584,7 +605,7 @@ def check_versions():
         print("Run './install.py' to install missing or update outdated tools")
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Install dotfiles and dependencies")
     parser.add_argument(
         "--update-lock",
