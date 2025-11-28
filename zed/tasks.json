@@ -17,6 +17,16 @@
     "hide": "on_success"
   },
   {
+    "label": "r/python_interpreter",
+    "command": "uv run python",
+    "cwd": "${ZED_WORKTREE_ROOT}",
+    "args": [],
+    "env": {},
+    "use_new_terminal": true,
+    "allow_concurrent_runs": true,
+    "hide": "on_success"
+  },
+  {
     "label": "build",
     "command": "ninja -C /w/rel/vgsm/master vgtrainer20252",
     "args": [],

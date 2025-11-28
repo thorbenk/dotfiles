@@ -116,7 +116,13 @@
       "space g s": "git::ToggleStaged",
       "space g c": "git::Commit",
       "space g t": "git_panel::ToggleFocus",
-      "space g d": "git::Diff"
+      "space g d": "git::Diff",
+      // + Run
+      "space r P": [
+        "task::Spawn",
+        { "task_name": "r/python_interpreter", "reveal_target": "center" }
+      ],
+      "space r p": ["task::Spawn", { "task_name": "r/python" }]
     }
   },
   {
