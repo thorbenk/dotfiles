@@ -86,8 +86,8 @@
       "space z": "workspace::ToggleZoom",
       "ctrl-b": "terminal_panel::ToggleFocus",
       "space g g": [
-        "workspace::SendKeystrokes",
-        "shift esc : new center terminal enter lazygit enter"
+        "task::Spawn",
+        { "task_name": "lazygit", "reveal_target": "center" }
       ],
       "] b": "pane::ActivateNextItem",
       "[ b": "pane::ActivatePreviousItem",
