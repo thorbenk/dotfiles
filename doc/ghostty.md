@@ -1,3 +1,7 @@
+# Zig
+
+## Build from source
+
 Download zig version [0.15.1](https://ziglang.org/download/0.15.2/zig-x86_64-linux-0.15.2.tar.xz)  and put in ``~/.local/bin`.
 
 ```bash
@@ -6,9 +10,17 @@ zig build -Doptimize=ReleaseFast -fno-sys=gtk4-layer-shell
 ./zig-out/bin/ghostty
 ```
 
+## Desktop entry
+
 When creating a `.desktop` entry, add `LD_LIBRARY_PATH=<build_dir>/zig-out/lib`.
 
-# Sample config
+## Quick terminal
+
+```bash
+./zig-out/bin/ghostty --keybind=global:ctrl+alt+space=toggle_quick_terminal
+```
+
+## Sample `~/.config/ghostty/config`
 
 ```
 window-decoration = client
