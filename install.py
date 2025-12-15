@@ -34,6 +34,7 @@ class PackageInfo(TypedDict):
     url: str
     repo: str
     binary_name: NotRequired[str]
+    archive_binary_name: NotRequired[str]
     extract_dir: NotRequired[str]
 
 
@@ -54,10 +55,18 @@ class GitHubRelease:
     version_pattern: str | None = None  # regex to match version in tag, e.g., r"v(\d+\.\d+\.\d+)"
     asset_pattern: str | None = None  # pattern to match asset name with {version} and {arch} placeholders
     binary_name: str | None = None  # name of the binary in the archive
+    archive_binary_name_pattern: str | None = None  # actual binary name inside archive
     extract_dir_pattern: str | None = None  # pattern for directory in archive with {version} and {arch} placeholders
 
 
 GITHUB_RELEASES = {
+    "codex": GitHubRelease(
+        repo="openai/codex",
+        version_pattern=r"rust-v(\d+\.\d+\.\d+)",
+        asset_pattern="codex-{arch}-unknown-linux-gnu.tar.gz",
+        binary_name="codex",
+        archive_binary_name_pattern="codex-{arch}-unknown-linux-gnu",
+    ),
     "fd": GitHubRelease(
         repo="sharkdp/fd",
         asset_pattern="fd-v{version}-{arch}-unknown-linux-gnu.tar.gz",
@@ -214,6 +223,14 @@ def update_lock_file() -> None:
                 )
                 lock_data[name]["extract_dir"] = extract_dir
 
+            if release_info.archive_binary_name_pattern:
+                archive_binary_name = release_info.archive_binary_name_pattern.format(
+                    arch=ARCH,
+                    arch_alt=get_arch_alt(),
+                    version=version,
+                )
+                lock_data[name]["archive_binary_name"] = archive_binary_name
+
             print(f"✓ {name}: {version}")
 
         except Exception as e:
@@ -362,12 +379,13 @@ def install_from_lock(package_name: str) -> None:
     # Regular archive extraction
     with extract_and_download(url) as tmpdir:
         binary_name = package_info.get("binary_name", package_name)
+        archive_binary_name = package_info.get("archive_binary_name", binary_name)
 
         # Check if there's an extract_dir
         if "extract_dir" in package_info:
-            bin_path = tmpdir / package_info["extract_dir"] / binary_name
+            bin_path = tmpdir / package_info["extract_dir"] / archive_binary_name
         else:
-            bin_path = tmpdir / binary_name
+            bin_path = tmpdir / archive_binary_name
 
         if not bin_path.exists():
             # Try to find the binary in tmpdir
@@ -377,14 +395,15 @@ def install_from_lock(package_name: str) -> None:
 
             # Try to find it recursively
             for root, dirs, files in os.walk(tmpdir):
-                if binary_name in files:
-                    bin_path = Path(root) / binary_name
+                if archive_binary_name in files:
+                    bin_path = Path(root) / archive_binary_name
                     print(f"Found binary at: {bin_path}")
                     break
 
         if bin_path.exists():
-            shutil.copy(bin_path, LOCAL_BIN)
-            chmod_x(LOCAL_BIN / binary_name)
+            dest_path = LOCAL_BIN / binary_name
+            shutil.copy(bin_path, dest_path)
+            chmod_x(dest_path)
         else:
             print(f"Could not find binary {binary_name} for {package_name}")
 
@@ -423,6 +442,12 @@ def basedpyright_version(version_output: str) -> str:
 
 
 def hyperfine_version(version_output: str) -> str:
+    match = re.search(r"(\d+\.\d+\.\d+)", version_output)
+    assert match
+    return match.group(1)
+
+
+def codex_version(version_output: str) -> str:
     match = re.search(r"(\d+\.\d+\.\d+)", version_output)
     assert match
     return match.group(1)
@@ -564,7 +589,7 @@ def check_versions() -> None:
             continue
 
         # Try to get installed version
-        if name in ["nvim", "lazygit", "difft", "fd", "hyperfine", "bat", "delta"]:
+        if name in ["nvim", "lazygit", "difft", "fd", "hyperfine", "bat", "delta", "codex"]:
             cmd_map: dict[str, tuple[list[str], Callable[[str], str] | None]] = {
                 "nvim": (["nvim", "--version"], nvim_version),
                 "lazygit": (["lazygit", "--version"], lazygit_version),
@@ -573,6 +598,7 @@ def check_versions() -> None:
                 "hyperfine": (["hyperfine", "--version"], hyperfine_version),
                 "bat": (["bat", "--version"], bat_version),
                 "delta": (["delta", "--version"], delta_version),
+                "codex": (["codex", "--version"], codex_version),
             }
 
             if name in cmd_map:
@@ -703,6 +729,11 @@ def main() -> None:
             cmd=["delta", "--version"],
             lines=1,
             extract_version=delta_version,
+        ),
+        "codex": Check(
+            cmd=["codex", "--version"],
+            lines=1,
+            extract_version=codex_version,
         ),
     }
 
