@@ -3,14 +3,16 @@
     "bindings": {
       "ctrl-o": "pane::GoBack",
       "ctrl+alt+f4": "debugger::Start",
-      "f4": "editor::SwitchSourceHeader"
-    }
+      "f4": "editor::SwitchSourceHeader",
+      "f11": "debugger::StepInto",
+      "f10": "debugger::StepOver",
+    },
   },
   {
     "context": "ProjectPanel",
     "bindings": {
-      "cmd-o": "workspace::Open"
-    }
+      "cmd-o": "workspace::Open",
+    },
   },
   {
     "context": "Dock",
@@ -18,8 +20,8 @@
       "ctrl-h": "workspace::ActivatePaneLeft",
       "ctrl-l": "workspace::ActivatePaneRight",
       "ctrl-k": "workspace::ActivatePaneUp",
-      "ctrl-j": "workspace::ActivatePaneDown"
-    }
+      "ctrl-j": "workspace::ActivatePaneDown",
+    },
   },
   {
     "context": "Workspace",
@@ -27,19 +29,19 @@
       "f7": [
         "task::Spawn",
         {
-          "task_name": "build"
-        }
+          "task_name": "build",
+        },
       ],
       "f6": [
         "task::Spawn",
         {
-          "task_name": "run"
-        }
+          "task_name": "run",
+        },
       ],
       "alt-l": "workspace::ToggleLeftDock",
       "alt-r": "workspace::ToggleRightDock",
-      "alt-b": "workspace::ToggleBottomDock"
-    }
+      "alt-b": "workspace::ToggleBottomDock",
+    },
   },
   {
     "context": "Terminal",
@@ -54,8 +56,8 @@
       "ctrl-h": "workspace::ActivatePaneLeft",
       "ctrl-l": "workspace::ActivatePaneRight",
       "ctrl-k": "workspace::ActivatePaneUp",
-      "ctrl-j": "workspace::ActivatePaneDown"
-    }
+      "ctrl-j": "workspace::ActivatePaneDown",
+    },
   },
   {
     "context": "Editor && vim_mode == normal && !VimWaiting && !menu",
@@ -70,12 +72,12 @@
       "ctrl-k": "workspace::ActivatePaneUp",
       "ctrl-j": "workspace::ActivatePaneDown",
       "space p": "vim::Paste",
-      "space P": ["vim::Paste", { "before": true }]
-    }
+      "space P": ["vim::Paste", { "before": true }],
+    },
   },
   {
     "context": "GitPanel",
-    "bindings": {}
+    "bindings": {},
   },
   {
     "context": "VimControl && !menu",
@@ -87,21 +89,12 @@
       "ctrl-b": "terminal_panel::ToggleFocus",
       "space g g": [
         "task::Spawn",
-        { "task_name": "lazygit", "reveal_target": "center" }
+        { "task_name": "lazygit", "reveal_target": "center" },
       ],
       "] b": "pane::ActivateNextItem",
       "[ b": "pane::ActivatePreviousItem",
       "] d": "editor::GoToDiagnostic",
       "[ d": "editor::GoToPreviousDiagnostic",
-      // + Open
-      "space o o": "outline_panel::ToggleFocus",
-      "space o p": "project_panel::ToggleFocus",
-      "space o g": "git_panel::ToggleFocus",
-      "space o e": "editor::ToggleFocus",
-      "space o d": "diagnostics::Deploy",
-      // + Task
-      "space t r": "task::Rerun",
-      "space t s": "task::Spawn",
       // + AI
       "space a i": "assistant::InlineAssist",
       "space a q": "agent::AddSelectionToThread",
@@ -112,18 +105,30 @@
       "space b e": "pane::RevealInProjectPanel",
       "space b f": "editor::RevealInFileManager",
       "space b p": "pane::TogglePinTab",
+      // + Debug
+      "space d s": "debugger::Start",
       // + Git
       "space g s": "git::ToggleStaged",
       "space g c": "git::Commit",
       "space g t": "git_panel::ToggleFocus",
       "space g d": "git::Diff",
+      "space g b": "git::BranchDiff",
+      // + Open
+      "space o o": "outline_panel::ToggleFocus",
+      "space o p": "project_panel::ToggleFocus",
+      "space o g": "git_panel::ToggleFocus",
+      "space o e": "editor::ToggleFocus",
+      "space o d": "diagnostics::Deploy",
       // + Run
       "space r P": [
         "task::Spawn",
-        { "task_name": "r/python_interpreter", "reveal_target": "center" }
+        { "task_name": "r/python_interpreter", "reveal_target": "center" },
       ],
-      "space r p": ["task::Spawn", { "task_name": "r/python" }]
-    }
+      "space r p": ["task::Spawn", { "task_name": "r/python" }],
+      // + Task
+      "space t r": "task::Rerun",
+      "space t s": "task::Spawn",
+    },
   },
   {
     "context": "MessageEditor > Editor",
@@ -133,14 +138,14 @@
       "ctrl-h": "workspace::ActivatePaneLeft",
       "ctrl-l": "workspace::ActivatePaneRight",
       "ctrl-k": "workspace::ActivatePaneUp",
-      "ctrl-j": "workspace::ActivatePaneDown"
-    }
+      "ctrl-j": "workspace::ActivatePaneDown",
+    },
   },
   {
     "context": "vim_mode == normal || vim_mode == visual",
     "bindings": {
       "s": "vim::PushSneak",
-      "shift-s": "vim::PushSneakBackward"
-    }
-  }
+      "shift-s": "vim::PushSneakBackward",
+    },
+  },
 ]
