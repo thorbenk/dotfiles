@@ -4,7 +4,7 @@
     "command": "uv",
     "args": ["run", "python", "${ZED_FILE}"],
     "use_new_terminal": false,
-    "allow_concurrent_runs": false
+    "allow_concurrent_runs": false,
   },
   {
     "label": "lazygit",
@@ -14,7 +14,7 @@
     "env": {},
     "use_new_terminal": true,
     "allow_concurrent_runs": false,
-    "hide": "on_success"
+    "hide": "on_success",
   },
   {
     "label": "r/python_interpreter",
@@ -24,14 +24,14 @@
     "env": {},
     "use_new_terminal": true,
     "allow_concurrent_runs": true,
-    "hide": "on_success"
+    "hide": "on_success",
   },
   {
     "label": "build",
-    "command": "ninja -C /w/rel/vgsm/master vgtrainer20252",
+    "command": "ninja -C /w/rel/vgsm/master",
     "args": [],
     "env": {},
     "use_new_terminal": false,
-    "allow_concurrent_runs": false
-  }
+    "allow_concurrent_runs": false,
+  },
 ]
