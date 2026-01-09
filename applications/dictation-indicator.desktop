@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Dictation Indicator
+Comment=System tray indicator for voice dictation status
+Exec=/home/kroeger/code/dotfiles/bin/dictation-indicator
+Icon=audio-input-microphone
+Terminal=false
+NoDisplay=false
+Categories=Utility;
+StartupNotify=false
+X-GNOME-Autostart-enabled=true

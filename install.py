@@ -118,6 +118,16 @@ GITHUB_RELEASES = {
         repo="Wilfred/difftastic",
         asset_pattern="difft-{arch}-unknown-linux-gnu.tar.gz",
     ),
+    "ydotool": GitHubRelease(
+        repo="ReimuNotMoe/ydotool",
+        asset_pattern="ydotool-release-ubuntu-latest",
+        binary_name="ydotool",
+    ),
+    "ydotoold": GitHubRelease(
+        repo="ReimuNotMoe/ydotool",
+        asset_pattern="ydotoold-release-ubuntu-latest",
+        binary_name="ydotoold",
+    ),
 }
 
 
@@ -376,6 +386,20 @@ def install_from_lock(package_name: str) -> None:
 
         return
 
+    # Special case for raw binaries (not archives)
+    if not url.endswith((".tar.gz", ".zip", ".tgz")):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            fname = os.path.basename(urlparse(url).path)
+            fpath = os.path.join(tmpdir, fname)
+            download_with_progress(url, fpath)
+
+            binary_name = package_info.get("binary_name", package_name)
+            dest = LOCAL_BIN / binary_name
+            shutil.copy(fpath, dest)
+            chmod_x(dest)
+
+        return
+
     # Regular archive extraction
     with extract_and_download(url) as tmpdir:
         binary_name = package_info.get("binary_name", package_name)
@@ -435,12 +459,6 @@ def delta_version(version_output: str) -> str:
     return match.group(1)
 
 
-def basedpyright_version(version_output: str) -> str:
-    match = re.search(r"basedpyright (\d+\.\d+\.\d+)", version_output)
-    assert match
-    return match.group(1)
-
-
 def hyperfine_version(version_output: str) -> str:
     match = re.search(r"(\d+\.\d+\.\d+)", version_output)
     assert match
@@ -469,6 +487,18 @@ def difftastic_version(version_output: str) -> str:
     match = re.search(r"Difftastic (\d+\.\d+\.\d+)", version_output)
     assert match
     return match.group(1)
+
+
+def ydotool_version(version_output: str) -> str:
+    # ydotool doesn't have a --version flag, we'll use the lock file version
+    # This function is just a placeholder to satisfy the Check interface
+    return "installed"
+
+
+def ydotoold_version(version_output: str) -> str:
+    # ydotoold doesn't have a --version flag, we'll use the lock file version
+    # This function is just a placeholder to satisfy the Check interface
+    return "installed"
 
 
 def get_installed_font_version(font_name: str) -> str | None:
@@ -686,11 +716,6 @@ def main() -> None:
         "fzf": Check(cmd=["fzf", "--version"], lines=1),
         "rg": Check(cmd=["rg", "--version"], lines=1),
         "tmux": Check(cmd=["tmux", "-V"], lines=1),
-        "basedpyright": Check(
-            cmd=["basedpyright", "--version"],
-            lines=1,
-            extract_version=basedpyright_version,
-        ),
     }
 
     # Tools managed by lock file
@@ -734,6 +759,16 @@ def main() -> None:
             cmd=["codex", "--version"],
             lines=1,
             extract_version=codex_version,
+        ),
+        "ydotool": Check(
+            cmd=["ydotool", "help"],
+            lines=1,
+            extract_version=ydotool_version,
+        ),
+        "ydotoold": Check(
+            cmd=["ydotoold", "--help"],
+            lines=1,
+            extract_version=ydotoold_version,
         ),
     }
 

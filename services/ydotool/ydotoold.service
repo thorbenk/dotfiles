@@ -1,0 +1,11 @@
+[Unit]
+Description=ydotool daemon
+Documentation=https://github.com/ReimuNotMoe/ydotool
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=%h/.local/bin/ydotoold
+
+[Install]
+WantedBy=default.target

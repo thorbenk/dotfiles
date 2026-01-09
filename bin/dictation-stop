@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+set -e
+
+THIS_DIR=$(dirname "$(realpath "$0")")
+NERD_DICTATION_DIR=$(readlink -f "$THIS_DIR/../nerd-dictation")
+DOTFILES_DIR=$(readlink -f "$THIS_DIR/..")
+LOG_FILE="$DOTFILES_DIR/log/dictation.log"
+
+# Ensure ~/.local/bin is in PATH
+export PATH="$HOME/.local/bin:$PATH"
+
+cd "$NERD_DICTATION_DIR" || exit 1
+
+echo "========================================" >> "$LOG_FILE"
+echo "$(date) - Stopping dictation" >> "$LOG_FILE"
+
+# Stop nerd-dictation
+uv run python nerd-dictation end >> "$LOG_FILE" 2>&1
+
+echo "Dictation stopped" >> "$LOG_FILE"

@@ -1,3 +1,7 @@
+# dotbot configuration file
+# 
+# See https://github.com/anishathalye/dotbot
+
 - defaults:
     link:
       create: true
@@ -30,6 +34,18 @@
     ~/.config/zed/settings.json: zed/settings.json
     ~/.config/zed/keymap.json: zed/keymap.json
     ~/.config/zed/debug.json: zed/debug.json
+
+    # Codex
+    ~/.codex/config.toml: codex/config.toml
+
+    # Systemd user services
+    ~/.config/systemd/user/ydotoold.service: services/ydotool/ydotoold.service
+
+    # Desktop applications
+    ~/.local/share/applications/dictation-indicator.desktop: applications/dictation-indicator.desktop
+
+    # Autostart dictation indicator
+    ~/.config/autostart/dictation-indicator.desktop: applications/dictation-indicator.desktop
     
     # Note: install.py handles tool installation (fd, bat, delta, lazygit, nvim, etc.)
     # Run './install.py --check' to see tool versions

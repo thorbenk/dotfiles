@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+set -e
+
+THIS_DIR=$(dirname "$(realpath "$0")")
+NERD_DICTATION_DIR=$(readlink -f "$THIS_DIR/../nerd-dictation")
+DOTFILES_DIR=$(readlink -f "$THIS_DIR/..")
+LOG_FILE="$DOTFILES_DIR/log/dictation.log"
+VOICE_MODEL="vosk-model-en-us-0.22"
+
+# Ensure ~/.local/bin is in PATH for ydotool
+export PATH="$HOME/.local/bin:$PATH"
+
+# Check if ydotool is available
+if ! command -v ydotool &> /dev/null; then
+    echo "ERROR: ydotool not found in PATH" | tee -a "$LOG_FILE"
+    echo "PATH: $PATH" | tee -a "$LOG_FILE"
+    notify-send "Dictation Error" "ydotool not found. Please install it first."
+    exit 1
+fi
+
+# Check if ydotoold is running
+if ! pgrep -x ydotoold > /dev/null; then
+    echo "ERROR: ydotoold daemon is not running" | tee -a "$LOG_FILE"
+    notify-send "Dictation Error" "ydotoold daemon is not running. Start it with: systemctl --user start ydotoold"
+    exit 1
+fi
+
+# Default to Jabra headset, but allow override via environment variable
+# Use: DICTATION_DEVICE="alsa_input.pci-0000_00_1f.3.analog-stereo.14" dictation-start
+PULSE_DEVICE="${DICTATION_DEVICE:-alsa_input.usb-GN_Netcom_A_S_Jabra_EVOLVE_LINK_00045C9B8B460A-00.mono-fallback}"
+
+cd "$NERD_DICTATION_DIR" || exit 1
+
+echo "========================================" >> "$LOG_FILE"
+echo "$(date) - Starting dictation" >> "$LOG_FILE"
+echo "ydotool: $(which ydotool)" >> "$LOG_FILE"
+echo "Audio device: $PULSE_DEVICE" >> "$LOG_FILE"
+echo "----------------------------------------" >> "$LOG_FILE"
+
+# Start nerd-dictation
+uv run python nerd-dictation begin \
+  --simulate-input-tool=YDOTOOL \
+  --vosk-model-dir="$NERD_DICTATION_DIR/$VOICE_MODEL" \
+  --pulse-device-name="$PULSE_DEVICE" \
+  --verbose=1 >> "$LOG_FILE" 2>&1 &
+
+echo "Dictation started (PID: $!)" >> "$LOG_FILE"

@@ -26,3 +26,6 @@
 	path = dotbot
 	url = https://github.com/anishathalye/dotbot
 	ignore = dirty
+[submodule "nerd-dictation"]
+	path = nerd-dictation
+	url = https://github.com/thorbenk/nerd-dictation.git

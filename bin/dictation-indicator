@@ -1,0 +1,149 @@
+#!/usr/bin/env python3
+"""
+System tray indicator for nerd-dictation status.
+Shows a red filled icon when dictation is active, grey outline when inactive.
+"""
+
+import sys
+import os
+import time
+import subprocess
+from pathlib import Path
+from PyQt5.QtWidgets import QApplication, QSystemTrayIcon, QMenu
+from PyQt5.QtGui import QIcon, QPixmap, QPainter, QColor
+from PyQt5.QtCore import QTimer, Qt
+
+
+class DictationIndicator:
+    def __init__(self):
+        self.app = QApplication(sys.argv)
+        self.app.setQuitOnLastWindowClosed(False)
+
+        # Create system tray icon
+        self.tray = QSystemTrayIcon()
+
+        # Set initial icon immediately
+        self.tray.setIcon(self.create_icon("#808080", filled=False))  # Grey outline by default
+        self.tray.setToolTip("Dictation: Checking...")
+
+        # Create menu
+        self.menu = QMenu()
+
+        self.status_action = self.menu.addAction("Status: Checking...")
+        self.status_action.setEnabled(False)
+
+        self.menu.addSeparator()
+
+        self.start_action = self.menu.addAction("Start Dictation")
+        self.start_action.triggered.connect(self.start_dictation)
+
+        self.stop_action = self.menu.addAction("Stop Dictation")
+        self.stop_action.triggered.connect(self.stop_dictation)
+
+        self.menu.addSeparator()
+
+        quit_action = self.menu.addAction("Quit Indicator")
+        quit_action.triggered.connect(self.quit)
+
+        self.tray.setContextMenu(self.menu)
+
+        # Timer to check status
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.update_status)
+        self.timer.start(1000)  # Check every second
+
+        # Make tray visible
+        self.tray.setVisible(True)
+
+        # Initial status update
+        self.is_running = False
+        self.update_status()
+
+    def create_icon(self, color, filled=True):
+        """Create a circular icon with the given color."""
+        pixmap = QPixmap(64, 64)
+        pixmap.fill(Qt.transparent)
+
+        painter = QPainter(pixmap)
+        painter.setRenderHint(QPainter.Antialiasing)
+
+        if filled:
+            painter.setBrush(QColor(color))
+            painter.setPen(Qt.NoPen)
+        else:
+            painter.setBrush(Qt.transparent)
+            painter.setPen(QColor(color))
+            painter.pen().setWidth(4)
+
+        painter.drawEllipse(8, 8, 48, 48)
+        painter.end()
+
+        return QIcon(pixmap)
+
+    def is_dictation_running(self):
+        """Check if nerd-dictation is running."""
+        try:
+            result = subprocess.run(
+                ["pgrep", "-f", "nerd-dictation begin"],
+                capture_output=True,
+                text=True
+            )
+            return result.returncode == 0
+        except Exception:
+            return False
+
+    def update_status(self):
+        """Update the tray icon and menu based on dictation status."""
+        running = self.is_dictation_running()
+
+        if running != self.is_running:
+            self.is_running = running
+
+            if running:
+                self.tray.setIcon(self.create_icon("#ff0000", filled=True))  # Red filled
+                self.tray.setToolTip("Dictation: ACTIVE")
+                self.status_action.setText("Status: ACTIVE")
+                self.start_action.setEnabled(False)
+                self.stop_action.setEnabled(True)
+            else:
+                self.tray.setIcon(self.create_icon("#808080", filled=False))  # Grey outline
+                self.tray.setToolTip("Dictation: INACTIVE")
+                self.status_action.setText("Status: INACTIVE")
+                self.start_action.setEnabled(True)
+                self.stop_action.setEnabled(False)
+
+    def start_dictation(self):
+        """Start dictation via the script."""
+        try:
+            dotfiles_bin = Path(__file__).parent
+            subprocess.Popen([str(dotfiles_bin / "dictation-start")])
+            # Wait a bit for the process to start
+            time.sleep(0.5)
+            self.update_status()
+        except Exception as e:
+            print(f"Error starting dictation: {e}", file=sys.stderr)
+
+    def stop_dictation(self):
+        """Stop dictation via the script."""
+        try:
+            dotfiles_bin = Path(__file__).parent
+            subprocess.Popen([str(dotfiles_bin / "dictation-stop")])
+            # Wait a bit for the process to stop
+            time.sleep(0.5)
+            self.update_status()
+        except Exception as e:
+            print(f"Error stopping dictation: {e}", file=sys.stderr)
+
+    def quit(self):
+        """Quit the indicator application."""
+        self.tray.setVisible(False)
+        self.app.quit()
+
+    def run(self):
+        """Run the application."""
+        sys.exit(self.app.exec_())
+
+
+if __name__ == "__main__":
+    indicator = DictationIndicator()
+    indicator.run()

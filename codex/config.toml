@@ -1,0 +1,8 @@
+[projects."/w/src/vgsm/master"]
+trust_level = "trusted"
+
+[projects."/home/kroeger/code/dotfiles"]
+trust_level = "trusted"
+
+[sandbox_workspace_write]
+writable_roots = [ "/run/user/1000", "/w/rel", "/w/dbg"]
