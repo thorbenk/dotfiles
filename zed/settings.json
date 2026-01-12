@@ -1,19 +1,40 @@
 {
+  "diagnostics": {
+    "inline": {
+      "enabled": true,
+    },
+  },
+  "ssh_connections": [
+    {
+      "host": "dehei-kroeger-02",
+      "projects": [
+        {
+          "paths": ["/home/azureuser"],
+        },
+        {
+          "paths": ["/home/azureuser/src/levoxel"],
+        },
+      ],
+    },
+  ],
+  "sticky_scroll": {
+    "enabled": true,
+  },
   "features": {
-    "edit_prediction_provider": "copilot"
+    "edit_prediction_provider": "copilot",
   },
   "file_types": {
     "C++": ["i"],
-    "Dockerfile": ["Dockerfile"]
+    "Dockerfile": ["Dockerfile"],
   },
   "use_system_path_prompts": false,
   "agent": {
     "always_allow_tool_actions": true,
     "default_model": {
       "provider": "copilot_chat",
-      "model": "claude-sonnet-4.5"
+      "model": "claude-sonnet-4.5",
     },
-    "model_parameters": []
+    "model_parameters": [],
   },
   "pane_split_direction_vertical": "right",
   "pane_split_direction_horizontal": "down",
@@ -22,16 +43,16 @@
   "vim_mode": true,
   "vim": {
     "use_system_clipboard": "always",
-    "use_smartcase_find": true
+    "use_smartcase_find": true,
   },
   "relative_line_numbers": "disabled",
   "cursor_blink": false,
   "indent_guides": {
     "enabled": true,
-    "coloring": "indent_aware"
+    "coloring": "indent_aware",
   },
   "inlay_hints": {
-    "enabled": true
+    "enabled": true,
   },
   "file_scan_exclusions": [
     "**/*.min.js",
@@ -40,7 +61,7 @@
     ".venv",
     ".mypy_cache",
     ".pytest_cache",
-    ".ruff_cache"
+    ".ruff_cache",
   ],
   "ui_font_family": "Roboto", // Alternatives: "Lato"
   "ui_font_size": 12.0,
@@ -49,64 +70,64 @@
   "buffer_font_family": "FiraCode Nerd Font",
   "tabs": {
     "file_icons": true,
-    "git_status": false
+    "git_status": false,
   },
   "autosave": "on_focus_change",
   "use_autoclose": false,
   "languages": {
     "Python": {
-      "language_servers": ["basedpyright", "!pyright"]
+      "language_servers": ["basedpyright", "!pyright"],
     },
     "Markdown": {
       "format_on_save": "off",
-      "remove_trailing_whitespace_on_save": false
+      "remove_trailing_whitespace_on_save": false,
     },
     "YAML": {
       "format_on_save": "off",
-      "remove_trailing_whitespace_on_save": false
+      "remove_trailing_whitespace_on_save": false,
     },
     "JSON": {
       "format_on_save": "off",
-      "remove_trailing_whitespace_on_save": false
+      "remove_trailing_whitespace_on_save": false,
     },
     "TOML": {
       "format_on_save": "off",
-      "remove_trailing_whitespace_on_save": false
-    }
+      "remove_trailing_whitespace_on_save": false,
+    },
   },
   "lsp": {
     "clangd": {
       "binary": {
         "path": "/usr/bin/clangd-18",
-        "arguments": []
-      }
+        "arguments": [],
+      },
     },
     "basedpyright": {
       "settings": {
         "basedpyright.disableOrganizeImports": true,
         "basedpyright.analysis": {
           "diagnosticMode": "workspace",
-          "typeCheckingMode": "standard"
+          "typeCheckingMode": "standard",
         },
         "python": {
-          "pythonPath": ".venv/bin/python"
-        }
-      }
-    }
+          "pythonPath": ".venv/bin/python",
+        },
+      },
+    },
   },
   "journal": {
-    "hour_format": "hour24"
+    "hour_format": "hour24",
   },
   "preview_tabs": {
-    "enabled": true
+    "enabled": true,
   },
   "search": {
     "case_sensitive": false,
-    "regex": true
+    "regex": true,
   },
   "telemetry": {
     "diagnostics": false,
-    "metrics": false
+    "metrics": false,
   },
   "terminal": {
     "font_family": "FiraCode Nerd Font Mono",
@@ -116,12 +137,12 @@
     "shell": "system",
     "env": {
       "EDITOR": "zed --wait",
-      "TERM": "xterm-256color"
-    }
+      "TERM": "xterm-256color",
+    },
   },
   "file_finder": {
     "file_icons": true,
-    "modal_max_width": "large"
+    "modal_max_width": "large",
   },
   // "unstable.ui_density": "compact",
   "git_panel": {
@@ -139,8 +160,8 @@
       // When to show the scrollbar in the git panel.
       //
       // Default: inherits editor scrollbar settings
-      "show": null
+      "show": null,
     },
-    "collapse_untracked_diff": true
-  }
+    "collapse_untracked_diff": true,
+  },
 }
