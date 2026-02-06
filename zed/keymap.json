@@ -93,8 +93,8 @@
       ],
       "] b": "pane::ActivateNextItem",
       "[ b": "pane::ActivatePreviousItem",
-      "] d": "editor::GoToDiagnostic",
-      "[ d": "editor::GoToPreviousDiagnostic",
+      "] q": "editor::GoToDiagnostic", // vim fugitive: ]q => :cnext
+      "[ q": "editor::GoToPreviousDiagnostic", // vim fugitive: [q => :cprev
       // + AI
       "space a i": "assistant::InlineAssist",
       "space a q": "agent::AddSelectionToThread",
