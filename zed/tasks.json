@@ -26,12 +26,4 @@
     "allow_concurrent_runs": true,
     "hide": "on_success",
   },
-  {
-    "label": "build",
-    "command": "ninja -C /w/rel/vgsm/master",
-    "args": [],
-    "env": {},
-    "use_new_terminal": false,
-    "allow_concurrent_runs": false,
-  },
 ]
