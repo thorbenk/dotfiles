@@ -1,4 +1,13 @@
 {
+  "edit_predictions": {
+    "provider": "copilot"
+  },
+  "agent_servers": {
+    "github-copilot": {
+      "type": "registry"
+    }
+  },
+  "which_key": { "enabled": true },
   "diagnostics": {
     "inline": {
       "enabled": true,
@@ -20,19 +29,47 @@
   "sticky_scroll": {
     "enabled": true,
   },
-  "features": {
-    "edit_prediction_provider": "copilot",
-  },
   "file_types": {
     "C++": ["i"],
     "Dockerfile": ["Dockerfile"],
   },
   "use_system_path_prompts": false,
   "agent": {
+    "show_turn_stats": true,
+    "favorite_models": [
+      {
+        "provider": "copilot_chat",
+        "model": "claude-sonnet-4.5"
+      },
+      {
+        "provider": "copilot_chat",
+        "model": "claude-opus-4.5"
+      },
+      {
+        "provider": "copilot_chat",
+        "model": "gpt-5.2"
+      },
+      {
+        "provider": "copilot_chat",
+        "model": "claude-haiku-4.5"
+      },
+      {
+        "provider": "copilot_chat",
+        "model": "gpt-5.2-codex"
+      },
+      {
+        "provider": "copilot_chat",
+        "model": "gpt-5.1-codex-max"
+      },
+      {
+        "provider": "copilot_chat",
+        "model": "gemini-3-pro-preview"
+      }
+    ],
     "always_allow_tool_actions": true,
     "default_model": {
       "provider": "copilot_chat",
-      "model": "claude-sonnet-4.5",
+      "model": "gpt-5.2-codex",
     },
     "model_parameters": [],
   },
