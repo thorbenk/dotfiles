@@ -16,9 +16,9 @@
     "extract_dir": "fd-v10.3.0-x86_64-unknown-linux-gnu"
   },
   "lazygit": {
-    "version": "0.58.1",
-    "tag": "v0.58.1",
-    "url": "https://github.com/jesseduffield/lazygit/releases/download/v0.58.1/lazygit_0.58.1_linux_x86_64.tar.gz",
+    "version": "0.59.0",
+    "tag": "v0.59.0",
+    "url": "https://github.com/jesseduffield/lazygit/releases/download/v0.59.0/lazygit_0.59.0_linux_x86_64.tar.gz",
     "repo": "jesseduffield/lazygit",
     "binary_name": "lazygit"
   },

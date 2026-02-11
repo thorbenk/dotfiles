@@ -3,6 +3,13 @@
     "provider": "copilot"
   },
   "agent_servers": {
+    "codex": {
+      "favorite_config_option_values": {
+        "model": [
+          "gpt-5.3-codex"
+        ]
+      }
+    },
     "github-copilot": {
       "type": "registry"
     }
@@ -35,6 +42,7 @@
   },
   "use_system_path_prompts": false,
   "agent": {
+    "default_profile": "write",
     "show_turn_stats": true,
     "favorite_models": [
       {
@@ -69,7 +77,7 @@
     "always_allow_tool_actions": true,
     "default_model": {
       "provider": "copilot_chat",
-      "model": "gpt-5.2-codex",
+      "model": "claude-sonnet-4.5",
     },
     "model_parameters": [],
   },
