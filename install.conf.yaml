@@ -38,6 +38,9 @@
     # Codex
     ~/.codex/config.toml: codex/config.toml
 
+    # Bottom (btm)
+    ~/.config/bottom/bottom.toml: bottom/bottom.toml
+
     # Systemd user services
     ~/.config/systemd/user/ydotoold.service: services/ydotool/ydotoold.service
 

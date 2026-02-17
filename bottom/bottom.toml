@@ -1,0 +1,71 @@
+# Bottom (btm) configuration file
+# See: https://clementtsang.github.io/bottom/stable/configuration/config-file/
+
+[flags]
+# Use basic mode for a simpler interface
+basic = false
+
+# Enable memory values to be shown in binary units
+mem_as_value = true
+
+# Default time interval in milliseconds
+rate = 1000
+
+# Temperature type (celsius, kelvin, fahrenheit)
+temperature_type = "celsius"
+
+# Default widget type
+default_widget_type = "cpu"
+
+# Hide time scaling
+hide_time = false
+
+# Show table scroll position
+show_table_scroll_position = true
+
+# Disable mouse capture
+disable_click = false
+
+# Group processes by default
+group_processes = false
+
+# Case sensitive search by default
+case_sensitive = false
+
+# Match whole word in search by default
+whole_word = false
+
+# Use regex in search by default
+regex = false
+
+# Show CPU usage as average
+cpu_left_legend = true
+
+[disk_filter]
+# Filter disks if needed
+# is_list_ignored = false
+# list = ["/dev/loop"]
+# regex = true
+# case_sensitive = false
+# whole_word = false
+
+[mount_filter]
+# Filter mount points if needed
+# is_list_ignored = false
+# list = ["/boot"]
+# regex = true
+# case_sensitive = false
+# whole_word = false
+
+# Define custom layout with only CPU and Memory widgets
+# Layout uses ROW and COL to define the structure
+# Each widget is identified by its type
+[[row]]
+  ratio = 50
+  [[row.child]]
+    type = "cpu"
+
+[[row]]
+  ratio = 50
+  [[row.child]]
+    type = "mem"

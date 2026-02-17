@@ -128,6 +128,11 @@ GITHUB_RELEASES = {
         asset_pattern="ydotoold-release-ubuntu-latest",
         binary_name="ydotoold",
     ),
+    "btm": GitHubRelease(
+        repo="ClementTsang/bottom",
+        asset_pattern="bottom_{arch}-unknown-linux-gnu.tar.gz",
+        binary_name="btm",
+    ),
 }
 
 
@@ -501,6 +506,12 @@ def ydotoold_version(version_output: str) -> str:
     return "installed"
 
 
+def btm_version(version_output: str) -> str:
+    match = re.search(r"bottom (\d+\.\d+\.\d+)", version_output)
+    assert match
+    return match.group(1)
+
+
 def get_installed_font_version(font_name: str) -> str | None:
     """Extract the Nerd Fonts version from an installed font file."""
     local_fonts = Path(os.path.expanduser("~/.local/share/fonts"))
@@ -769,6 +780,11 @@ def main() -> None:
             cmd=["ydotoold", "--help"],
             lines=1,
             extract_version=ydotoold_version,
+        ),
+        "btm": Check(
+            cmd=["btm", "--version"],
+            lines=1,
+            extract_version=btm_version,
         ),
     }
 

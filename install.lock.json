@@ -91,5 +91,12 @@
     "url": "https://github.com/ReimuNotMoe/ydotool/releases/download/v1.0.4/ydotoold-release-ubuntu-latest",
     "repo": "ReimuNotMoe/ydotool",
     "binary_name": "ydotoold"
+  },
+  "btm": {
+    "version": "0.12.3",
+    "tag": "0.12.3",
+    "url": "https://github.com/ClementTsang/bottom/releases/download/0.12.3/bottom_x86_64-unknown-linux-gnu.tar.gz",
+    "repo": "ClementTsang/bottom",
+    "binary_name": "btm"
   }
 }
