@@ -1,8 +1,8 @@
 {
   "codex": {
-    "version": "0.98.0",
-    "tag": "rust-v0.98.0",
-    "url": "https://github.com/openai/codex/releases/download/rust-v0.98.0/codex-x86_64-unknown-linux-gnu.tar.gz",
+    "version": "0.104.0",
+    "tag": "rust-v0.104.0",
+    "url": "https://github.com/openai/codex/releases/download/rust-v0.104.0/codex-x86_64-unknown-linux-gnu.tar.gz",
     "repo": "openai/codex",
     "binary_name": "codex",
     "archive_binary_name": "codex-x86_64-unknown-linux-gnu"
@@ -98,5 +98,12 @@
     "url": "https://github.com/ClementTsang/bottom/releases/download/0.12.3/bottom_x86_64-unknown-linux-gnu.tar.gz",
     "repo": "ClementTsang/bottom",
     "binary_name": "btm"
+  },
+  "tree-sitter": {
+    "version": "0.26.5",
+    "tag": "v0.26.5",
+    "url": "https://github.com/tree-sitter/tree-sitter/releases/download/v0.26.5/tree-sitter-linux-x64.gz",
+    "repo": "tree-sitter/tree-sitter",
+    "binary_name": "tree-sitter"
   }
 }

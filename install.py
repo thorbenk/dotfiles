@@ -133,6 +133,11 @@ GITHUB_RELEASES = {
         asset_pattern="bottom_{arch}-unknown-linux-gnu.tar.gz",
         binary_name="btm",
     ),
+    "tree-sitter": GitHubRelease(
+        repo="tree-sitter/tree-sitter",
+        asset_pattern="tree-sitter-linux-x64.gz",
+        binary_name="tree-sitter",
+    ),
 }
 
 
@@ -391,6 +396,23 @@ def install_from_lock(package_name: str) -> None:
 
         return
 
+    # Special case for gzip-compressed single binaries (e.g., tree-sitter-linux-x64.gz)
+    if url.endswith(".gz") and not url.endswith((".tar.gz", ".tgz")):
+        import gzip as gzip_mod
+        with tempfile.TemporaryDirectory() as tmpdir:
+            fname = os.path.basename(urlparse(url).path)
+            fpath = os.path.join(tmpdir, fname)
+            download_with_progress(url, fpath)
+
+            binary_name = package_info.get("binary_name", package_name)
+            dest = LOCAL_BIN / binary_name
+            with gzip_mod.open(fpath, "rb") as f_in:
+                with open(dest, "wb") as f_out:
+                    shutil.copyfileobj(f_in, f_out)
+            chmod_x(dest)
+
+        return
+
     # Special case for raw binaries (not archives)
     if not url.endswith((".tar.gz", ".zip", ".tgz")):
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -508,6 +530,12 @@ def ydotoold_version(version_output: str) -> str:
 
 def btm_version(version_output: str) -> str:
     match = re.search(r"bottom (\d+\.\d+\.\d+)", version_output)
+    assert match
+    return match.group(1)
+
+
+def tree_sitter_version(version_output: str) -> str:
+    match = re.search(r"tree-sitter (\d+\.\d+\.\d+)", version_output)
     assert match
     return match.group(1)
 
@@ -630,7 +658,7 @@ def check_versions() -> None:
             continue
 
         # Try to get installed version
-        if name in ["nvim", "lazygit", "difft", "fd", "hyperfine", "bat", "delta", "codex"]:
+        if name in ["nvim", "lazygit", "difft", "fd", "hyperfine", "bat", "delta", "codex", "tree-sitter"]:
             cmd_map: dict[str, tuple[list[str], Callable[[str], str] | None]] = {
                 "nvim": (["nvim", "--version"], nvim_version),
                 "lazygit": (["lazygit", "--version"], lazygit_version),
@@ -640,6 +668,7 @@ def check_versions() -> None:
                 "bat": (["bat", "--version"], bat_version),
                 "delta": (["delta", "--version"], delta_version),
                 "codex": (["codex", "--version"], codex_version),
+                "tree-sitter": (["tree-sitter", "--version"], tree_sitter_version),
             }
 
             if name in cmd_map:
@@ -785,6 +814,11 @@ def main() -> None:
             cmd=["btm", "--version"],
             lines=1,
             extract_version=btm_version,
+        ),
+        "tree-sitter": Check(
+            cmd=["tree-sitter", "--version"],
+            lines=1,
+            extract_version=tree_sitter_version,
         ),
     }
 
