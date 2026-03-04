@@ -33,6 +33,7 @@ class PackageInfo(TypedDict):
     tag: str
     url: str
     repo: str
+    source: NotRequired[str]
     binary_name: NotRequired[str]
     archive_binary_name: NotRequired[str]
     extract_dir: NotRequired[str]
@@ -57,6 +58,7 @@ class GitHubRelease:
     binary_name: str | None = None  # name of the binary in the archive
     archive_binary_name_pattern: str | None = None  # actual binary name inside archive
     extract_dir_pattern: str | None = None  # pattern for directory in archive with {version} and {arch} placeholders
+    extra_dirs: list[tuple[str, str]] | None = None  # list of (src_pattern, dest) dirs to copy; src relative to extract_dir, dest relative to ~/.local/
 
 
 GITHUB_RELEASES = {
@@ -138,7 +140,15 @@ GITHUB_RELEASES = {
         asset_pattern="tree-sitter-linux-x64.gz",
         binary_name="tree-sitter",
     ),
+    "clangd": GitHubRelease(
+        repo="clangd/clangd",
+        asset_pattern="clangd-linux-{version}.zip",
+        binary_name="clangd",
+        extract_dir_pattern="clangd_{version}/bin",
+        extra_dirs=[("../lib", "lib")],
+    ),
 }
+
 
 
 def get_arch_alt() -> str:
@@ -166,6 +176,7 @@ def fetch_latest_release(repo: str) -> GitHubReleaseData:
     except urllib.error.HTTPError as e:
         print(f"Error fetching release for {repo}: {e}")
         raise
+
 
 
 def extract_version_from_tag(tag: str, pattern: str | None = None) -> str:
@@ -250,6 +261,9 @@ def update_lock_file() -> None:
                     version=version,
                 )
                 lock_data[name]["archive_binary_name"] = archive_binary_name
+
+            if release_info.extra_dirs:
+                lock_data[name]["extra_dirs"] = release_info.extra_dirs
 
             print(f"✓ {name}: {version}")
 
@@ -458,6 +472,21 @@ def install_from_lock(package_name: str) -> None:
         else:
             print(f"Could not find binary {binary_name} for {package_name}")
 
+        # Copy extra directories (e.g., clangd lib/ with built-in headers)
+        if "extra_dirs" in package_info:
+            local_prefix = LOCAL_BIN.parent  # ~/.local
+            extract_base = tmpdir / package_info["extract_dir"] if "extract_dir" in package_info else tmpdir
+            for src_rel, dest_rel in package_info["extra_dirs"]:
+                src_path = (extract_base / src_rel).resolve()
+                dest_path = local_prefix / dest_rel
+                if src_path.is_dir():
+                    if dest_path.exists():
+                        shutil.rmtree(dest_path)
+                    shutil.copytree(src_path, dest_path)
+                    print(f"  Copied {src_rel} -> {dest_path}")
+                else:
+                    print(f"  Warning: extra dir {src_path} not found")
+
 
 
 
@@ -540,6 +569,13 @@ def tree_sitter_version(version_output: str) -> str:
     return match.group(1)
 
 
+def clangd_version(version_output: str) -> str:
+    match = re.search(r"clangd version (\d+\.\d+\.\d+)", version_output)
+    assert match
+    return match.group(1)
+
+
+
 def get_installed_font_version(font_name: str) -> str | None:
     """Extract the Nerd Fonts version from an installed font file."""
     local_fonts = Path(os.path.expanduser("~/.local/share/fonts"))
@@ -618,8 +654,10 @@ def show_lock_file() -> None:
 
     for name, info in sorted(lock.items()):
         version = info.get("version", "unknown")
+        source = info.get("source", "github")
         repo = info.get("repo", "")
-        print(f"{Fore.CYAN}{name:<{M}}{Fore.RESET} : v{version:<10} ({repo})")
+        label = f"PyPI" if source == "pypi" else repo
+        print(f"{Fore.CYAN}{name:<{M}}{Fore.RESET} : v{version:<10} ({label})")
 
     print()
 
@@ -657,8 +695,18 @@ def check_versions() -> None:
                 print(f"{Fore.YELLOW}{name:<{M}}{Fore.RESET} : v{installed_version} → v{locked_version}")
             continue
 
+        # Tools without version detection - just check if installed
+        if name in ["ydotool", "ydotoold"]:
+            if shutil.which(name):
+                up_to_date.append(name)
+                print(f"{Fore.GREEN}{name:<{M}}{Fore.RESET} : installed (version check skipped)")
+            else:
+                not_installed.append(name)
+                print(f"{Fore.RED}{name:<{M}}{Fore.RESET} : NOT INSTALLED (locked: v{locked_version})")
+            continue
+
         # Try to get installed version
-        if name in ["nvim", "lazygit", "difft", "fd", "hyperfine", "bat", "delta", "codex", "tree-sitter"]:
+        if name in ["nvim", "lazygit", "difft", "fd", "hyperfine", "bat", "delta", "codex", "tree-sitter", "clangd"]:
             cmd_map: dict[str, tuple[list[str], Callable[[str], str] | None]] = {
                 "nvim": (["nvim", "--version"], nvim_version),
                 "lazygit": (["lazygit", "--version"], lazygit_version),
@@ -669,6 +717,7 @@ def check_versions() -> None:
                 "delta": (["delta", "--version"], delta_version),
                 "codex": (["codex", "--version"], codex_version),
                 "tree-sitter": (["tree-sitter", "--version"], tree_sitter_version),
+                "clangd": (["clangd", "--version"], clangd_version),
             }
 
             if name in cmd_map:
@@ -819,6 +868,11 @@ def main() -> None:
             cmd=["tree-sitter", "--version"],
             lines=1,
             extract_version=tree_sitter_version,
+        ),
+        "clangd": Check(
+            cmd=["clangd", "--version"],
+            lines=1,
+            extract_version=clangd_version,
         ),
     }
 

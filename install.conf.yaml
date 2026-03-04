@@ -35,6 +35,10 @@
     ~/.config/zed/keymap.json: zed/keymap.json
     ~/.config/zed/debug.json: zed/debug.json
 
+    # Claude Code
+    ~/.claude/settings.json: claude/settings.json
+    ~/.claude/statusline.py: claude/statusline.py
+
     # Codex
     ~/.codex/config.toml: codex/config.toml
 

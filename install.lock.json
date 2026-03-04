@@ -1,8 +1,8 @@
 {
   "codex": {
-    "version": "0.104.0",
-    "tag": "rust-v0.104.0",
-    "url": "https://github.com/openai/codex/releases/download/rust-v0.104.0/codex-x86_64-unknown-linux-gnu.tar.gz",
+    "version": "0.107.0",
+    "tag": "rust-v0.107.0",
+    "url": "https://github.com/openai/codex/releases/download/rust-v0.107.0/codex-x86_64-unknown-linux-gnu.tar.gz",
     "repo": "openai/codex",
     "binary_name": "codex",
     "archive_binary_name": "codex-x86_64-unknown-linux-gnu"
@@ -100,10 +100,24 @@
     "binary_name": "btm"
   },
   "tree-sitter": {
-    "version": "0.26.5",
-    "tag": "v0.26.5",
-    "url": "https://github.com/tree-sitter/tree-sitter/releases/download/v0.26.5/tree-sitter-linux-x64.gz",
+    "version": "0.26.6",
+    "tag": "v0.26.6",
+    "url": "https://github.com/tree-sitter/tree-sitter/releases/download/v0.26.6/tree-sitter-linux-x64.gz",
     "repo": "tree-sitter/tree-sitter",
     "binary_name": "tree-sitter"
+  },
+  "clangd": {
+    "version": "21.1.8",
+    "tag": "21.1.8",
+    "url": "https://github.com/clangd/clangd/releases/download/21.1.8/clangd-linux-21.1.8.zip",
+    "repo": "clangd/clangd",
+    "binary_name": "clangd",
+    "extract_dir": "clangd_21.1.8/bin",
+    "extra_dirs": [
+      [
+        "../lib",
+        "lib"
+      ]
+    ]
   }
 }
