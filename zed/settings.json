@@ -1,18 +1,40 @@
 {
+  "diff_view_style": "unified",
+  "project_panel": {
+    "dock": "right"
+  },
+  "outline_panel": {
+    "dock": "left"
+  },
+  "collaboration_panel": {
+    "dock": "left"
+  },
+  "icon_theme": {
+    "mode": "dark",
+    "light": "Zed (Default)",
+    "dark": "Zed (Default)"
+  },
+  "session": {
+    "trust_all_worktrees": true,
+  },
   "edit_predictions": {
-    "provider": "copilot"
+    "provider": "copilot",
   },
   "agent_servers": {
-    "codex": {
-      "favorite_config_option_values": {
-        "model": [
-          "gpt-5.3-codex"
-        ]
-      }
-    },
-    "github-copilot": {
+    "github-copilot-cli": {
       "type": "registry"
-    }
+    },
+    "codex-acp": {
+      "type": "registry",
+    },
+    "claude-acp": {
+      "favorite_config_option_values": {
+        "mode": [
+          "bypassPermissions"
+        ]
+      },
+      "type": "registry",
+    },
   },
   "which_key": { "enabled": true },
   "diagnostics": {
@@ -20,19 +42,6 @@
       "enabled": true,
     },
   },
-  "ssh_connections": [
-    {
-      "host": "dehei-kroeger-02",
-      "projects": [
-        {
-          "paths": ["/home/azureuser"],
-        },
-        {
-          "paths": ["/home/azureuser/src/levoxel"],
-        },
-      ],
-    },
-  ],
   "sticky_scroll": {
     "enabled": true,
   },
@@ -42,48 +51,55 @@
   },
   "use_system_path_prompts": false,
   "agent": {
+    "dock": "left",
+    "tool_permissions": {
+      "default": "allow",
+    },
     "default_profile": "write",
     "show_turn_stats": true,
     "favorite_models": [
       {
         "provider": "copilot_chat",
-        "model": "claude-sonnet-4.5"
+        "model": "claude-sonnet-4.5",
       },
       {
         "provider": "copilot_chat",
-        "model": "claude-opus-4.5"
+        "model": "claude-opus-4.5",
       },
       {
         "provider": "copilot_chat",
-        "model": "gpt-5.2"
+        "model": "gpt-5.2",
       },
       {
         "provider": "copilot_chat",
-        "model": "claude-haiku-4.5"
+        "model": "claude-haiku-4.5",
       },
       {
         "provider": "copilot_chat",
-        "model": "gpt-5.2-codex"
+        "model": "gpt-5.2-codex",
       },
       {
         "provider": "copilot_chat",
-        "model": "gpt-5.1-codex-max"
+        "model": "gpt-5.1-codex-max",
       },
       {
         "provider": "copilot_chat",
-        "model": "gemini-3-pro-preview"
-      }
+        "model": "gemini-3-pro-preview",
+      },
     ],
-    "always_allow_tool_actions": true,
     "default_model": {
       "provider": "copilot_chat",
-      "model": "claude-sonnet-4.5",
+      "model": "gpt-4o",
     },
     "model_parameters": [],
   },
   "pane_split_direction_vertical": "right",
   "pane_split_direction_horizontal": "down",
-  "theme": "One Dark",
+  "theme": {
+    "mode": "dark",
+    "light": "One Light",
+    "dark": "One Dark"
+  },
   // "server_url": "https://127.0.0.1:389",
   "vim_mode": true,
   "vim": {
@@ -143,8 +159,7 @@
   "lsp": {
     "clangd": {
       "binary": {
-        "path": "/usr/bin/clangd-18",
-        "arguments": [],
+        "path": "~/.local/bin/clangd",
       },
     },
     "basedpyright": {

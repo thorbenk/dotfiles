@@ -23,3 +23,7 @@ And to fixup the GPU:
 # RUST_LOG=info DRI_PRIME=pci-0000_01_00_0 __VK_LAYER_NV_optimus=NVIDIA_only __GLX_VENDOR_LIBRARY_NAME=nvidia $ZED_BIN -- --foreground "$@"
 DRI_PRIME=pci-0000_01_00_0 __VK_LAYER_NV_optimus=NVIDIA_only __GLX_VENDOR_LIBRARY_NAME=nvidia $ZED_BIN "$@" &>/dev/null & disown
 ```
+
+## `remote_server`
+
+Upload to `~/.zed_server/zed-remote-server-dev-build`.

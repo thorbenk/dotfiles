@@ -46,13 +46,19 @@
     ~/.config/bottom/bottom.toml: bottom/bottom.toml
 
     # Systemd user services
-    ~/.config/systemd/user/ydotoold.service: services/ydotool/ydotoold.service
+    ~/.config/systemd/user/ydotoold.service:
+      path: services/ydotool/ydotoold.service
+      if: '[ "$(hostname)" != "dell-brick" ]'
 
     # Desktop applications
-    ~/.local/share/applications/dictation-indicator.desktop: applications/dictation-indicator.desktop
+    ~/.local/share/applications/dictation-indicator.desktop:
+      path: applications/dictation-indicator.desktop
+      if: '[ "$(hostname)" != "dell-brick" ]'
 
     # Autostart dictation indicator
-    ~/.config/autostart/dictation-indicator.desktop: applications/dictation-indicator.desktop
+    ~/.config/autostart/dictation-indicator.desktop:
+      path: applications/dictation-indicator.desktop
+      if: '[ "$(hostname)" != "dell-brick" ]'
     
     # Note: install.py handles tool installation (fd, bat, delta, lazygit, nvim, etc.)
     # Run './install.py --check' to see tool versions

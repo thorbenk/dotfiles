@@ -26,6 +26,66 @@ LOCAL_BIN.mkdir(parents=True, exist_ok=True)
 
 ARCH = platform.machine()
 LOCK_FILE = PWD / "install.lock.json"
+HOSTNAME = platform.node()
+
+
+@dataclasses.dataclass(frozen=True)
+class Dep:
+    name: str
+    only_on: tuple[str, ...] | None = None
+    not_on: tuple[str, ...] | None = None
+
+    def __post_init__(self) -> None:
+        if self.only_on is not None and self.not_on is not None:
+            raise ValueError(f"Dep {self.name}: cannot set both only_on and not_on")
+
+    def applies_here(self) -> bool:
+        if self.only_on is not None and HOSTNAME not in self.only_on:
+            return False
+        if self.not_on is not None and HOSTNAME in self.not_on:
+            return False
+        return True
+
+
+# WHAT to install, and on which hosts. HOW each dep is fetched / version-checked
+# is defined in GITHUB_RELEASES (below) and system_deps / lockfile_tools (in main).
+DEPS: list[Dep] = [
+    # System tools (provided by package manager; only version-checked)
+    Dep("git"),
+    Dep("uv"),
+    Dep("zsh"),
+    Dep("wget"),
+    Dep("curl"),
+    Dep("npm"),
+    Dep("fzf"),
+    Dep("rg"),
+    Dep("tmux"),
+
+    # Tools managed via install.lock.json + GitHub releases
+    Dep("nvim"),
+    Dep("lazygit"),
+    Dep("difft"),
+    Dep("fd"),
+    Dep("hyperfine"),
+    Dep("bat"),
+    Dep("delta"),
+    Dep("codex"),
+    Dep("ydotool", not_on=("dell-brick",)),
+    Dep("ydotoold", not_on=("dell-brick",)),
+    Dep("btm"),
+    Dep("tree-sitter"),
+    Dep("clangd"),
+
+    # Fonts
+    Dep("firacode"),
+    Dep("iosevkaterm"),
+]
+
+# Lock-file key -> font-family pattern used by fc-list
+FONTS: dict[str, str] = {
+    "firacode": "FiraCode",
+    "iosevkaterm": "IosevkaTerm",
+}
 
 
 class PackageInfo(TypedDict):
@@ -211,8 +271,11 @@ def find_matching_asset(assets: list[GitHubAsset], pattern: str, version: str) -
 def update_lock_file() -> None:
     """Fetch latest releases and update the lock file."""
     lock_data: dict[str, PackageInfo] = {}
+    dep_names = {d.name for d in DEPS}
 
     for name, release_info in GITHUB_RELEASES.items():
+        if name not in dep_names:
+            continue
         try:
             release = fetch_latest_release(release_info.repo)
             tag = release["tag_name"]
@@ -361,12 +424,10 @@ def install_font(font_name: str) -> bool:
     return True
 
 
-def install_fonts() -> None:
-    """Install all configured Nerd Fonts."""
-    fonts_to_install = ["firacode", "iosevkaterm"]
-
+def install_fonts(font_names: list[str]) -> None:
+    """Install the listed Nerd Fonts (lock-file keys, e.g. 'firacode')."""
     any_installed = False
-    for font in fonts_to_install:
+    for font in font_names:
         if install_font(font):
             any_installed = True
 
@@ -638,6 +699,39 @@ def ensure_symlink(src: Path, dst: Path) -> None:
         dst.symlink_to(src)
 
 
+def validate_deps(
+    system_deps: dict[str, "Check"],
+    lockfile_tools: dict[str, "Check"],
+) -> None:
+    """Sanity-check DEPS against the HOW dicts.
+
+    Every dep must be defined in exactly one of system_deps / lockfile_tools / FONTS,
+    and every lockfile tool must have a matching GITHUB_RELEASES entry.
+    """
+    seen: dict[str, str] = {}
+    for src, names in [
+        ("system_deps", system_deps.keys()),
+        ("lockfile_tools", lockfile_tools.keys()),
+        ("fonts", FONTS.keys()),
+    ]:
+        for n in names:
+            assert n not in seen, f"{n!r} defined in both {seen[n]} and {src}"
+            seen[n] = src
+
+    dep_names = {d.name for d in DEPS}
+    missing = seen.keys() - dep_names
+    extra = dep_names - seen.keys()
+    assert not missing and not extra, (
+        f"DEPS mismatch: missing in DEPS={sorted(missing)}, "
+        f"extra in DEPS (no HOW)={sorted(extra)}"
+    )
+
+    missing_gh = lockfile_tools.keys() - GITHUB_RELEASES.keys()
+    assert not missing_gh, (
+        f"lockfile_tools without GITHUB_RELEASES entry: {sorted(missing_gh)}"
+    )
+
+
 def show_lock_file() -> None:
     """Display lock file contents in a readable format."""
     if not LOCK_FILE.exists():
@@ -665,6 +759,7 @@ def show_lock_file() -> None:
 def check_versions() -> None:
     """Compare installed versions with lock file versions."""
     lock = load_lock_file()
+    active = {d.name for d in DEPS if d.applies_here()}
 
     print(f"\nVersion Check (Installed vs Locked)")
     print(f"{'='*80}\n")
@@ -676,6 +771,8 @@ def check_versions() -> None:
     not_installed = []
 
     for name, info in sorted(lock.items()):
+        if name not in active:
+            continue
         locked_version = info.get("version", "unknown")
 
         # Check font versions
@@ -787,10 +884,13 @@ def main() -> None:
         print("Run with --update-lock to create it")
         sys.exit(1)
 
+    active = {d.name for d in DEPS if d.applies_here()}
+
     # Check if fonts are installed
-    required_fonts = ["FiraCode", "IosevkaTerm"]
-    if not query_fonts_installed(required_fonts):
-        install_fonts()
+    active_fonts = [n for n in FONTS if n in active]
+    required_font_patterns = [FONTS[n] for n in active_fonts]
+    if required_font_patterns and not query_fonts_installed(required_font_patterns):
+        install_fonts(active_fonts)
 
     lock = load_lock_file()
 
@@ -876,12 +976,16 @@ def main() -> None:
         ),
     }
 
+    validate_deps(system_deps, lockfile_tools)
+
     M = max(len(name) for name in list(system_deps.keys()) + list(lockfile_tools.keys()))
 
     failed = False
 
     # Check system dependencies
     for name, cmd in system_deps.items():
+        if name not in active:
+            continue
         r = run(cmd.cmd)
         if r == "":
             print(Fore.RED + f"{name:<{M}} : not found" + Fore.RESET)
@@ -895,6 +999,8 @@ def main() -> None:
 
     # Check and install/update lockfile-managed tools
     for name, cmd in lockfile_tools.items():
+        if name not in active:
+            continue
         if name not in lock:
             print(Fore.YELLOW + f"{name:<{M}} : not in lock file, skipping" + Fore.RESET)
             continue

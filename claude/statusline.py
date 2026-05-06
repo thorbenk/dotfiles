@@ -108,6 +108,11 @@ def main():
     if model:
         parts.append(model)
 
+    permission_mode = data.get("permissionMode", "")
+    if permission_mode:
+        mode_label = permission_mode.capitalize()
+        parts.append(f"{DIM}{mode_label}{RESET}")
+
     bar_color = RED if pct >= 90 else YELLOW if pct >= 70 else GREEN
     filled = pct * 10 // 100
     bar = "\u2593" * filled + "\u2591" * (10 - filled)
