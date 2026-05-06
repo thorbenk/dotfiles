@@ -87,10 +87,11 @@
       "space S": "project_symbols::Toggle",
       "space z": "workspace::ToggleZoom",
       "ctrl-b": "terminal_panel::ToggleFocus",
-      "space g g": [
+      "space g l": [
         "task::Spawn",
         { "task_name": "lazygit", "reveal_target": "center" },
       ],
+      "space g g": "git_graph::Open",
       "] b": "pane::ActivateNextItem",
       "[ b": "pane::ActivatePreviousItem",
       "] q": "editor::GoToDiagnostic", // vim fugitive: ]q => :cnext
