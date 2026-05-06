@@ -75,6 +75,7 @@ DEPS: list[Dep] = [
     Dep("btm"),
     Dep("tree-sitter"),
     Dep("clangd"),
+    Dep("zed"),
 
     # Fonts
     Dep("firacode"),
@@ -119,6 +120,28 @@ class GitHubRelease:
     archive_binary_name_pattern: str | None = None  # actual binary name inside archive
     extract_dir_pattern: str | None = None  # pattern for directory in archive with {version} and {arch} placeholders
     extra_dirs: list[tuple[str, str]] | None = None  # list of (src_pattern, dest) dirs to copy; src relative to extract_dir, dest relative to ~/.local/
+    install: Callable[[str, "PackageInfo", Path], None] | None = None  # custom installer; if set, takes over after archive extraction
+
+
+def install_zed(name: str, info: "PackageInfo", tmpdir: Path) -> None:
+    """Install Zed as an app bundle under ~/.local/zed.app, with a binary
+    symlink and a path-patched .desktop file."""
+    local_prefix = LOCAL_BIN.parent  # ~/.local
+    bundle = local_prefix / "zed.app"
+    if bundle.exists():
+        shutil.rmtree(bundle)
+    shutil.copytree(tmpdir / "zed.app", bundle)
+    ensure_symlink(bundle / "bin" / "zed", LOCAL_BIN / "zed")
+
+    appid = "dev.zed.Zed"
+    desktop_src = bundle / "share/applications" / f"{appid}.desktop"
+    desktop_dst = local_prefix / "share/applications" / f"{appid}.desktop"
+    desktop_dst.parent.mkdir(parents=True, exist_ok=True)
+    icon = bundle / "share/icons/hicolor/512x512/apps/zed.png"
+    text = desktop_src.read_text()
+    text = text.replace("Icon=zed", f"Icon={icon}")
+    text = text.replace("Exec=zed", f"Exec={bundle / 'bin/zed'}")
+    desktop_dst.write_text(text)
 
 
 GITHUB_RELEASES = {
@@ -206,6 +229,12 @@ GITHUB_RELEASES = {
         binary_name="clangd",
         extract_dir_pattern="clangd_{version}/bin",
         extra_dirs=[("../lib", "lib")],
+    ),
+    "zed": GitHubRelease(
+        repo="zed-industries/zed",
+        asset_pattern="zed-linux-{arch}.tar.gz",
+        binary_name="zed",
+        install=install_zed,
     ),
 }
 
@@ -453,6 +482,13 @@ def install_from_lock(package_name: str) -> None:
     package_info = lock[package_name]
     url = package_info["url"]
 
+    # Custom installer (e.g. app bundles): takes over after archive extraction.
+    release = GITHUB_RELEASES.get(package_name)
+    if release is not None and release.install is not None:
+        with extract_and_download(url) as tmpdir:
+            release.install(package_name, package_info, tmpdir)
+        return
+
     # Special case for appimage
     if url.endswith(".appimage"):
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -636,6 +672,12 @@ def clangd_version(version_output: str) -> str:
     return match.group(1)
 
 
+def zed_version(version_output: str) -> str:
+    match = re.search(r"(\d+\.\d+\.\d+)", version_output)
+    assert match
+    return match.group(1)
+
+
 
 def get_installed_font_version(font_name: str) -> str | None:
     """Extract the Nerd Fonts version from an installed font file."""
@@ -803,7 +845,7 @@ def check_versions() -> None:
             continue
 
         # Try to get installed version
-        if name in ["nvim", "lazygit", "difft", "fd", "hyperfine", "bat", "delta", "codex", "tree-sitter", "clangd"]:
+        if name in ["nvim", "lazygit", "difft", "fd", "hyperfine", "bat", "delta", "codex", "tree-sitter", "clangd", "zed"]:
             cmd_map: dict[str, tuple[list[str], Callable[[str], str] | None]] = {
                 "nvim": (["nvim", "--version"], nvim_version),
                 "lazygit": (["lazygit", "--version"], lazygit_version),
@@ -815,6 +857,7 @@ def check_versions() -> None:
                 "codex": (["codex", "--version"], codex_version),
                 "tree-sitter": (["tree-sitter", "--version"], tree_sitter_version),
                 "clangd": (["clangd", "--version"], clangd_version),
+                "zed": (["zed", "--version"], zed_version),
             }
 
             if name in cmd_map:
@@ -973,6 +1016,11 @@ def main() -> None:
             cmd=["clangd", "--version"],
             lines=1,
             extract_version=clangd_version,
+        ),
+        "zed": Check(
+            cmd=["zed", "--version"],
+            lines=1,
+            extract_version=zed_version,
         ),
     }
 

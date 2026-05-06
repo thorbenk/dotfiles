@@ -1,18 +1,18 @@
 {
   "diff_view_style": "unified",
   "project_panel": {
-    "dock": "right"
+    "dock": "right",
   },
   "outline_panel": {
-    "dock": "left"
+    "dock": "left",
   },
   "collaboration_panel": {
-    "dock": "left"
+    "dock": "left",
   },
   "icon_theme": {
     "mode": "dark",
     "light": "Zed (Default)",
-    "dark": "Zed (Default)"
+    "dark": "Zed (Default)",
   },
   "session": {
     "trust_all_worktrees": true,
@@ -22,16 +22,14 @@
   },
   "agent_servers": {
     "github-copilot-cli": {
-      "type": "registry"
+      "type": "registry",
     },
     "codex-acp": {
       "type": "registry",
     },
     "claude-acp": {
       "favorite_config_option_values": {
-        "mode": [
-          "bypassPermissions"
-        ]
+        "mode": ["bypassPermissions"],
       },
       "type": "registry",
     },
@@ -98,7 +96,7 @@
   "theme": {
     "mode": "dark",
     "light": "One Light",
-    "dark": "One Dark"
+    "dark": "One Dark",
   },
   // "server_url": "https://127.0.0.1:389",
   "vim_mode": true,

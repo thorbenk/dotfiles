@@ -1,12 +1,4 @@
 {
-  "codex": {
-    "version": "0.125.0",
-    "tag": "rust-v0.125.0",
-    "url": "https://github.com/openai/codex/releases/download/rust-v0.125.0/codex-x86_64-unknown-linux-gnu.tar.gz",
-    "repo": "openai/codex",
-    "binary_name": "codex",
-    "archive_binary_name": "codex-x86_64-unknown-linux-gnu"
-  },
   "fd": {
     "version": "10.4.2",
     "tag": "v10.4.2",
@@ -21,13 +13,6 @@
     "url": "https://github.com/jesseduffield/lazygit/releases/download/v0.61.1/lazygit_0.61.1_linux_x86_64.tar.gz",
     "repo": "jesseduffield/lazygit",
     "binary_name": "lazygit"
-  },
-  "difftastic": {
-    "version": "0.68.0",
-    "tag": "0.68.0",
-    "url": "https://github.com/Wilfred/difftastic/releases/download/0.68.0/difft-x86_64-unknown-linux-gnu.tar.gz",
-    "repo": "Wilfred/difftastic",
-    "binary_name": "difft"
   },
   "hyperfine": {
     "version": "1.20.0",
@@ -73,9 +58,9 @@
     "repo": "ryanoasis/nerd-fonts"
   },
   "difft": {
-    "version": "0.68.0",
-    "tag": "0.68.0",
-    "url": "https://github.com/Wilfred/difftastic/releases/download/0.68.0/difft-x86_64-unknown-linux-gnu.tar.gz",
+    "version": "0.69.0",
+    "tag": "0.69.0",
+    "url": "https://github.com/Wilfred/difftastic/releases/download/0.69.0/difft-x86_64-unknown-linux-gnu.tar.gz",
     "repo": "Wilfred/difftastic"
   },
   "ydotool": {
@@ -119,5 +104,12 @@
         "lib"
       ]
     ]
+  },
+  "zed": {
+    "version": "1.0.1",
+    "tag": "v1.0.1",
+    "url": "https://github.com/zed-industries/zed/releases/download/v1.0.1/zed-linux-x86_64.tar.gz",
+    "repo": "zed-industries/zed",
+    "binary_name": "zed"
   }
 }
