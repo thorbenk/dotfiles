@@ -149,9 +149,9 @@ GITHUB_RELEASES = {
     "codex": GitHubRelease(
         repo="openai/codex",
         version_pattern=r"rust-v(\d+\.\d+\.\d+)",
-        asset_pattern="codex-{arch}-unknown-linux-gnu.tar.gz",
+        asset_pattern="codex-{arch}-unknown-linux-musl.tar.gz",
         binary_name="codex",
-        archive_binary_name_pattern="codex-{arch}-unknown-linux-gnu",
+        archive_binary_name_pattern="codex-{arch}-unknown-linux-musl",
     ),
     "fd": GitHubRelease(
         repo="sharkdp/fd",
