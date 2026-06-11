@@ -60,7 +60,6 @@ DEPS: list[Dep] = [
     Dep("fzf"),
     Dep("rg"),
     Dep("tmux"),
-
     # Tools managed via install.lock.json + GitHub releases
     Dep("nvim"),
     Dep("lazygit"),
@@ -70,14 +69,15 @@ DEPS: list[Dep] = [
     Dep("bat"),
     Dep("delta"),
     Dep("codex"),
-    Dep("ydotool", not_on=("dell-brick",)),
-    Dep("ydotoold", not_on=("dell-brick",)),
+    Dep("rtk"),
+    # Dep("ydotool", not_on=("dell-brick",)),
+    # Dep("ydotoold", not_on=("dell-brick",)),
     Dep("btm"),
     Dep("tree-sitter"),
     Dep("clangd"),
     Dep("zed"),
     Dep("hunk"),
-
+    Dep("rclone", only_on=("DEHEI-7H3ZXL3",)),
     # Fonts
     Dep("firacode"),
     Dep("iosevkaterm"),
@@ -115,13 +115,23 @@ class GitHubReleaseData(TypedDict):
 @dataclasses.dataclass(frozen=True)
 class GitHubRelease:
     repo: str  # e.g., "sharkdp/fd"
-    version_pattern: str | None = None  # regex to match version in tag, e.g., r"v(\d+\.\d+\.\d+)"
-    asset_pattern: str | None = None  # pattern to match asset name with {version} and {arch} placeholders
+    version_pattern: str | None = (
+        None  # regex to match version in tag, e.g., r"v(\d+\.\d+\.\d+)"
+    )
+    asset_pattern: str | None = (
+        None  # pattern to match asset name with {version} and {arch} placeholders
+    )
     binary_name: str | None = None  # name of the binary in the archive
     archive_binary_name_pattern: str | None = None  # actual binary name inside archive
-    extract_dir_pattern: str | None = None  # pattern for directory in archive with {version} and {arch} placeholders
-    extra_dirs: list[tuple[str, str]] | None = None  # list of (src_pattern, dest) dirs to copy; src relative to extract_dir, dest relative to ~/.local/
-    install: Callable[[str, "PackageInfo", Path], None] | None = None  # custom installer; if set, takes over after archive extraction
+    extract_dir_pattern: str | None = (
+        None  # pattern for directory in archive with {version} and {arch} placeholders
+    )
+    extra_dirs: list[tuple[str, str]] | None = (
+        None  # list of (src_pattern, dest) dirs to copy; src relative to extract_dir, dest relative to ~/.local/
+    )
+    install: Callable[[str, "PackageInfo", Path], None] | None = (
+        None  # custom installer; if set, takes over after archive extraction
+    )
 
 
 def install_zed(name: str, info: "PackageInfo", tmpdir: Path) -> None:
@@ -145,6 +155,19 @@ def install_zed(name: str, info: "PackageInfo", tmpdir: Path) -> None:
     desktop_dst.write_text(text)
 
 
+def install_hunk(name: str, info: "PackageInfo", tmpdir: Path) -> None:
+    # The hunk binary resolves its own path and loads skills/hunk-review/SKILL.md
+    # relative to it, so the binary and skills/ dir must live together.
+    local_prefix = LOCAL_BIN.parent  # ~/.local
+    bundle = local_prefix / "hunk"
+    extract_dir = tmpdir / info["extract_dir"]
+    if bundle.exists():
+        shutil.rmtree(bundle)
+    shutil.copytree(extract_dir, bundle)
+    chmod_x(bundle / "hunk")
+    ensure_symlink(bundle / "hunk", LOCAL_BIN / "hunk")
+
+
 GITHUB_RELEASES = {
     "codex": GitHubRelease(
         repo="openai/codex",
@@ -152,6 +175,11 @@ GITHUB_RELEASES = {
         asset_pattern="codex-{arch}-unknown-linux-musl.tar.gz",
         binary_name="codex",
         archive_binary_name_pattern="codex-{arch}-unknown-linux-musl",
+    ),
+    "rtk": GitHubRelease(
+        repo="rtk-ai/rtk",
+        asset_pattern="rtk-{arch}-unknown-linux-musl.tar.gz",
+        binary_name="rtk",
     ),
     "fd": GitHubRelease(
         repo="sharkdp/fd",
@@ -204,16 +232,16 @@ GITHUB_RELEASES = {
         repo="Wilfred/difftastic",
         asset_pattern="difft-{arch}-unknown-linux-gnu.tar.gz",
     ),
-    "ydotool": GitHubRelease(
-        repo="ReimuNotMoe/ydotool",
-        asset_pattern="ydotool-release-ubuntu-latest",
-        binary_name="ydotool",
-    ),
-    "ydotoold": GitHubRelease(
-        repo="ReimuNotMoe/ydotool",
-        asset_pattern="ydotoold-release-ubuntu-latest",
-        binary_name="ydotoold",
-    ),
+    # "ydotool": GitHubRelease(
+    #     repo="ReimuNotMoe/ydotool",
+    #     asset_pattern="ydotool-release-ubuntu-latest",
+    #     binary_name="ydotool",
+    # ),
+    # "ydotoold": GitHubRelease(
+    #     repo="ReimuNotMoe/ydotool",
+    #     asset_pattern="ydotoold-release-ubuntu-latest",
+    #     binary_name="ydotoold",
+    # ),
     "btm": GitHubRelease(
         repo="ClementTsang/bottom",
         asset_pattern="bottom_{arch}-unknown-linux-gnu.tar.gz",
@@ -242,9 +270,15 @@ GITHUB_RELEASES = {
         asset_pattern="hunkdiff-linux-{arch_short}.tar.gz",
         binary_name="hunk",
         extract_dir_pattern="hunkdiff-linux-{arch_short}",
+        install=install_hunk,
+    ),
+    "rclone": GitHubRelease(
+        repo="rclone/rclone",
+        asset_pattern="rclone-v{version}-linux-amd64.zip",
+        binary_name="rclone",
+        extract_dir_pattern="rclone-v{version}-linux-amd64",
     ),
 }
-
 
 
 def get_arch_alt() -> str:
@@ -285,7 +319,6 @@ def fetch_latest_release(repo: str) -> GitHubReleaseData:
         raise
 
 
-
 def extract_version_from_tag(tag: str, pattern: str | None = None) -> str:
     """Extract version from git tag."""
     if pattern:
@@ -294,18 +327,24 @@ def extract_version_from_tag(tag: str, pattern: str | None = None) -> str:
             return match.group(1)
 
     # Default: remove leading 'v' if present
-    return tag.lstrip('v')
+    return tag.lstrip("v")
 
 
-def find_matching_asset(assets: list[GitHubAsset], pattern: str, version: str) -> str | None:
+def find_matching_asset(
+    assets: list[GitHubAsset], pattern: str, version: str
+) -> str | None:
     """Find asset URL matching the pattern for current architecture."""
     arch_alt = get_arch_alt()
     arch_short = get_arch_short()
 
     # Replace placeholders in pattern - try both arch formats
     patterns_to_try = [
-        pattern.format(version=version, arch=ARCH, arch_alt=arch_alt, arch_short=arch_short),
-        pattern.format(version=version, arch=arch_alt, arch_alt=arch_alt, arch_short=arch_short),
+        pattern.format(
+            version=version, arch=ARCH, arch_alt=arch_alt, arch_short=arch_short
+        ),
+        pattern.format(
+            version=version, arch=arch_alt, arch_alt=arch_alt, arch_short=arch_short
+        ),
     ]
 
     for pattern_filled in patterns_to_try:
@@ -532,6 +571,7 @@ def install_from_lock(package_name: str) -> None:
     # Special case for gzip-compressed single binaries (e.g., tree-sitter-linux-x64.gz)
     if url.endswith(".gz") and not url.endswith((".tar.gz", ".tgz")):
         import gzip as gzip_mod
+
         with tempfile.TemporaryDirectory() as tmpdir:
             fname = os.path.basename(urlparse(url).path)
             fpath = os.path.join(tmpdir, fname)
@@ -594,7 +634,11 @@ def install_from_lock(package_name: str) -> None:
         # Copy extra directories (e.g., clangd lib/ with built-in headers)
         if "extra_dirs" in package_info:
             local_prefix = LOCAL_BIN.parent  # ~/.local
-            extract_base = tmpdir / package_info["extract_dir"] if "extract_dir" in package_info else tmpdir
+            extract_base = (
+                tmpdir / package_info["extract_dir"]
+                if "extract_dir" in package_info
+                else tmpdir
+            )
             for src_rel, dest_rel in package_info["extra_dirs"]:
                 src_path = (extract_base / src_rel).resolve()
                 dest_path = local_prefix / dest_rel
@@ -605,9 +649,6 @@ def install_from_lock(package_name: str) -> None:
                     print(f"  Copied {src_rel} -> {dest_path}")
                 else:
                     print(f"  Warning: extra dir {src_path} not found")
-
-
-
 
 
 def nvim_version(version_output: str) -> str:
@@ -642,6 +683,12 @@ def hyperfine_version(version_output: str) -> str:
 
 def codex_version(version_output: str) -> str:
     match = re.search(r"(\d+\.\d+\.\d+)", version_output)
+    assert match
+    return match.group(1)
+
+
+def rtk_version(version_output: str) -> str:
+    match = re.search(r"rtk (\d+\.\d+\.\d+)", version_output)
     assert match
     return match.group(1)
 
@@ -706,6 +753,11 @@ def hunk_version(version_output: str) -> str:
     return match.group(1)
 
 
+def rclone_version(version_output: str) -> str:
+    match = re.search(r"rclone v(\d+\.\d+\.\d+)", version_output)
+    assert match
+    return match.group(1)
+
 
 def get_installed_font_version(font_name: str) -> str | None:
     """Extract the Nerd Fonts version from an installed font file."""
@@ -727,9 +779,7 @@ def get_installed_font_version(font_name: str) -> str | None:
 
     # Extract version from font file using strings
     result = subprocess.run(
-        ["strings", str(font_files[0])],
-        capture_output=True,
-        text=True
+        ["strings", str(font_files[0])], capture_output=True, text=True
     )
 
     for line in result.stdout.splitlines():
@@ -812,7 +862,7 @@ def show_lock_file() -> None:
     lock = load_lock_file()
 
     print(f"\nLock file: {LOCK_FILE}")
-    print(f"{'='*80}\n")
+    print(f"{'=' * 80}\n")
 
     M = max(len(name) for name in lock.keys())
 
@@ -832,7 +882,7 @@ def check_versions() -> None:
     active = {d.name for d in DEPS if d.applies_here()}
 
     print(f"\nVersion Check (Installed vs Locked)")
-    print(f"{'='*80}\n")
+    print(f"{'=' * 80}\n")
 
     M = max(len(name) for name in lock.keys())
 
@@ -851,7 +901,9 @@ def check_versions() -> None:
 
             if installed_version is None:
                 not_installed.append(name)
-                print(f"{Fore.RED}{name:<{M}}{Fore.RESET} : NOT INSTALLED (locked: v{locked_version})")
+                print(
+                    f"{Fore.RED}{name:<{M}}{Fore.RESET} : NOT INSTALLED (locked: v{locked_version})"
+                )
                 continue
 
             if installed_version == locked_version:
@@ -859,21 +911,42 @@ def check_versions() -> None:
                 print(f"{Fore.GREEN}{name:<{M}}{Fore.RESET} : v{installed_version} ✓")
             else:
                 outdated.append(name)
-                print(f"{Fore.YELLOW}{name:<{M}}{Fore.RESET} : v{installed_version} → v{locked_version}")
+                print(
+                    f"{Fore.YELLOW}{name:<{M}}{Fore.RESET} : v{installed_version} → v{locked_version}"
+                )
             continue
 
         # Tools without version detection - just check if installed
         if name in ["ydotool", "ydotoold"]:
             if shutil.which(name):
                 up_to_date.append(name)
-                print(f"{Fore.GREEN}{name:<{M}}{Fore.RESET} : installed (version check skipped)")
+                print(
+                    f"{Fore.GREEN}{name:<{M}}{Fore.RESET} : installed (version check skipped)"
+                )
             else:
                 not_installed.append(name)
-                print(f"{Fore.RED}{name:<{M}}{Fore.RESET} : NOT INSTALLED (locked: v{locked_version})")
+                print(
+                    f"{Fore.RED}{name:<{M}}{Fore.RESET} : NOT INSTALLED (locked: v{locked_version})"
+                )
             continue
 
         # Try to get installed version
-        if name in ["nvim", "lazygit", "difft", "fd", "hyperfine", "bat", "delta", "codex", "tree-sitter", "clangd", "zed", "hunk"]:
+        if name in [
+            "nvim",
+            "lazygit",
+            "difft",
+            "fd",
+            "hyperfine",
+            "bat",
+            "delta",
+            "codex",
+            "rtk",
+            "tree-sitter",
+            "clangd",
+            "zed",
+            "hunk",
+            "rclone",
+        ]:
             cmd_map: dict[str, tuple[list[str], Callable[[str], str] | None]] = {
                 "nvim": (["nvim", "--version"], nvim_version),
                 "lazygit": (["lazygit", "--version"], lazygit_version),
@@ -883,10 +956,12 @@ def check_versions() -> None:
                 "bat": (["bat", "--version"], bat_version),
                 "delta": (["delta", "--version"], delta_version),
                 "codex": (["codex", "--version"], codex_version),
+                "rtk": (["rtk", "--version"], rtk_version),
                 "tree-sitter": (["tree-sitter", "--version"], tree_sitter_version),
                 "clangd": (["clangd", "--version"], clangd_version),
                 "zed": (["zed", "--version"], zed_version),
                 "hunk": (["hunk", "--version"], hunk_version),
+                "rclone": (["rclone", "--version"], rclone_version),
             }
 
             if name in cmd_map:
@@ -895,7 +970,9 @@ def check_versions() -> None:
 
                 if output == "":
                     not_installed.append(name)
-                    print(f"{Fore.RED}{name:<{M}}{Fore.RESET} : NOT INSTALLED (locked: v{locked_version})")
+                    print(
+                        f"{Fore.RED}{name:<{M}}{Fore.RESET} : NOT INSTALLED (locked: v{locked_version})"
+                    )
                     continue
 
                 if extract_fn is not None:
@@ -905,15 +982,21 @@ def check_versions() -> None:
 
                 if installed_version == locked_version:
                     up_to_date.append(name)
-                    print(f"{Fore.GREEN}{name:<{M}}{Fore.RESET} : v{installed_version} ✓")
+                    print(
+                        f"{Fore.GREEN}{name:<{M}}{Fore.RESET} : v{installed_version} ✓"
+                    )
                 else:
                     outdated.append(name)
-                    print(f"{Fore.YELLOW}{name:<{M}}{Fore.RESET} : v{installed_version} → v{locked_version}")
+                    print(
+                        f"{Fore.YELLOW}{name:<{M}}{Fore.RESET} : v{installed_version} → v{locked_version}"
+                    )
 
-    print(f"\n{'='*80}")
-    print(f"Summary: {Fore.GREEN}{len(up_to_date)} up-to-date{Fore.RESET}, "
-          f"{Fore.YELLOW}{len(outdated)} outdated{Fore.RESET}, "
-          f"{Fore.RED}{len(not_installed)} not installed{Fore.RESET}\n")
+    print(f"\n{'=' * 80}")
+    print(
+        f"Summary: {Fore.GREEN}{len(up_to_date)} up-to-date{Fore.RESET}, "
+        f"{Fore.YELLOW}{len(outdated)} outdated{Fore.RESET}, "
+        f"{Fore.RED}{len(not_installed)} not installed{Fore.RESET}\n"
+    )
 
     if outdated or not_installed:
         print("Run './install.py' to install missing or update outdated tools")
@@ -1021,16 +1104,21 @@ def main() -> None:
             lines=1,
             extract_version=codex_version,
         ),
-        "ydotool": Check(
-            cmd=["ydotool", "help"],
+        "rtk": Check(
+            cmd=["rtk", "--version"],
             lines=1,
-            extract_version=ydotool_version,
+            extract_version=rtk_version,
         ),
-        "ydotoold": Check(
-            cmd=["ydotoold", "--help"],
-            lines=1,
-            extract_version=ydotoold_version,
-        ),
+        # "ydotool": Check(
+        #     cmd=["ydotool", "help"],
+        #     lines=1,
+        #     extract_version=ydotool_version,
+        # ),
+        # "ydotoold": Check(
+        #     cmd=["ydotoold", "--help"],
+        #     lines=1,
+        #     extract_version=ydotoold_version,
+        # ),
         "btm": Check(
             cmd=["btm", "--version"],
             lines=1,
@@ -1056,11 +1144,18 @@ def main() -> None:
             lines=1,
             extract_version=hunk_version,
         ),
+        "rclone": Check(
+            cmd=["rclone", "--version"],
+            lines=1,
+            extract_version=rclone_version,
+        ),
     }
 
     validate_deps(system_deps, lockfile_tools)
 
-    M = max(len(name) for name in list(system_deps.keys()) + list(lockfile_tools.keys()))
+    M = max(
+        len(name) for name in list(system_deps.keys()) + list(lockfile_tools.keys())
+    )
 
     failed = False
 
@@ -1084,7 +1179,9 @@ def main() -> None:
         if name not in active:
             continue
         if name not in lock:
-            print(Fore.YELLOW + f"{name:<{M}} : not in lock file, skipping" + Fore.RESET)
+            print(
+                Fore.YELLOW + f"{name:<{M}} : not in lock file, skipping" + Fore.RESET
+            )
             continue
 
         locked_version = lock[name].get("version", "unknown")
@@ -1092,7 +1189,11 @@ def main() -> None:
 
         if r == "":
             # Tool not installed
-            print(Fore.YELLOW + f"{name:<{M}} : not found, installing v{locked_version}" + Fore.RESET)
+            print(
+                Fore.YELLOW
+                + f"{name:<{M}} : not found, installing v{locked_version}"
+                + Fore.RESET
+            )
             install_from_lock(name)
             # Verify installation
             r = run(cmd.cmd)
@@ -1109,11 +1210,17 @@ def main() -> None:
             if cmd.extract_version:
                 installed_version = cmd.extract_version(version_str)
             else:
-                installed_version = version_str.strip().split()[0] if version_str else "unknown"
+                installed_version = (
+                    version_str.strip().split()[0] if version_str else "unknown"
+                )
 
             if installed_version != locked_version:
                 # Version mismatch, update
-                print(Fore.YELLOW + f"{name:<{M}} : v{installed_version} → v{locked_version}, updating" + Fore.RESET)
+                print(
+                    Fore.YELLOW
+                    + f"{name:<{M}} : v{installed_version} → v{locked_version}, updating"
+                    + Fore.RESET
+                )
                 install_from_lock(name)
                 # Verify update
                 r = run(cmd.cmd)

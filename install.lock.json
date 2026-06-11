@@ -1,11 +1,18 @@
 {
   "codex": {
-    "version": "0.130.0",
-    "tag": "rust-v0.130.0",
-    "url": "https://github.com/openai/codex/releases/download/rust-v0.130.0/codex-x86_64-unknown-linux-musl.tar.gz",
+    "version": "0.139.0",
+    "tag": "rust-v0.139.0",
+    "url": "https://github.com/openai/codex/releases/download/rust-v0.139.0/codex-x86_64-unknown-linux-musl.tar.gz",
     "repo": "openai/codex",
     "binary_name": "codex",
     "archive_binary_name": "codex-x86_64-unknown-linux-musl"
+  },
+  "rtk": {
+    "version": "0.42.3",
+    "tag": "v0.42.3",
+    "url": "https://github.com/rtk-ai/rtk/releases/download/v0.42.3/rtk-x86_64-unknown-linux-musl.tar.gz",
+    "repo": "rtk-ai/rtk",
+    "binary_name": "rtk"
   },
   "fd": {
     "version": "10.4.2",
@@ -16,9 +23,9 @@
     "extract_dir": "fd-v10.4.2-x86_64-unknown-linux-gnu"
   },
   "lazygit": {
-    "version": "0.61.1",
-    "tag": "v0.61.1",
-    "url": "https://github.com/jesseduffield/lazygit/releases/download/v0.61.1/lazygit_0.61.1_linux_x86_64.tar.gz",
+    "version": "0.62.2",
+    "tag": "v0.62.2",
+    "url": "https://github.com/jesseduffield/lazygit/releases/download/v0.62.2/lazygit_0.62.2_linux_x86_64.tar.gz",
     "repo": "jesseduffield/lazygit",
     "binary_name": "lazygit"
   },
@@ -47,9 +54,9 @@
     "extract_dir": "delta-0.19.2-x86_64-unknown-linux-gnu"
   },
   "nvim": {
-    "version": "0.12.2",
-    "tag": "v0.12.2",
-    "url": "https://github.com/neovim/neovim/releases/download/v0.12.2/nvim-linux-x86_64.appimage",
+    "version": "0.12.3",
+    "tag": "v0.12.3",
+    "url": "https://github.com/neovim/neovim/releases/download/v0.12.3/nvim-linux-x86_64.appimage",
     "repo": "neovim/neovim",
     "binary_name": "nvim-linux-x86_64.appimage"
   },
@@ -71,20 +78,6 @@
     "url": "https://github.com/Wilfred/difftastic/releases/download/0.69.0/difft-x86_64-unknown-linux-gnu.tar.gz",
     "repo": "Wilfred/difftastic"
   },
-  "ydotool": {
-    "version": "1.0.4",
-    "tag": "v1.0.4",
-    "url": "https://github.com/ReimuNotMoe/ydotool/releases/download/v1.0.4/ydotool-release-ubuntu-latest",
-    "repo": "ReimuNotMoe/ydotool",
-    "binary_name": "ydotool"
-  },
-  "ydotoold": {
-    "version": "1.0.4",
-    "tag": "v1.0.4",
-    "url": "https://github.com/ReimuNotMoe/ydotool/releases/download/v1.0.4/ydotoold-release-ubuntu-latest",
-    "repo": "ReimuNotMoe/ydotool",
-    "binary_name": "ydotoold"
-  },
   "btm": {
     "version": "0.12.3",
     "tag": "0.12.3",
@@ -93,9 +86,9 @@
     "binary_name": "btm"
   },
   "tree-sitter": {
-    "version": "0.26.8",
-    "tag": "v0.26.8",
-    "url": "https://github.com/tree-sitter/tree-sitter/releases/download/v0.26.8/tree-sitter-linux-x64.gz",
+    "version": "0.26.9",
+    "tag": "v0.26.9",
+    "url": "https://github.com/tree-sitter/tree-sitter/releases/download/v0.26.9/tree-sitter-linux-x64.gz",
     "repo": "tree-sitter/tree-sitter",
     "binary_name": "tree-sitter"
   },
@@ -114,18 +107,26 @@
     ]
   },
   "zed": {
-    "version": "1.1.8",
-    "tag": "v1.1.8",
-    "url": "https://github.com/zed-industries/zed/releases/download/v1.1.8/zed-linux-x86_64.tar.gz",
+    "version": "1.6.3",
+    "tag": "v1.6.3",
+    "url": "https://github.com/zed-industries/zed/releases/download/v1.6.3/zed-linux-x86_64.tar.gz",
     "repo": "zed-industries/zed",
     "binary_name": "zed"
   },
   "hunk": {
-    "version": "0.12.0",
-    "tag": "v0.12.0",
-    "url": "https://github.com/modem-dev/hunk/releases/download/v0.12.0/hunkdiff-linux-x64.tar.gz",
+    "version": "0.15.1",
+    "tag": "v0.15.1",
+    "url": "https://github.com/modem-dev/hunk/releases/download/v0.15.1/hunkdiff-linux-x64.tar.gz",
     "repo": "modem-dev/hunk",
     "binary_name": "hunk",
     "extract_dir": "hunkdiff-linux-x64"
+  },
+  "rclone": {
+    "version": "1.74.3",
+    "tag": "v1.74.3",
+    "url": "https://github.com/rclone/rclone/releases/download/v1.74.3/rclone-v1.74.3-linux-amd64.zip",
+    "repo": "rclone/rclone",
+    "binary_name": "rclone",
+    "extract_dir": "rclone-v1.74.3-linux-amd64"
   }
 }
