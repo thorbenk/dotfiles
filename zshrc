@@ -85,6 +85,44 @@ unsetopt correct_all
 # use ripgrep to hide ignored files
 export FZF_DEFAULT_COMMAND="rg --files"
 
+#--- git worktree picker -----------------------------------------------------
+
+# wt: fuzzy-pick a git worktree and cd into it.
+#   - lists every worktree as "<branch>  <path>"; type to filter
+#   - Enter cd's into the selected worktree
+#   - preview pane shows that worktree's recent commits
+# (named 'wt' so it doesn't clash with oh-my-zsh's `gwt`=`git worktree`)
+wt () {
+  emulate -L zsh
+  command git rev-parse --git-dir >/dev/null 2>&1 || {
+    echo "wt: not inside a git repository" >&2
+    return 1
+  }
+
+  local selection dir
+  selection=$(
+    command git worktree list --porcelain | awk '
+      /^worktree /  { path = substr($0, 10) }
+      /^branch /    { ref = substr($0, 8); sub(/^refs\/heads\//, "", ref); emit() }
+      /^detached$/  { ref = "(detached)"; emit() }
+      /^bare$/      { ref = "(bare)"; emit() }
+      function emit() {
+        disp = path
+        sub("^" ENVIRON["HOME"], "~", disp)
+        printf "%-30s %s\t%s\n", ref, disp, path
+        ref=""; path=""
+      }
+    ' | fzf --delimiter='\t' --with-nth=1 \
+            --prompt='worktree> ' \
+            --height=40% --reverse --ansi \
+            --preview='git -C {2} -c color.ui=always log --oneline -15' \
+            --preview-window='right:55%'
+  ) || return
+
+  dir=${selection##*$'\t'}
+  [[ -n $dir && -d $dir ]] && cd -- "$dir"
+}
+
 #--- alias ------------------------------------------------------------------
 
 alias "vim=$NVIM"
@@ -138,7 +176,24 @@ if [ -f "$HOME/.cargo/env" ]; then
     source "$HOME/.cargo/env"
 fi
 
-alias zed="env DRI_PRIME=pci-0000_01_00_0 __VK_LAYER_NV_optimus=NVIDIA_only __GLX_VENDOR_LIBRARY_NAME=nvidia /x/3rdparty/zed/target/release/cli"
+# Run zed in the foreground so the shell stays attached and crashes/panics
+# are visible. Also tee all output to a timestamped log for post-mortem.
+# (Zed additionally writes ~/.local/share/zed/logs/Zed.log on its own.)
+zed () {
+    local log="/tmp/zed-$(date +%Y%m%d-%H%M%S).log"
+    echo "zed: logging to $log"
+    # VK_DRIVER_FILES: pin the Vulkan loader to the NVIDIA ICD only, so Zed/Blade
+    #   deterministically renders on the RTX 2000 (replaces the old, mismatched
+    #   DRI_PRIME/GLX vars that didn't affect Vulkan). Drop this line to fall back
+    #   to the Intel iGPU (intel_icd.json).
+    # ZED_GENERATE_MINIDUMPS: self-built Zed runs as the "Dev" release channel,
+    #   which otherwise SKIPS the crash handler. Forces minidumps to be written to
+    #   ~/.local/share/zed/logs/<session_id>.dmp on a crash. Safe to drop once stable.
+    # RUST_BACKTRACE: full backtrace if it's a Rust panic (not a native crash).
+    env VK_DRIVER_FILES=/usr/share/vulkan/icd.d/nvidia_icd.json \
+        ZED_GENERATE_MINIDUMPS=1 RUST_BACKTRACE=full \
+        /x/3rdparty/zed/target/release/cli --foreground "$@" 2>&1 | tee "$log"
+}
 
 # eval "$(starship init zsh)"
 
