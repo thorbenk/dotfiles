@@ -1,0 +1,57 @@
+#!/bin/bash
+# zed-oom-protect — strongly protect the user's self-built Zed editor from the
+# Linux OOM killer, so that under memory pressure (e.g. big parallel C++ builds)
+# the kernel sacrifices other processes before the editor.
+#
+# Why this needs root: an unprivileged process can only RAISE its oom_score_adj
+# (make itself more killable); LOWERING it below the inherited session value
+# requires CAP_SYS_RESOURCE. So we run this tiny, fixed-behaviour helper as root
+# via a scoped NOPASSWD sudoers rule instead of granting `choom` wholesale.
+#
+# Hardened for passwordless sudo:
+#   * takes NO arguments,
+#   * only ever touches processes whose executable lives under $PREFIX,
+#   * writes a single fixed oom_score_adj value.
+#
+# ONE-TIME INSTALL (root-owned copy + scoped sudoers rule):
+#   sudo install -o root -g root -m 0755 \
+#       ~/code/dotfiles/zed/zed-oom-protect /usr/local/sbin/zed-oom-protect
+#   echo 'kroeger ALL=(root) NOPASSWD: /usr/local/sbin/zed-oom-protect' \
+#       | sudo tee /etc/sudoers.d/zed-oom-protect >/dev/null
+#   sudo chmod 0440 /etc/sudoers.d/zed-oom-protect
+#   sudo visudo -cf /etc/sudoers.d/zed-oom-protect   # validate
+# Re-run the `install` line after editing this file (the live copy is the root one).
+
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+export PATH
+set -uo pipefail
+
+PREFIX=/x/3rdparty/zed/   # only protect zed binaries built under this path
+SCORE=-800               # OOM bias: -1000 = never kill; +200 = session default
+deadline=$((SECONDS + 10))
+found=0
+
+while :; do
+  for pd in /proc/[0-9]*; do
+    exe=$(readlink -f "$pd/exe" 2>/dev/null) || continue
+    case "$exe" in
+      "$PREFIX"*/zed) : ;;   # e.g. /x/3rdparty/zed/target/release[-fast]/zed
+      *) continue ;;
+    esac
+    found=1
+    pid=${pd#/proc/}
+    cur=$(cat "$pd/oom_score_adj" 2>/dev/null) || continue
+    [ "$cur" = "$SCORE" ] && continue
+    if printf '%s\n' "$SCORE" > "$pd/oom_score_adj" 2>/dev/null; then
+      echo "zed-oom-protect: pid $pid oom_score_adj $cur -> $SCORE"
+    else
+      echo "zed-oom-protect: FAILED to set pid $pid (run as root?)" >&2
+    fi
+  done
+  [ "$found" -eq 1 ] && break
+  [ "$SECONDS" -ge "$deadline" ] && {
+    echo "zed-oom-protect: no Zed process under $PREFIX after 10s" >&2
+    break
+  }
+  sleep 0.5
+done

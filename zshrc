@@ -176,27 +176,21 @@ if [ -f "$HOME/.cargo/env" ]; then
     source "$HOME/.cargo/env"
 fi
 
-# Run zed in the foreground so the shell stays attached and crashes/panics
-# are visible. Also tee all output to a timestamped log for post-mortem.
-# (Zed additionally writes ~/.local/share/zed/logs/Zed.log on its own.)
+# zed: launch detached on the NVIDIA GPU, then hand the shell back.
+#   VK_DRIVER_FILES pins the Vulkan loader to the RTX 2000 (swap to
+#   intel_icd.json for the Intel iGPU). We run the `zed` binary directly and
+#   background+disown it with `&!`
+#   The recurring "crashes" were the OOM killer reaping the session during big
+#   parallel C++ builds (62G RAM, ~2G swap). zed-oom-protect lowers Zed's
+#   oom_score_adj so the build dies first; it needs the one-time root install
+#   (see zed/zed-oom-protect) and silently no-ops if not installed.
 zed () {
-    local log="/tmp/zed-$(date +%Y%m%d-%H%M%S).log"
-    echo "zed: logging to $log"
-    # VK_DRIVER_FILES: pin the Vulkan loader to the NVIDIA ICD only, so Zed/Blade
-    #   deterministically renders on the RTX 2000 (replaces the old, mismatched
-    #   DRI_PRIME/GLX vars that didn't affect Vulkan). Drop this line to fall back
-    #   to the Intel iGPU (intel_icd.json).
-    # ZED_GENERATE_MINIDUMPS: self-built Zed runs as the "Dev" release channel,
-    #   which otherwise SKIPS the crash handler. Forces minidumps to be written to
-    #   ~/.local/share/zed/logs/<session_id>.dmp on a crash. Safe to drop once stable.
-    # RUST_BACKTRACE: full backtrace if it's a Rust panic (not a native crash).
     env VK_DRIVER_FILES=/usr/share/vulkan/icd.d/nvidia_icd.json \
-        ZED_GENERATE_MINIDUMPS=1 RUST_BACKTRACE=full \
-        /x/3rdparty/zed/target/release/cli --foreground "$@" 2>&1 | tee "$log"
+        /x/3rdparty/zed/target/release-fast/zed "$@" &>/dev/null &!
+    ( sudo -n /usr/local/sbin/zed-oom-protect & ) >/dev/null 2>&1
 }
 
 # eval "$(starship init zsh)"
-
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
