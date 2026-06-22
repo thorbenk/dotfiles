@@ -1,16 +1,16 @@
 {
   "codex": {
-    "version": "0.139.0",
-    "tag": "rust-v0.139.0",
-    "url": "https://github.com/openai/codex/releases/download/rust-v0.139.0/codex-x86_64-unknown-linux-musl.tar.gz",
+    "version": "0.141.0",
+    "tag": "rust-v0.141.0",
+    "url": "https://github.com/openai/codex/releases/download/rust-v0.141.0/codex-x86_64-unknown-linux-musl.tar.gz",
     "repo": "openai/codex",
     "binary_name": "codex",
     "archive_binary_name": "codex-x86_64-unknown-linux-musl"
   },
   "rtk": {
-    "version": "0.42.3",
-    "tag": "v0.42.3",
-    "url": "https://github.com/rtk-ai/rtk/releases/download/v0.42.3/rtk-x86_64-unknown-linux-musl.tar.gz",
+    "version": "0.42.4",
+    "tag": "v0.42.4",
+    "url": "https://github.com/rtk-ai/rtk/releases/download/v0.42.4/rtk-x86_64-unknown-linux-musl.tar.gz",
     "repo": "rtk-ai/rtk",
     "binary_name": "rtk"
   },
@@ -107,16 +107,16 @@
     ]
   },
   "zed": {
-    "version": "1.6.3",
-    "tag": "v1.6.3",
-    "url": "https://github.com/zed-industries/zed/releases/download/v1.6.3/zed-linux-x86_64.tar.gz",
+    "version": "1.7.2",
+    "tag": "v1.7.2",
+    "url": "https://github.com/zed-industries/zed/releases/download/v1.7.2/zed-linux-x86_64.tar.gz",
     "repo": "zed-industries/zed",
     "binary_name": "zed"
   },
   "hunk": {
-    "version": "0.15.1",
-    "tag": "v0.15.1",
-    "url": "https://github.com/modem-dev/hunk/releases/download/v0.15.1/hunkdiff-linux-x64.tar.gz",
+    "version": "0.15.3",
+    "tag": "v0.15.3",
+    "url": "https://github.com/modem-dev/hunk/releases/download/v0.15.3/hunkdiff-linux-x64.tar.gz",
     "repo": "modem-dev/hunk",
     "binary_name": "hunk",
     "extract_dir": "hunkdiff-linux-x64"
