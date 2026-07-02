@@ -76,6 +76,7 @@ DEPS: list[Dep] = [
     Dep("tree-sitter"),
     Dep("clangd"),
     Dep("zed"),
+    Dep("typst"),
     Dep("hunk"),
     Dep("rclone", only_on=("DEHEI-7H3ZXL3",)),
     # Fonts
@@ -264,6 +265,12 @@ GITHUB_RELEASES = {
         asset_pattern="zed-linux-{arch}.tar.gz",
         binary_name="zed",
         install=install_zed,
+    ),
+    "typst": GitHubRelease(
+        repo="typst/typst",
+        asset_pattern="typst-{arch}-unknown-linux-musl.tar.xz",
+        binary_name="typst",
+        extract_dir_pattern="typst-{arch}-unknown-linux-musl",
     ),
     "hunk": GitHubRelease(
         repo="modem-dev/hunk",
@@ -466,6 +473,9 @@ def extract_and_download(url: str) -> Generator[Path, None, None]:
         if fname.endswith(".tar.gz"):
             with tarfile.open(fname, "r:gz") as tar:
                 tar.extractall(path=tmpdir, filter="data")
+        elif fname.endswith(".tar.xz"):
+            with tarfile.open(fname, "r:xz") as tar:
+                tar.extractall(path=tmpdir, filter="data")
         elif fname.endswith(".zip"):
             with zipfile.ZipFile(fname, "r") as zip_ref:
                 zip_ref.extractall(tmpdir)
@@ -587,7 +597,7 @@ def install_from_lock(package_name: str) -> None:
         return
 
     # Special case for raw binaries (not archives)
-    if not url.endswith((".tar.gz", ".zip", ".tgz")):
+    if not url.endswith((".tar.gz", ".tar.xz", ".zip", ".tgz")):
         with tempfile.TemporaryDirectory() as tmpdir:
             fname = os.path.basename(urlparse(url).path)
             fpath = os.path.join(tmpdir, fname)
@@ -743,6 +753,12 @@ def clangd_version(version_output: str) -> str:
 
 def zed_version(version_output: str) -> str:
     match = re.search(r"(\d+\.\d+\.\d+)", version_output)
+    assert match
+    return match.group(1)
+
+
+def typst_version(version_output: str) -> str:
+    match = re.search(r"typst (\d+\.\d+\.\d+)", version_output)
     assert match
     return match.group(1)
 
@@ -944,6 +960,7 @@ def check_versions() -> None:
             "tree-sitter",
             "clangd",
             "zed",
+            "typst",
             "hunk",
             "rclone",
         ]:
@@ -960,6 +977,7 @@ def check_versions() -> None:
                 "tree-sitter": (["tree-sitter", "--version"], tree_sitter_version),
                 "clangd": (["clangd", "--version"], clangd_version),
                 "zed": (["zed", "--version"], zed_version),
+                "typst": (["typst", "--version"], typst_version),
                 "hunk": (["hunk", "--version"], hunk_version),
                 "rclone": (["rclone", "--version"], rclone_version),
             }
@@ -1138,6 +1156,11 @@ def main() -> None:
             cmd=["zed", "--version"],
             lines=1,
             extract_version=zed_version,
+        ),
+        "typst": Check(
+            cmd=["typst", "--version"],
+            lines=1,
+            extract_version=typst_version,
         ),
         "hunk": Check(
             cmd=["hunk", "--version"],

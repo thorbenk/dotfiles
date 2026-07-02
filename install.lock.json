@@ -1,16 +1,16 @@
 {
   "codex": {
-    "version": "0.141.0",
-    "tag": "rust-v0.141.0",
-    "url": "https://github.com/openai/codex/releases/download/rust-v0.141.0/codex-x86_64-unknown-linux-musl.tar.gz",
+    "version": "0.142.5",
+    "tag": "rust-v0.142.5",
+    "url": "https://github.com/openai/codex/releases/download/rust-v0.142.5/codex-x86_64-unknown-linux-musl.tar.gz",
     "repo": "openai/codex",
     "binary_name": "codex",
     "archive_binary_name": "codex-x86_64-unknown-linux-musl"
   },
   "rtk": {
-    "version": "0.42.4",
-    "tag": "v0.42.4",
-    "url": "https://github.com/rtk-ai/rtk/releases/download/v0.42.4/rtk-x86_64-unknown-linux-musl.tar.gz",
+    "version": "0.43.0",
+    "tag": "v0.43.0",
+    "url": "https://github.com/rtk-ai/rtk/releases/download/v0.43.0/rtk-x86_64-unknown-linux-musl.tar.gz",
     "repo": "rtk-ai/rtk",
     "binary_name": "rtk"
   },
@@ -79,26 +79,26 @@
     "repo": "Wilfred/difftastic"
   },
   "btm": {
-    "version": "0.12.3",
-    "tag": "0.12.3",
-    "url": "https://github.com/ClementTsang/bottom/releases/download/0.12.3/bottom_x86_64-unknown-linux-gnu.tar.gz",
+    "version": "0.14.3",
+    "tag": "0.14.3",
+    "url": "https://github.com/ClementTsang/bottom/releases/download/0.14.3/bottom_x86_64-unknown-linux-gnu.tar.gz",
     "repo": "ClementTsang/bottom",
     "binary_name": "btm"
   },
   "tree-sitter": {
-    "version": "0.26.9",
-    "tag": "v0.26.9",
-    "url": "https://github.com/tree-sitter/tree-sitter/releases/download/v0.26.9/tree-sitter-linux-x64.gz",
+    "version": "0.26.10",
+    "tag": "v0.26.10",
+    "url": "https://github.com/tree-sitter/tree-sitter/releases/download/v0.26.10/tree-sitter-linux-x64.gz",
     "repo": "tree-sitter/tree-sitter",
     "binary_name": "tree-sitter"
   },
   "clangd": {
-    "version": "22.1.0",
-    "tag": "22.1.0",
-    "url": "https://github.com/clangd/clangd/releases/download/22.1.0/clangd-linux-22.1.0.zip",
+    "version": "22.1.6",
+    "tag": "22.1.6",
+    "url": "https://github.com/clangd/clangd/releases/download/22.1.6/clangd-linux-22.1.6.zip",
     "repo": "clangd/clangd",
     "binary_name": "clangd",
-    "extract_dir": "clangd_22.1.0/bin",
+    "extract_dir": "clangd_22.1.6/bin",
     "extra_dirs": [
       [
         "../lib",
@@ -107,16 +107,24 @@
     ]
   },
   "zed": {
-    "version": "1.7.2",
-    "tag": "v1.7.2",
-    "url": "https://github.com/zed-industries/zed/releases/download/v1.7.2/zed-linux-x86_64.tar.gz",
+    "version": "1.9.0",
+    "tag": "v1.9.0",
+    "url": "https://github.com/zed-industries/zed/releases/download/v1.9.0/zed-linux-x86_64.tar.gz",
     "repo": "zed-industries/zed",
     "binary_name": "zed"
   },
+  "typst": {
+    "version": "0.15.0",
+    "tag": "v0.15.0",
+    "url": "https://github.com/typst/typst/releases/download/v0.15.0/typst-x86_64-unknown-linux-musl.tar.xz",
+    "repo": "typst/typst",
+    "binary_name": "typst",
+    "extract_dir": "typst-x86_64-unknown-linux-musl"
+  },
   "hunk": {
-    "version": "0.15.3",
-    "tag": "v0.15.3",
-    "url": "https://github.com/modem-dev/hunk/releases/download/v0.15.3/hunkdiff-linux-x64.tar.gz",
+    "version": "0.16.0",
+    "tag": "v0.16.0",
+    "url": "https://github.com/modem-dev/hunk/releases/download/v0.16.0/hunkdiff-linux-x64.tar.gz",
     "repo": "modem-dev/hunk",
     "binary_name": "hunk",
     "extract_dir": "hunkdiff-linux-x64"
