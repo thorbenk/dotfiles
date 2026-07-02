@@ -44,6 +44,13 @@
     },
   },
   {
+    "context": "Workspace && !Terminal",
+    "bindings": {
+      "space t c": "workspace::NewCenterTerminal",
+      "space t r": "terminal::RenameTerminal",
+    },
+  },
+  {
     "context": "Terminal",
     "bindings": {
       "ctrl-o": ["terminal::SendKeystroke", "ctrl-o"], // zsh config: copy current command line
