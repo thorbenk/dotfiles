@@ -1364,10 +1364,6 @@ def main() -> None:
                 print(Fore.GREEN + f"{name:<{M}} : {installed_version} ✓" + Fore.RESET)
 
     print()
-    print("=" * 80)
-    print("Tool installation complete!")
-    print("Note: Dotfiles symlinking is handled by Dotbot (./install)")
-    print("=" * 80)
 
     if failed:
         print("Check failed.")
