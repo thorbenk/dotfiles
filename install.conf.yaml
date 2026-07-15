@@ -48,6 +48,9 @@
     # Ghostty terminal
     ~/.config/ghostty/config: ghostty/config
 
+    # direnv
+    ~/.config/direnv/direnv.toml: direnv/direnv.toml
+
     # Systemd user services
     ~/.config/systemd/user/ydotoold.service:
       path: services/ydotool/ydotoold.service

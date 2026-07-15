@@ -58,6 +58,7 @@ DEPS: list[Dep] = [
     Dep("curl"),
     Dep("npm"),
     Dep("fnm"),
+    Dep("direnv"),
     Dep("fzf"),
     Dep("rg"),
     Dep("tmux"),
@@ -229,6 +230,11 @@ GITHUB_RELEASES = {
         repo="junegunn/fzf",
         asset_pattern="fzf-{version}-linux_amd64.tar.gz",
         binary_name="fzf",
+    ),
+    "direnv": GitHubRelease(
+        repo="direnv/direnv",
+        asset_pattern="direnv.linux-amd64",
+        binary_name="direnv",
     ),
     "fd": GitHubRelease(
         repo="sharkdp/fd",
@@ -770,6 +776,12 @@ def fzf_version(version_output: str) -> str:
     return match.group(1)
 
 
+def direnv_version(version_output: str) -> str:
+    match = re.search(r"(\d+\.\d+\.\d+)", version_output)
+    assert match
+    return match.group(1)
+
+
 def lazygit_version(version_output: str) -> str:
     match = re.search(r"version=(\d+\.\d+\.\d+)", version_output)
     assert match
@@ -1210,6 +1222,11 @@ def main() -> None:
             cmd=["fzf", "--version"],
             lines=1,
             extract_version=fzf_version,
+        ),
+        "direnv": Check(
+            cmd=["direnv", "--version"],
+            lines=1,
+            extract_version=direnv_version,
         ),
         # "ydotool": Check(
         #     cmd=["ydotool", "help"],

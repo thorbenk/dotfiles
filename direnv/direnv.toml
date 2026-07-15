@@ -1,0 +1,13 @@
+# direnv global config — https://direnv.net/man/direnv.toml.1.html
+#
+# Replaces oh-my-zsh's dotenv plugin. direnv only loads a directory after an
+# explicit `direnv allow` (run it once per project), so it avoids the
+# "cd into a repo and its .env runs code" RCE that plain auto-sourcing has.
+
+[global]
+# Also load plain `.env` files, not just `.envrc` (needs direnv >= 2.31.0).
+# If both exist, `.envrc` wins. This keeps the old `.env` auto-load behavior.
+load_dotenv = true
+
+# Hide the "direnv: export +FOO ..." chatter on every allowed dir.
+hide_env_diff = true

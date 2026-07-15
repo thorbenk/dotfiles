@@ -15,7 +15,6 @@ dev = [
 
 [tool.ruff]
 exclude = [
-  "oh-my-zsh",
   "tmux/plugins/tmux-thumb",
   "tmux/plugins/tpm",
   "zsh/plugins/zsh-autosuggestions",
@@ -28,7 +27,6 @@ exclude = [
 strict = false
 exclude = [
   "dotbot/",
-  "oh-my-zsh/",
   "tmux/",
   "zsh/plugins/",
   "nvim/",

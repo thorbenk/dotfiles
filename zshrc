@@ -16,23 +16,103 @@ export LOCAL_INSTALL_PREFIX=/nobackup/inst
 export KDEV_DUCHAIN_DIR=$NOBACKUP/kdevduchain
 
 export DOTFILES_DIR=$HOME/code/dotfiles
-export ZSH_CUSTOM=$DOTFILES_DIR/zsh
+ZSH_PLUGINS=$DOTFILES_DIR/zsh/plugins
 
-# history (HISTFILE set before oh-my-zsh, which only sets it if unset;
-# dedup setopts are applied after the source in the extra-settings section)
+# history file + sizes (were oh-my-zsh defaults; set explicitly now).
+# dedup setopts live in the "extra settings" section below.
 export HISTFILE=$HOME/.zsh/.zsh_history
+export HISTSIZE=50000
+export SAVEHIST=10000
 
-#--- oh-my-zsh ---------------------------------------------------------------
+#=== bare zsh (replaced oh-my-zsh) ===========================================
+# A small setup we own: completion, keybindings, a minimal prompt, and the few
+# oh-my-zsh conveniences actually used (ssh-agent, copypath, dotenv), plus the
+# plugin submodules. zsh-syntax-highlighting is sourced at the END of this file
+# so it wraps every ZLE widget defined here and later.
 
-export ZSH=$DOTFILES_DIR/oh-my-zsh
-export ZSH_THEME="half-life"
-# export CASE_SENSITIVE="false" # case-insensitive completion
-# export DISABLE_AUTO_UPDATE="true" # no weekly update checks
+#--- completion --------------------------------------------------------------
+# WORDCHARS='' => ^W and word-motions treat punctuation as boundaries, so ^W
+# deletes one path component at a time. (This matches oh-my-zsh's default.)
+WORDCHARS=''
 
-# zsh-syntax-highlighting must be last so it wraps all other ZLE widgets.
-plugins=(git ssh-agent copypath dotenv zsh-autosuggestions zsh-you-should-use zsh-syntax-highlighting)
-# colored-man-pages zsh-bat
-source $ZSH/oh-my-zsh.sh
+autoload -Uz compinit
+compinit -u -d "$HOME/.zsh/.zcompdump"    # -u: don't nag about the vendored dirs
+
+zstyle ':completion:*' menu select                         # arrow-key menu
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'  # case-insensitive
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "$HOME/.zsh/.zcompcache"
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"    # color the matches
+zstyle ':completion:*:descriptions' format '%F{yellow}%d%f'
+
+#--- directory navigation ----------------------------------------------------
+setopt AUTO_CD            # `foo/` means `cd foo/`
+setopt AUTO_PUSHD         # cd pushes onto the dir stack (use `cd -<TAB>`)
+setopt PUSHD_IGNORE_DUPS
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
+#--- keybindings -------------------------------------------------------------
+bindkey -e                              # emacs-style line editing
+bindkey '^[[H'   beginning-of-line      # Home
+bindkey '^[OH'   beginning-of-line
+bindkey '^[[F'   end-of-line            # End
+bindkey '^[OF'   end-of-line
+bindkey '^[[3~'  delete-char            # Delete
+bindkey '^[[1;5C' forward-word          # Ctrl-Right
+bindkey '^[[1;5D' backward-word         # Ctrl-Left
+# Up/Down search history by the prefix already typed.
+autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey '^[[A' up-line-or-beginning-search
+bindkey '^[[B' down-line-or-beginning-search
+
+#--- ls / completion colors --------------------------------------------------
+# oh-my-zsh used to populate LS_COLORS; do it ourselves so it survives.
+if command -v dircolors >/dev/null 2>&1; then
+    eval "$(dircolors -b)"
+fi
+
+#--- prompt (minimal: exit status, cwd, git branch) --------------------------
+setopt PROMPT_SUBST
+autoload -Uz vcs_info add-zsh-hook
+zstyle ':vcs_info:git:*' formats       ' %F{magenta}%b%f'
+zstyle ':vcs_info:git:*' actionformats ' %F{magenta}%b|%a%f'
+add-zsh-hook precmd vcs_info
+# %(?..) prints the exit code in red only when the last command failed.
+PROMPT='%(?..%F{red}%? %f)%F{cyan}%~%f${vcs_info_msg_0_} %F{green}%#%f '
+
+#--- ssh-agent ---------------------------------------------------------------
+# Prefer an agent already provided (desktop/systemd). Otherwise start a
+# persistent one and cache its env so all shells share a single agent.
+if [ -z "$SSH_AUTH_SOCK" ]; then
+    _ssh_env="$HOME/.zsh/.ssh-agent-env"
+    [ -f "$_ssh_env" ] && source "$_ssh_env" >/dev/null
+    ssh-add -l >/dev/null 2>&1
+    if [ $? -eq 2 ]; then           # 2 => no reachable agent
+        ssh-agent -s > "$_ssh_env"
+        source "$_ssh_env" >/dev/null
+    fi
+    unset _ssh_env
+fi
+
+#--- copypath: copy the absolute path of a file/dir (default cwd) to clipboard
+copypath() {
+    local f="${1:-.}"; [[ $f = /* ]] || f="$PWD/$f"
+    print -n -- "${f:A}" | wl-copy && echo "${f:A} copied to clipboard."
+}
+
+#--- terminal / (non-tmux) window title --------------------------------------
+_title_precmd() { print -Pn "\e]2;%~\a" }
+_title_preexec() { print -Pn "\e]2;$1\a" }
+add-zsh-hook precmd  _title_precmd
+add-zsh-hook preexec _title_preexec
+
+#--- plugins (zsh-syntax-highlighting is sourced at the END of this file) -----
+source $ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $ZSH_PLUGINS/zsh-you-should-use/you-should-use.plugin.zsh
 
 #--- zsh copybuffer plugin ---------------------------------------------------
 
@@ -52,7 +132,7 @@ bindkey -M vicmd "^O" copybuffer
 setopt NO_SHARE_HISTORY
 setopt INC_APPEND_HISTORY  # write each command immediately (crash-safe), without live-sharing into other sessions
 
-# history dedup (HISTSIZE/SAVEHIST left at oh-my-zsh defaults: 50000/10000)
+# history dedup (HISTSIZE/SAVEHIST set near the top)
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_FIND_NO_DUPS
 
@@ -204,3 +284,16 @@ zed () {
 if command -v fnm >/dev/null 2>&1; then
     eval "$(fnm env --use-on-cd --shell zsh)"
 fi
+
+#--- direnv: per-directory env (.envrc / .env) -------------------------------
+# Replaces oh-my-zsh's dotenv plugin. Loads a dir only after `direnv allow`, so
+# no auto-run RCE. `load_dotenv=true` in ~/.config/direnv/direnv.toml keeps the
+# old `.env` behavior. After the ~/.local/bin PATH export so direnv is found.
+if command -v direnv >/dev/null 2>&1; then
+    eval "$(direnv hook zsh)"
+fi
+
+#--- zsh-syntax-highlighting (MUST be last) ----------------------------------
+# It wraps every ZLE widget defined so far, so it has to come after all other
+# widget setup (copybuffer, fzf, fnm, etc.).
+source $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

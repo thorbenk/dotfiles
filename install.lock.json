@@ -28,6 +28,13 @@
     "repo": "junegunn/fzf",
     "binary_name": "fzf"
   },
+  "direnv": {
+    "version": "2.37.1",
+    "tag": "v2.37.1",
+    "url": "https://github.com/direnv/direnv/releases/download/v2.37.1/direnv.linux-amd64",
+    "repo": "direnv/direnv",
+    "binary_name": "direnv"
+  },
   "fd": {
     "version": "10.4.2",
     "tag": "v10.4.2",
