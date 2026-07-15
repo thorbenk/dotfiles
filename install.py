@@ -3,11 +3,11 @@
 import subprocess
 import dataclasses
 import contextlib
-from typing import Generator, TypedDict, Any, cast, NotRequired
+from typing import Generator, TypedDict, cast, NotRequired, Callable
 from colorama import Fore
 from urllib.parse import urlparse
-from typing import Callable
 import re
+import gzip
 import shutil
 import urllib.request
 from pathlib import Path
@@ -25,8 +25,18 @@ LOCAL_BIN = Path(os.path.expanduser("~/.local/bin"))
 LOCAL_BIN.mkdir(parents=True, exist_ok=True)
 
 ARCH = platform.machine()
+# x86_64 stays x86_64; aarch64 becomes arm64 / arm64. Fall back to raw ARCH.
+ARCH_ALT = {"aarch64": "arm64"}.get(ARCH, ARCH)
+ARCH_SHORT = {"x86_64": "x64", "aarch64": "arm64"}.get(ARCH, ARCH)
 LOCK_FILE = PWD / "install.lock.json"
 HOSTNAME = platform.node()
+
+
+def fill(pattern: str, version: str = "") -> str:
+    """Fill {version}/{arch}/{arch_alt}/{arch_short} placeholders in a pattern."""
+    return pattern.format(
+        version=version, arch=ARCH, arch_alt=ARCH_ALT, arch_short=ARCH_SHORT
+    )
 
 
 @dataclasses.dataclass(frozen=True)
@@ -71,8 +81,6 @@ DEPS: list[Dep] = [
     Dep("bat"),
     Dep("delta"),
     Dep("codex"),
-    # Dep("ydotool", not_on=("dell-brick",)),
-    # Dep("ydotoold", not_on=("dell-brick",)),
     Dep("btm"),
     Dep("tree-sitter"),
     Dep("clangd"),
@@ -241,7 +249,7 @@ GITHUB_RELEASES = {
         asset_pattern="lazygit_{version}_linux_{arch}.tar.gz",
         binary_name="lazygit",
     ),
-    "difftastic": GitHubRelease(
+    "difft": GitHubRelease(
         repo="Wilfred/difftastic",
         asset_pattern="difft-{arch}-unknown-linux-gnu.tar.gz",
         binary_name="difft",
@@ -277,20 +285,6 @@ GITHUB_RELEASES = {
         repo="ryanoasis/nerd-fonts",
         asset_pattern="IosevkaTerm.zip",
     ),
-    "difft": GitHubRelease(
-        repo="Wilfred/difftastic",
-        asset_pattern="difft-{arch}-unknown-linux-gnu.tar.gz",
-    ),
-    # "ydotool": GitHubRelease(
-    #     repo="ReimuNotMoe/ydotool",
-    #     asset_pattern="ydotool-release-ubuntu-latest",
-    #     binary_name="ydotool",
-    # ),
-    # "ydotoold": GitHubRelease(
-    #     repo="ReimuNotMoe/ydotool",
-    #     asset_pattern="ydotoold-release-ubuntu-latest",
-    #     binary_name="ydotoold",
-    # ),
     "btm": GitHubRelease(
         repo="ClementTsang/bottom",
         asset_pattern="bottom_{arch}-unknown-linux-gnu.tar.gz",
@@ -343,28 +337,6 @@ GITHUB_RELEASES = {
 }
 
 
-def get_arch_alt() -> str:
-    """Convert x86_64 to x86_64, aarch64 to arm64, etc."""
-    match ARCH:
-        case "x86_64":
-            return "x86_64"
-        case "aarch64":
-            return "arm64"
-        case _:
-            return ARCH
-
-
-def get_arch_short() -> str:
-    """Convert x86_64 to x64, aarch64 to arm64."""
-    match ARCH:
-        case "x86_64":
-            return "x64"
-        case "aarch64":
-            return "arm64"
-        case _:
-            return ARCH
-
-
 def github_token() -> str | None:
     """A GitHub token from the environment, if set. Raises the API rate limit
     from 60 to 5000 requests/hour when present."""
@@ -374,7 +346,6 @@ def github_token() -> str | None:
 def fetch_latest_release(repo: str) -> GitHubReleaseData:
     """Fetch the latest release info from GitHub API."""
     url = f"https://api.github.com/repos/{repo}/releases/latest"
-    print(f"Fetching latest release for {repo}...")
 
     request = urllib.request.Request(url)
     request.add_header("Accept", "application/vnd.github+json")
@@ -411,17 +382,10 @@ def find_matching_asset(
     assets: list[GitHubAsset], pattern: str, version: str
 ) -> str | None:
     """Find asset URL matching the pattern for current architecture."""
-    arch_alt = get_arch_alt()
-    arch_short = get_arch_short()
-
-    # Replace placeholders in pattern - try both arch formats
+    # Try both arch formats for the {arch} placeholder.
     patterns_to_try = [
-        pattern.format(
-            version=version, arch=ARCH, arch_alt=arch_alt, arch_short=arch_short
-        ),
-        pattern.format(
-            version=version, arch=arch_alt, arch_alt=arch_alt, arch_short=arch_short
-        ),
+        fill(pattern, version),
+        fill(pattern.replace("{arch}", "{arch_alt}"), version),
     ]
 
     for pattern_filled in patterns_to_try:
@@ -465,32 +429,17 @@ def update_lock_file() -> None:
             }
 
             if release_info.binary_name:
-                # Fill in arch placeholders in binary name
-                binary_name = release_info.binary_name.format(
-                    arch=ARCH,
-                    arch_alt=get_arch_alt(),
-                    arch_short=get_arch_short(),
-                    version=version,
-                )
-                lock_data[name]["binary_name"] = binary_name
+                lock_data[name]["binary_name"] = fill(release_info.binary_name, version)
 
             if release_info.extract_dir_pattern:
-                extract_dir = release_info.extract_dir_pattern.format(
-                    version=version,
-                    arch=ARCH,
-                    arch_alt=get_arch_alt(),
-                    arch_short=get_arch_short(),
+                lock_data[name]["extract_dir"] = fill(
+                    release_info.extract_dir_pattern, version
                 )
-                lock_data[name]["extract_dir"] = extract_dir
 
             if release_info.archive_binary_name_pattern:
-                archive_binary_name = release_info.archive_binary_name_pattern.format(
-                    arch=ARCH,
-                    arch_alt=get_arch_alt(),
-                    arch_short=get_arch_short(),
-                    version=version,
+                lock_data[name]["archive_binary_name"] = fill(
+                    release_info.archive_binary_name_pattern, version
                 )
-                lock_data[name]["archive_binary_name"] = archive_binary_name
 
             if release_info.extra_dirs:
                 lock_data[name]["extra_dirs"] = release_info.extra_dirs
@@ -531,8 +480,13 @@ def download_with_progress(url: str, fname: str) -> None:
     sys.stdout.write("\n")
 
 
-def mkpath(s: str) -> Path:
-    return Path(os.path.expanduser(s))
+@contextlib.contextmanager
+def download_to_tempdir(url: str) -> Generator[Path, None, None]:
+    """Download a single file to a temp dir and yield its path."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        fpath = Path(tmpdir) / os.path.basename(urlparse(url).path)
+        download_with_progress(url, str(fpath))
+        yield fpath
 
 
 @contextlib.contextmanager
@@ -562,12 +516,67 @@ def run(cmd: list[str]) -> str:
     return r.stdout.decode("utf-8")
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(frozen=True)
 class Check:
     cmd: list[str]
-    lines: int = -1
-    extract_version: Callable[[str], str] | None = None
-    install: Callable[[], None] | None = None
+    # Regex with one capture group matched against the first line of `cmd`'s
+    # output. None → generic "\d+.\d+.\d+"; only set it when that would be wrong.
+    pattern: str | None = None
+
+
+def extract_version(output: str, pattern: str | None = None) -> str:
+    """Pull a version out of command/tag output via `pattern` (group 1)."""
+    match = re.search(pattern or r"(\d+\.\d+\.\d+)", output)
+    assert match, f"could not parse version from: {output!r}"
+    return match.group(1)
+
+
+def query_version(check: "Check") -> str | None:
+    """Run `check.cmd` and return its extracted version, or None if not found."""
+    output = run(check.cmd)
+    if not output:
+        return None
+    return extract_version(output.splitlines()[0], check.pattern)
+
+
+# System tools provided by the package manager (version-checked, not installed).
+SYSTEM_DEPS: dict[str, Check] = {
+    "git": Check(["git", "--version"]),
+    "uv": Check(["uv", "--version"]),
+    "zsh": Check(["zsh", "--version"]),
+    "wget": Check(["wget", "--version"]),
+    "curl": Check(["curl", "--version"], pattern=r"curl (\d+\.\d+\.\d+)"),
+    "npm": Check(["npm", "--version"]),
+    "rg": Check(["rg", "--version"]),
+    "tmux": Check(["tmux", "-V"]),
+}
+
+# Tools installed from install.lock.json. A pattern is only needed where the
+# first "\d+.\d+.\d+" in the --version output isn't the tool's own version.
+LOCKFILE_TOOLS: dict[str, Check] = {
+    name: Check([name, "--version"], pattern=pattern)
+    for name, pattern in {
+        "nvim": None,
+        "lazygit": r"version=(\d+\.\d+\.\d+)",
+        "difft": None,
+        "fd": None,
+        "hyperfine": None,
+        "bat": None,
+        "delta": None,
+        "codex": None,
+        "fnm": None,
+        "fzf": None,
+        "direnv": None,
+        "btm": None,
+        "tree-sitter": None,
+        "clangd": None,
+        "zed": None,
+        "marktext": None,
+        "typst": None,
+        "hunk": None,
+        "rclone": None,
+    }.items()
+}
 
 
 def install_font(font_name: str) -> bool:
@@ -632,12 +641,8 @@ def install_from_lock(package_name: str) -> None:
 
     # Special case for appimage
     if url.endswith(".appimage"):
-        with tempfile.TemporaryDirectory() as tmpdir:
-            fname = os.path.basename(urlparse(url).path)
-            fpath = os.path.join(tmpdir, fname)
-            download_with_progress(url, fpath)
-
-            dest = LOCAL_BIN / fname
+        with download_to_tempdir(url) as fpath:
+            dest = LOCAL_BIN / fpath.name
             shutil.copy(fpath, dest)
             chmod_x(dest)
 
@@ -645,39 +650,23 @@ def install_from_lock(package_name: str) -> None:
             binary_link = LOCAL_BIN / package_name
             ensure_symlink(dest, binary_link)
             chmod_x(binary_link)
-
         return
 
     # Special case for gzip-compressed single binaries (e.g., tree-sitter-linux-x64.gz)
     if url.endswith(".gz") and not url.endswith((".tar.gz", ".tgz")):
-        import gzip as gzip_mod
-
-        with tempfile.TemporaryDirectory() as tmpdir:
-            fname = os.path.basename(urlparse(url).path)
-            fpath = os.path.join(tmpdir, fname)
-            download_with_progress(url, fpath)
-
-            binary_name = package_info.get("binary_name", package_name)
-            dest = LOCAL_BIN / binary_name
-            with gzip_mod.open(fpath, "rb") as f_in:
-                with open(dest, "wb") as f_out:
-                    shutil.copyfileobj(f_in, f_out)
+        with download_to_tempdir(url) as fpath:
+            dest = LOCAL_BIN / package_info.get("binary_name", package_name)
+            with gzip.open(fpath, "rb") as f_in, open(dest, "wb") as f_out:
+                shutil.copyfileobj(f_in, f_out)
             chmod_x(dest)
-
         return
 
     # Special case for raw binaries (not archives)
     if not url.endswith((".tar.gz", ".tar.xz", ".zip", ".tgz")):
-        with tempfile.TemporaryDirectory() as tmpdir:
-            fname = os.path.basename(urlparse(url).path)
-            fpath = os.path.join(tmpdir, fname)
-            download_with_progress(url, fpath)
-
-            binary_name = package_info.get("binary_name", package_name)
-            dest = LOCAL_BIN / binary_name
+        with download_to_tempdir(url) as fpath:
+            dest = LOCAL_BIN / package_info.get("binary_name", package_name)
             shutil.copy(fpath, dest)
             chmod_x(dest)
-
         return
 
     # Regular archive extraction
@@ -729,138 +718,6 @@ def install_from_lock(package_name: str) -> None:
                     print(f"  Copied {src_rel} -> {dest_path}")
                 else:
                     print(f"  Warning: extra dir {src_path} not found")
-
-
-def nvim_version(version_output: str) -> str:
-    match = re.search(r"NVIM v(\d+\.\d+\.\d+)", version_output)
-    assert match
-    return match.group(1)
-
-
-def fd_version(version_output: str) -> str:
-    match = re.search(r"(\d+\.\d+\.\d+)", version_output)
-    assert match
-    return match.group(1)
-
-
-def bat_version(version_output: str) -> str:
-    match = re.search(r"bat (\d+\.\d+\.\d+)", version_output)
-    assert match
-    return match.group(1)
-
-
-def delta_version(version_output: str) -> str:
-    match = re.search(r"delta (\d+\.\d+\.\d+)", version_output)
-    assert match
-    return match.group(1)
-
-
-def hyperfine_version(version_output: str) -> str:
-    match = re.search(r"(\d+\.\d+\.\d+)", version_output)
-    assert match
-    return match.group(1)
-
-
-def codex_version(version_output: str) -> str:
-    match = re.search(r"(\d+\.\d+\.\d+)", version_output)
-    assert match
-    return match.group(1)
-
-
-def fnm_version(version_output: str) -> str:
-    match = re.search(r"fnm (\d+\.\d+\.\d+)", version_output)
-    assert match
-    return match.group(1)
-
-
-def fzf_version(version_output: str) -> str:
-    match = re.search(r"(\d+\.\d+\.\d+)", version_output)
-    assert match
-    return match.group(1)
-
-
-def direnv_version(version_output: str) -> str:
-    match = re.search(r"(\d+\.\d+\.\d+)", version_output)
-    assert match
-    return match.group(1)
-
-
-def lazygit_version(version_output: str) -> str:
-    match = re.search(r"version=(\d+\.\d+\.\d+)", version_output)
-    assert match
-    return match.group(1)
-
-
-def curl_version(version_output: str) -> str:
-    match = re.search(r"curl (\d+\.\d+\.\d+)", version_output)
-    assert match
-    return match.group(1)
-
-
-def difftastic_version(version_output: str) -> str:
-    match = re.search(r"Difftastic (\d+\.\d+\.\d+)", version_output)
-    assert match
-    return match.group(1)
-
-
-def ydotool_version(version_output: str) -> str:
-    # ydotool doesn't have a --version flag, we'll use the lock file version
-    # This function is just a placeholder to satisfy the Check interface
-    return "installed"
-
-
-def ydotoold_version(version_output: str) -> str:
-    # ydotoold doesn't have a --version flag, we'll use the lock file version
-    # This function is just a placeholder to satisfy the Check interface
-    return "installed"
-
-
-def btm_version(version_output: str) -> str:
-    match = re.search(r"bottom (\d+\.\d+\.\d+)", version_output)
-    assert match
-    return match.group(1)
-
-
-def tree_sitter_version(version_output: str) -> str:
-    match = re.search(r"tree-sitter (\d+\.\d+\.\d+)", version_output)
-    assert match
-    return match.group(1)
-
-
-def clangd_version(version_output: str) -> str:
-    match = re.search(r"clangd version (\d+\.\d+\.\d+)", version_output)
-    assert match
-    return match.group(1)
-
-
-def zed_version(version_output: str) -> str:
-    match = re.search(r"(\d+\.\d+\.\d+)", version_output)
-    assert match
-    return match.group(1)
-
-
-def typst_version(version_output: str) -> str:
-    match = re.search(r"typst (\d+\.\d+\.\d+)", version_output)
-    assert match
-    return match.group(1)
-
-
-def hunk_version(version_output: str) -> str:
-    match = re.search(r"(\d+\.\d+\.\d+)", version_output)
-    assert match
-    return match.group(1)
-
-
-def marktext_version(version_output: str) -> str:
-    match = re.search(r"MarkText: v(\d+\.\d+\.\d+)", version_output)
-    assert match
-    return match.group(1)
-
-
-def rclone_version(version_output: str) -> str:
-    match = re.search(r"rclone v(\d+\.\d+\.\d+)", version_output)
-    assert match
-    return match.group(1)
 
 
 def get_installed_font_version(font_name: str) -> str | None:
@@ -923,19 +780,16 @@ def ensure_symlink(src: Path, dst: Path) -> None:
         dst.symlink_to(src)
 
 
-def validate_deps(
-    system_deps: dict[str, "Check"],
-    lockfile_tools: dict[str, "Check"],
-) -> None:
+def validate_deps() -> None:
     """Sanity-check DEPS against the HOW dicts.
 
-    Every dep must be defined in exactly one of system_deps / lockfile_tools / FONTS,
+    Every dep must be defined in exactly one of SYSTEM_DEPS / LOCKFILE_TOOLS / FONTS,
     and every lockfile tool must have a matching GITHUB_RELEASES entry.
     """
     seen: dict[str, str] = {}
     for src, names in [
-        ("system_deps", system_deps.keys()),
-        ("lockfile_tools", lockfile_tools.keys()),
+        ("SYSTEM_DEPS", SYSTEM_DEPS.keys()),
+        ("LOCKFILE_TOOLS", LOCKFILE_TOOLS.keys()),
         ("fonts", FONTS.keys()),
     ]:
         for n in names:
@@ -950,9 +804,9 @@ def validate_deps(
         f"extra in DEPS (no HOW)={sorted(extra)}"
     )
 
-    missing_gh = lockfile_tools.keys() - GITHUB_RELEASES.keys()
+    missing_gh = LOCKFILE_TOOLS.keys() - GITHUB_RELEASES.keys()
     assert not missing_gh, (
-        f"lockfile_tools without GITHUB_RELEASES entry: {sorted(missing_gh)}"
+        f"LOCKFILE_TOOLS without GITHUB_RELEASES entry: {sorted(missing_gh)}"
     )
 
 
@@ -989,113 +843,31 @@ def check_versions() -> None:
     print(f"{'=' * 80}\n")
 
     M = max(len(name) for name in lock.keys())
+    outdated: list[str] = []
+    up_to_date: list[str] = []
+    not_installed: list[str] = []
 
-    outdated = []
-    up_to_date = []
-    not_installed = []
+    def report(name: str, installed: str | None, locked: str) -> None:
+        if installed is None:
+            not_installed.append(name)
+            print(
+                f"{Fore.RED}{name:<{M}}{Fore.RESET} : NOT INSTALLED (locked: v{locked})"
+            )
+        elif installed == locked:
+            up_to_date.append(name)
+            print(f"{Fore.GREEN}{name:<{M}}{Fore.RESET} : v{installed} ✓")
+        else:
+            outdated.append(name)
+            print(f"{Fore.YELLOW}{name:<{M}}{Fore.RESET} : v{installed} → v{locked}")
 
     for name, info in sorted(lock.items()):
         if name not in active:
             continue
         locked_version = info.get("version", "unknown")
-
-        # Check font versions
-        if name in ["firacode", "iosevkaterm"]:
-            installed_version = get_installed_font_version(name)
-
-            if installed_version is None:
-                not_installed.append(name)
-                print(
-                    f"{Fore.RED}{name:<{M}}{Fore.RESET} : NOT INSTALLED (locked: v{locked_version})"
-                )
-                continue
-
-            if installed_version == locked_version:
-                up_to_date.append(name)
-                print(f"{Fore.GREEN}{name:<{M}}{Fore.RESET} : v{installed_version} ✓")
-            else:
-                outdated.append(name)
-                print(
-                    f"{Fore.YELLOW}{name:<{M}}{Fore.RESET} : v{installed_version} → v{locked_version}"
-                )
-            continue
-
-        # Tools without version detection - just check if installed
-        if name in ["ydotool", "ydotoold"]:
-            if shutil.which(name):
-                up_to_date.append(name)
-                print(
-                    f"{Fore.GREEN}{name:<{M}}{Fore.RESET} : installed (version check skipped)"
-                )
-            else:
-                not_installed.append(name)
-                print(
-                    f"{Fore.RED}{name:<{M}}{Fore.RESET} : NOT INSTALLED (locked: v{locked_version})"
-                )
-            continue
-
-        # Try to get installed version
-        if name in [
-            "nvim",
-            "lazygit",
-            "difft",
-            "fd",
-            "hyperfine",
-            "bat",
-            "delta",
-            "codex",
-            "tree-sitter",
-            "clangd",
-            "zed",
-            "marktext",
-            "typst",
-            "hunk",
-            "rclone",
-        ]:
-            cmd_map: dict[str, tuple[list[str], Callable[[str], str] | None]] = {
-                "nvim": (["nvim", "--version"], nvim_version),
-                "lazygit": (["lazygit", "--version"], lazygit_version),
-                "difft": (["difft", "--version"], difftastic_version),
-                "fd": (["fd", "--version"], fd_version),
-                "hyperfine": (["hyperfine", "--version"], hyperfine_version),
-                "bat": (["bat", "--version"], bat_version),
-                "delta": (["delta", "--version"], delta_version),
-                "codex": (["codex", "--version"], codex_version),
-                "tree-sitter": (["tree-sitter", "--version"], tree_sitter_version),
-                "clangd": (["clangd", "--version"], clangd_version),
-                "zed": (["zed", "--version"], zed_version),
-                "marktext": (["marktext", "--version"], marktext_version),
-                "typst": (["typst", "--version"], typst_version),
-                "hunk": (["hunk", "--version"], hunk_version),
-                "rclone": (["rclone", "--version"], rclone_version),
-            }
-
-            if name in cmd_map:
-                cmd, extract_fn = cmd_map[name]
-                output = run(cmd)
-
-                if output == "":
-                    not_installed.append(name)
-                    print(
-                        f"{Fore.RED}{name:<{M}}{Fore.RESET} : NOT INSTALLED (locked: v{locked_version})"
-                    )
-                    continue
-
-                if extract_fn is not None:
-                    installed_version = extract_fn(output.splitlines()[0])
-                else:
-                    installed_version = output.strip().split()[0]
-
-                if installed_version == locked_version:
-                    up_to_date.append(name)
-                    print(
-                        f"{Fore.GREEN}{name:<{M}}{Fore.RESET} : v{installed_version} ✓"
-                    )
-                else:
-                    outdated.append(name)
-                    print(
-                        f"{Fore.YELLOW}{name:<{M}}{Fore.RESET} : v{installed_version} → v{locked_version}"
-                    )
+        if name in FONTS:
+            report(name, get_installed_font_version(name), locked_version)
+        elif name in LOCKFILE_TOOLS:
+            report(name, query_version(LOCKFILE_TOOLS[name]), locked_version)
 
     print(f"\n{'=' * 80}")
     print(
@@ -1155,152 +927,26 @@ def main() -> None:
 
     lock = load_lock_file()
 
-    # System dependencies (not in lock file)
-    system_deps = {
-        "git": Check(cmd=["git", "--version"], lines=1),
-        "uv": Check(cmd=["uv", "--version"], lines=1),
-        "zsh": Check(cmd=["zsh", "--version"], lines=1),
-        "wget": Check(cmd=["wget", "--version"], lines=1),
-        "curl": Check(cmd=["curl", "--version"], lines=1, extract_version=curl_version),
-        "npm": Check(cmd=["npm", "--version"], lines=1),
-        "rg": Check(cmd=["rg", "--version"], lines=1),
-        "tmux": Check(cmd=["tmux", "-V"], lines=1),
-    }
+    validate_deps()
 
-    # Tools managed by lock file
-    lockfile_tools = {
-        "nvim": Check(
-            cmd=["nvim", "--version"],
-            lines=1,
-            extract_version=nvim_version,
-        ),
-        "lazygit": Check(
-            cmd=["lazygit", "--version"],
-            lines=1,
-            extract_version=lazygit_version,
-        ),
-        "difft": Check(
-            cmd=["difft", "--version"],
-            lines=1,
-            extract_version=difftastic_version,
-        ),
-        "fd": Check(
-            cmd=["fd", "--version"],
-            lines=1,
-            extract_version=fd_version,
-        ),
-        "hyperfine": Check(
-            cmd=["hyperfine", "--version"],
-            lines=1,
-            extract_version=hyperfine_version,
-        ),
-        "bat": Check(
-            cmd=["bat", "--version"],
-            lines=1,
-            extract_version=bat_version,
-        ),
-        "delta": Check(
-            cmd=["delta", "--version"],
-            lines=1,
-            extract_version=delta_version,
-        ),
-        "codex": Check(
-            cmd=["codex", "--version"],
-            lines=1,
-            extract_version=codex_version,
-        ),
-        "fnm": Check(
-            cmd=["fnm", "--version"],
-            lines=1,
-            extract_version=fnm_version,
-        ),
-        "fzf": Check(
-            cmd=["fzf", "--version"],
-            lines=1,
-            extract_version=fzf_version,
-        ),
-        "direnv": Check(
-            cmd=["direnv", "--version"],
-            lines=1,
-            extract_version=direnv_version,
-        ),
-        # "ydotool": Check(
-        #     cmd=["ydotool", "help"],
-        #     lines=1,
-        #     extract_version=ydotool_version,
-        # ),
-        # "ydotoold": Check(
-        #     cmd=["ydotoold", "--help"],
-        #     lines=1,
-        #     extract_version=ydotoold_version,
-        # ),
-        "btm": Check(
-            cmd=["btm", "--version"],
-            lines=1,
-            extract_version=btm_version,
-        ),
-        "tree-sitter": Check(
-            cmd=["tree-sitter", "--version"],
-            lines=1,
-            extract_version=tree_sitter_version,
-        ),
-        "clangd": Check(
-            cmd=["clangd", "--version"],
-            lines=1,
-            extract_version=clangd_version,
-        ),
-        "zed": Check(
-            cmd=["zed", "--version"],
-            lines=1,
-            extract_version=zed_version,
-        ),
-        "marktext": Check(
-            cmd=["marktext", "--version"],
-            lines=1,
-            extract_version=marktext_version,
-        ),
-        "typst": Check(
-            cmd=["typst", "--version"],
-            lines=1,
-            extract_version=typst_version,
-        ),
-        "hunk": Check(
-            cmd=["hunk", "--version"],
-            lines=1,
-            extract_version=hunk_version,
-        ),
-        "rclone": Check(
-            cmd=["rclone", "--version"],
-            lines=1,
-            extract_version=rclone_version,
-        ),
-    }
-
-    validate_deps(system_deps, lockfile_tools)
-
-    M = max(
-        len(name) for name in list(system_deps.keys()) + list(lockfile_tools.keys())
-    )
-
+    M = max(len(name) for name in [*SYSTEM_DEPS, *LOCKFILE_TOOLS])
     failed = False
 
-    # Check system dependencies
-    for name, cmd in system_deps.items():
+    # System dependencies (informational only — installed by the package manager)
+    for name, check in SYSTEM_DEPS.items():
         if name not in active:
             continue
-        r = run(cmd.cmd)
-        if r == "":
+        output = run(check.cmd)
+        if not output:
             print(Fore.RED + f"{name:<{M}} : not found" + Fore.RESET)
             failed = True
         else:
-            lines = r.splitlines()
-            version_str = ", ".join(lines[: cmd.lines])
-            if cmd.extract_version:
-                version_str = cmd.extract_version(version_str)
-            print(Fore.GREEN + f"{name:<{M}} : {version_str}" + Fore.RESET)
+            line = output.splitlines()[0]
+            version = extract_version(line, check.pattern) if check.pattern else line
+            print(Fore.GREEN + f"{name:<{M}} : {version}" + Fore.RESET)
 
     # Check and install/update lockfile-managed tools
-    for name, cmd in lockfile_tools.items():
+    for name, check in LOCKFILE_TOOLS.items():
         if name not in active:
             continue
         if name not in lock:
@@ -1309,55 +955,29 @@ def main() -> None:
             )
             continue
 
-        locked_version = lock[name].get("version", "unknown")
-        r = run(cmd.cmd)
+        locked = lock[name].get("version", "unknown")
+        installed = query_version(check)
 
-        if r == "":
-            # Tool not installed
+        if installed is None:
             print(
                 Fore.YELLOW
-                + f"{name:<{M}} : not found, installing v{locked_version}"
+                + f"{name:<{M}} : not found, installing v{locked}"
                 + Fore.RESET
             )
-            install_from_lock(name)
-            # Verify installation
-            r = run(cmd.cmd)
-            if r:
-                lines = r.splitlines()
-                version_str = ", ".join(lines[: cmd.lines])
-                if cmd.extract_version:
-                    version_str = cmd.extract_version(version_str)
-                print(Fore.GREEN + f"{name:<{M}} : {version_str} ✓" + Fore.RESET)
+        elif installed != locked:
+            print(
+                Fore.YELLOW
+                + f"{name:<{M}} : v{installed} → v{locked}, updating"
+                + Fore.RESET
+            )
         else:
-            # Tool is installed, check version
-            lines = r.splitlines()
-            version_str = ", ".join(lines[: cmd.lines])
-            if cmd.extract_version:
-                installed_version = cmd.extract_version(version_str)
-            else:
-                installed_version = (
-                    version_str.strip().split()[0] if version_str else "unknown"
-                )
+            print(Fore.GREEN + f"{name:<{M}} : {installed} ✓" + Fore.RESET)
+            continue
 
-            if installed_version != locked_version:
-                # Version mismatch, update
-                print(
-                    Fore.YELLOW
-                    + f"{name:<{M}} : v{installed_version} → v{locked_version}, updating"
-                    + Fore.RESET
-                )
-                install_from_lock(name)
-                # Verify update
-                r = run(cmd.cmd)
-                if r:
-                    lines = r.splitlines()
-                    version_str = ", ".join(lines[: cmd.lines])
-                    if cmd.extract_version:
-                        version_str = cmd.extract_version(version_str)
-                    print(Fore.GREEN + f"{name:<{M}} : {version_str} ✓" + Fore.RESET)
-            else:
-                # Version matches
-                print(Fore.GREEN + f"{name:<{M}} : {installed_version} ✓" + Fore.RESET)
+        install_from_lock(name)
+        installed = query_version(check)
+        if installed:
+            print(Fore.GREEN + f"{name:<{M}} : {installed} ✓" + Fore.RESET)
 
     print()
 
