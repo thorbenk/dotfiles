@@ -38,9 +38,6 @@
     # Claude Code
     ~/.claude/settings.json: claude/settings.json
     ~/.claude/statusline.py: claude/statusline.py
-    # ninja wrapper: shadows real ninja on PATH to log build progress for the
-    # statusline (~/.local/bin precedes /usr/bin). Pairs with statusline.py.
-    ~/.local/bin/ninja: claude/ninja-wrapper
 
     # Codex
     ~/.codex/config.toml: codex/config.toml

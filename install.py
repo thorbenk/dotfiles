@@ -76,6 +76,7 @@ DEPS: list[Dep] = [
     Dep("tree-sitter"),
     Dep("clangd"),
     Dep("zed"),
+    Dep("marktext"),
     Dep("typst"),
     Dep("hunk"),
     Dep("rclone", only_on=("DEHEI-7H3ZXL3",)),
@@ -167,6 +168,42 @@ def install_hunk(name: str, info: "PackageInfo", tmpdir: Path) -> None:
     shutil.copytree(extract_dir, bundle)
     chmod_x(bundle / "hunk")
     ensure_symlink(bundle / "hunk", LOCAL_BIN / "hunk")
+
+
+def install_marktext(name: str, info: "PackageInfo", tmpdir: Path) -> None:
+    # MarkText is an Electron bundle: the binary must stay with its resources.
+    # The bundled chrome-sandbox isn't setuid-root after a home-dir extract, so
+    # a bare launch aborts; a wrapper on PATH and the .desktop both pass
+    # --no-sandbox so both CLI and GUI launches work.
+    local_prefix = LOCAL_BIN.parent  # ~/.local
+    bundle = local_prefix / "marktext"
+    extract_dir = tmpdir / info["extract_dir"]
+    if bundle.exists():
+        shutil.rmtree(bundle)
+    shutil.copytree(extract_dir, bundle)
+    chmod_x(bundle / "marktext")
+
+    launcher = LOCAL_BIN / "marktext"
+    if launcher.exists() or launcher.is_symlink():
+        launcher.unlink()
+    launcher.write_text(f'#!/bin/sh\nexec "{bundle / "marktext"}" --no-sandbox "$@"\n')
+    chmod_x(launcher)
+
+    icon = bundle / "resources/static/icon.png"
+    desktop_dst = local_prefix / "share/applications" / "marktext.desktop"
+    desktop_dst.parent.mkdir(parents=True, exist_ok=True)
+    desktop_dst.write_text(
+        "[Desktop Entry]\n"
+        "Name=MarkText\n"
+        "Comment=Next generation markdown editor\n"
+        f"Exec={launcher} %F\n"
+        f"Icon={icon}\n"
+        "Terminal=false\n"
+        "Type=Application\n"
+        "Categories=Office;TextEditor;Utility;\n"
+        "MimeType=text/markdown;\n"
+        "StartupWMClass=marktext\n"
+    )
 
 
 GITHUB_RELEASES = {
@@ -265,6 +302,13 @@ GITHUB_RELEASES = {
         asset_pattern="zed-linux-{arch}.tar.gz",
         binary_name="zed",
         install=install_zed,
+    ),
+    "marktext": GitHubRelease(
+        repo="marktext/marktext",
+        asset_pattern="marktext-linux-{version}.tar.gz",
+        binary_name="marktext",
+        extract_dir_pattern="marktext-linux-{version}",
+        install=install_marktext,
     ),
     "typst": GitHubRelease(
         repo="typst/typst",
@@ -769,6 +813,12 @@ def hunk_version(version_output: str) -> str:
     return match.group(1)
 
 
+def marktext_version(version_output: str) -> str:
+    match = re.search(r"MarkText: v(\d+\.\d+\.\d+)", version_output)
+    assert match
+    return match.group(1)
+
+
 def rclone_version(version_output: str) -> str:
     match = re.search(r"rclone v(\d+\.\d+\.\d+)", version_output)
     assert match
@@ -960,6 +1010,7 @@ def check_versions() -> None:
             "tree-sitter",
             "clangd",
             "zed",
+            "marktext",
             "typst",
             "hunk",
             "rclone",
@@ -977,6 +1028,7 @@ def check_versions() -> None:
                 "tree-sitter": (["tree-sitter", "--version"], tree_sitter_version),
                 "clangd": (["clangd", "--version"], clangd_version),
                 "zed": (["zed", "--version"], zed_version),
+                "marktext": (["marktext", "--version"], marktext_version),
                 "typst": (["typst", "--version"], typst_version),
                 "hunk": (["hunk", "--version"], hunk_version),
                 "rclone": (["rclone", "--version"], rclone_version),
@@ -1156,6 +1208,11 @@ def main() -> None:
             cmd=["zed", "--version"],
             lines=1,
             extract_version=zed_version,
+        ),
+        "marktext": Check(
+            cmd=["marktext", "--version"],
+            lines=1,
+            extract_version=marktext_version,
         ),
         "typst": Check(
             cmd=["typst", "--version"],

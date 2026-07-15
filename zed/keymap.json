@@ -44,7 +44,7 @@
     },
   },
   {
-    "context": "Workspace && !Terminal",
+    "context": "Workspace && !Terminal && vim_mode == normal && !VimWaiting && !menu",
     "bindings": {
       "space t c": "workspace::NewCenterTerminal",
       "space t r": "terminal::RenameTerminal",

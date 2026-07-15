@@ -113,6 +113,14 @@
     "repo": "zed-industries/zed",
     "binary_name": "zed"
   },
+  "marktext": {
+    "version": "0.19.1",
+    "tag": "v0.19.1",
+    "url": "https://github.com/marktext/marktext/releases/download/v0.19.1/marktext-linux-0.19.1.tar.gz",
+    "repo": "marktext/marktext",
+    "binary_name": "marktext",
+    "extract_dir": "marktext-linux-0.19.1"
+  },
   "typst": {
     "version": "0.15.0",
     "tag": "v0.15.0",
