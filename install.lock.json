@@ -37,9 +37,9 @@
     "extract_dir": "fd-v10.4.2-x86_64-unknown-linux-gnu"
   },
   "lazygit": {
-    "version": "0.63.0",
-    "tag": "v0.63.0",
-    "url": "https://github.com/jesseduffield/lazygit/releases/download/v0.63.0/lazygit_0.63.0_linux_x86_64.tar.gz",
+    "version": "0.63.1",
+    "tag": "v0.63.1",
+    "url": "https://github.com/jesseduffield/lazygit/releases/download/v0.63.1/lazygit_0.63.1_linux_x86_64.tar.gz",
     "repo": "jesseduffield/lazygit",
     "binary_name": "lazygit"
   },
@@ -145,9 +145,9 @@
     "extract_dir": "typst-x86_64-unknown-linux-musl"
   },
   "hunk": {
-    "version": "0.17.0",
-    "tag": "v0.17.0",
-    "url": "https://github.com/modem-dev/hunk/releases/download/v0.17.0/hunkdiff-linux-x64.tar.gz",
+    "version": "0.17.1",
+    "tag": "v0.17.1",
+    "url": "https://github.com/modem-dev/hunk/releases/download/v0.17.1/hunkdiff-linux-x64.tar.gz",
     "repo": "modem-dev/hunk",
     "binary_name": "hunk",
     "extract_dir": "hunkdiff-linux-x64"

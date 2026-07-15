@@ -23,19 +23,25 @@ import argparse
 PWD = Path(__file__).parent
 LOCAL_BIN = Path(os.path.expanduser("~/.local/bin"))
 LOCAL_BIN.mkdir(parents=True, exist_ok=True)
+LOCAL_FONTS = Path(os.path.expanduser("~/.local/share/fonts"))
 
 ARCH = platform.machine()
-# x86_64 stays x86_64; aarch64 becomes arm64 / arm64. Fall back to raw ARCH.
+# aarch64 -> arm64/arm64; x86_64 -> x86_64/x64. Fall back to raw ARCH otherwise.
 ARCH_ALT = {"aarch64": "arm64"}.get(ARCH, ARCH)
 ARCH_SHORT = {"x86_64": "x64", "aarch64": "arm64"}.get(ARCH, ARCH)
 LOCK_FILE = PWD / "install.lock.json"
 HOSTNAME = platform.node()
 
 
-def fill(pattern: str, version: str = "") -> str:
+def url_filename(url: str) -> str:
+    """The trailing filename of a URL, ignoring any query/fragment."""
+    return os.path.basename(urlparse(url).path)
+
+
+def fill(pattern: str, version: str = "", arch: str | None = None) -> str:
     """Fill {version}/{arch}/{arch_alt}/{arch_short} placeholders in a pattern."""
     return pattern.format(
-        version=version, arch=ARCH, arch_alt=ARCH_ALT, arch_short=ARCH_SHORT
+        version=version, arch=arch or ARCH, arch_alt=ARCH_ALT, arch_short=ARCH_SHORT
     )
 
 
@@ -58,7 +64,7 @@ class Dep:
 
 
 # WHAT to install, and on which hosts. HOW each dep is fetched / version-checked
-# is defined in GITHUB_RELEASES (below) and system_deps / lockfile_tools (in main).
+# is defined below in GITHUB_RELEASES and SYSTEM_DEPS / LOCKFILE_TOOLS.
 DEPS: list[Dep] = [
     # System tools (provided by package manager; only version-checked)
     Dep("git"),
@@ -382,13 +388,9 @@ def find_matching_asset(
     assets: list[GitHubAsset], pattern: str, version: str
 ) -> str | None:
     """Find asset URL matching the pattern for current architecture."""
-    # Try both arch formats for the {arch} placeholder.
-    patterns_to_try = [
-        fill(pattern, version),
-        fill(pattern.replace("{arch}", "{arch_alt}"), version),
-    ]
-
-    for pattern_filled in patterns_to_try:
+    # Try both spellings of the machine arch for the {arch} placeholder.
+    for arch in (ARCH, ARCH_ALT):
+        pattern_filled = fill(pattern, version, arch=arch)
         for asset in assets:
             if asset["name"] == pattern_filled:
                 return asset["browser_download_url"]
@@ -484,26 +486,24 @@ def download_with_progress(url: str, fname: str) -> None:
 def download_to_tempdir(url: str) -> Generator[Path, None, None]:
     """Download a single file to a temp dir and yield its path."""
     with tempfile.TemporaryDirectory() as tmpdir:
-        fpath = Path(tmpdir) / os.path.basename(urlparse(url).path)
+        fpath = Path(tmpdir) / url_filename(url)
         download_with_progress(url, str(fpath))
         yield fpath
 
 
 @contextlib.contextmanager
 def extract_and_download(url: str) -> Generator[Path, None, None]:
-    with tempfile.TemporaryDirectory(delete=True) as tmpdir:
-        fname = tmpdir + "/" + url.split("/")[-1]
-        download_with_progress(url, fname)
-        if fname.endswith(".tar.gz"):
-            with tarfile.open(fname, "r:gz") as tar:
-                tar.extractall(path=tmpdir, filter="data")
-        elif fname.endswith(".tar.xz"):
-            with tarfile.open(fname, "r:xz") as tar:
-                tar.extractall(path=tmpdir, filter="data")
-        elif fname.endswith(".zip"):
-            with zipfile.ZipFile(fname, "r") as zip_ref:
-                zip_ref.extractall(tmpdir)
-        yield Path(tmpdir)
+    """Download an archive and yield the temp dir it was extracted into."""
+    with download_to_tempdir(url) as fpath:
+        name = fpath.name
+        if name.endswith((".tar.gz", ".tar.xz")):
+            mode = "r:gz" if name.endswith(".tar.gz") else "r:xz"
+            with tarfile.open(fpath, mode) as tar:
+                tar.extractall(path=fpath.parent, filter="data")
+        elif name.endswith(".zip"):
+            with zipfile.ZipFile(fpath, "r") as zip_ref:
+                zip_ref.extractall(fpath.parent)
+        yield fpath.parent
 
 
 def run(cmd: list[str]) -> str:
@@ -519,8 +519,9 @@ def run(cmd: list[str]) -> str:
 @dataclasses.dataclass(frozen=True)
 class Check:
     cmd: list[str]
-    # Regex with one capture group matched against the first line of `cmd`'s
-    # output. None → generic "\d+.\d+.\d+"; only set it when that would be wrong.
+    # Regex (one capture group) for the version in the first line of `cmd`'s
+    # output. For lockfile tools, None falls back to a generic "\d+.\d+.\d+"
+    # (see query_version); for system deps, None just prints the raw line.
     pattern: str | None = None
 
 
@@ -551,31 +552,20 @@ SYSTEM_DEPS: dict[str, Check] = {
     "tmux": Check(["tmux", "-V"]),
 }
 
-# Tools installed from install.lock.json. A pattern is only needed where the
-# first "\d+.\d+.\d+" in the --version output isn't the tool's own version.
+# Tools installed from install.lock.json, all checked with `<tool> --version`.
+LOCKFILE_TOOL_NAMES = [
+    "nvim", "lazygit", "difft", "fd", "hyperfine", "bat", "delta", "codex",
+    "fnm", "fzf", "direnv", "btm", "tree-sitter", "clangd", "zed", "marktext",
+    "typst", "hunk", "rclone",
+]  # fmt: skip
+
+# Override the version regex only where the first "\d+.\d+.\d+" in the
+# --version output isn't the tool's own version.
+LOCKFILE_PATTERNS = {"lazygit": r"version=(\d+\.\d+\.\d+)"}
+
 LOCKFILE_TOOLS: dict[str, Check] = {
-    name: Check([name, "--version"], pattern=pattern)
-    for name, pattern in {
-        "nvim": None,
-        "lazygit": r"version=(\d+\.\d+\.\d+)",
-        "difft": None,
-        "fd": None,
-        "hyperfine": None,
-        "bat": None,
-        "delta": None,
-        "codex": None,
-        "fnm": None,
-        "fzf": None,
-        "direnv": None,
-        "btm": None,
-        "tree-sitter": None,
-        "clangd": None,
-        "zed": None,
-        "marktext": None,
-        "typst": None,
-        "hunk": None,
-        "rclone": None,
-    }.items()
+    name: Check([name, "--version"], pattern=LOCKFILE_PATTERNS.get(name))
+    for name in LOCKFILE_TOOL_NAMES
 }
 
 
@@ -589,15 +579,14 @@ def install_font(font_name: str) -> bool:
 
     package_info = lock[font_name]
     url = package_info["url"]
-    zip_filename = os.path.basename(urlparse(url).path)
-    local_fonts = Path(os.path.expanduser("~/.local/share/fonts"))
-    local_fonts.mkdir(parents=True, exist_ok=True)
+    zip_filename = url_filename(url)
+    LOCAL_FONTS.mkdir(parents=True, exist_ok=True)
 
     print(f"Installing {font_name} font...")
     download_with_progress(url, zip_filename)
 
     with zipfile.ZipFile(zip_filename, "r") as zip_ref:
-        zip_ref.extractall(local_fonts)
+        zip_ref.extractall(LOCAL_FONTS)
 
     os.remove(zip_filename)
     return True
@@ -611,9 +600,8 @@ def install_fonts(font_names: list[str]) -> None:
             any_installed = True
 
     if any_installed:
-        local_fonts = Path(os.path.expanduser("~/.local/share/fonts"))
         print("Refreshing font cache...")
-        subprocess.run(["fc-cache", "-f", "-v"], cwd=local_fonts)
+        subprocess.run(["fc-cache", "-f", "-v"], cwd=LOCAL_FONTS)
 
 
 def chmod_x(fname: Path) -> None:
@@ -652,20 +640,16 @@ def install_from_lock(package_name: str) -> None:
             chmod_x(binary_link)
         return
 
-    # Special case for gzip-compressed single binaries (e.g., tree-sitter-linux-x64.gz)
-    if url.endswith(".gz") and not url.endswith((".tar.gz", ".tgz")):
-        with download_to_tempdir(url) as fpath:
-            dest = LOCAL_BIN / package_info.get("binary_name", package_name)
-            with gzip.open(fpath, "rb") as f_in, open(dest, "wb") as f_out:
-                shutil.copyfileobj(f_in, f_out)
-            chmod_x(dest)
-        return
-
-    # Special case for raw binaries (not archives)
+    # Non-archive downloads: a bare binary, or a single gzip-compressed one
+    # (e.g. tree-sitter-linux-x64.gz). Appimages were already handled above.
     if not url.endswith((".tar.gz", ".tar.xz", ".zip", ".tgz")):
         with download_to_tempdir(url) as fpath:
             dest = LOCAL_BIN / package_info.get("binary_name", package_name)
-            shutil.copy(fpath, dest)
+            if url.endswith(".gz"):
+                with gzip.open(fpath, "rb") as f_in, open(dest, "wb") as f_out:
+                    shutil.copyfileobj(f_in, f_out)
+            else:
+                shutil.copy(fpath, dest)
             chmod_x(dest)
         return
 
@@ -722,8 +706,6 @@ def install_from_lock(package_name: str) -> None:
 
 def get_installed_font_version(font_name: str) -> str | None:
     """Extract the Nerd Fonts version from an installed font file."""
-    local_fonts = Path(os.path.expanduser("~/.local/share/fonts"))
-
     # Map lock file names to font file patterns
     font_patterns = {
         "firacode": "FiraCode*NerdFont-Regular.ttf",
@@ -734,7 +716,7 @@ def get_installed_font_version(font_name: str) -> str | None:
         return None
 
     # Find a font file for this font family
-    font_files = list(local_fonts.glob(font_patterns[font_name]))
+    font_files = list(LOCAL_FONTS.glob(font_patterns[font_name]))
     if not font_files:
         return None
 
