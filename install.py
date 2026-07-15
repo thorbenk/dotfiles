@@ -94,6 +94,7 @@ DEPS: list[Dep] = [
     Dep("marktext"),
     Dep("typst"),
     Dep("atuin"),
+    Dep("zoxide"),
     Dep("hunk"),
     Dep("rclone", only_on=("DEHEI-7H3ZXL3",)),
     # Fonts
@@ -334,6 +335,11 @@ GITHUB_RELEASES = {
         binary_name="atuin",
         extract_dir_pattern="atuin-{arch}-unknown-linux-gnu",
     ),
+    "zoxide": GitHubRelease(
+        repo="ajeetdsouza/zoxide",
+        asset_pattern="zoxide-{version}-{arch}-unknown-linux-musl.tar.gz",
+        binary_name="zoxide",
+    ),
     "hunk": GitHubRelease(
         repo="modem-dev/hunk",
         asset_pattern="hunkdiff-linux-{arch_short}.tar.gz",
@@ -563,7 +569,7 @@ SYSTEM_DEPS: dict[str, Check] = {
 LOCKFILE_TOOL_NAMES = [
     "nvim", "lazygit", "difft", "fd", "hyperfine", "bat", "delta", "codex",
     "fnm", "fzf", "direnv", "btm", "tree-sitter", "clangd", "zed", "marktext",
-    "typst", "atuin", "hunk", "rclone",
+    "typst", "atuin", "zoxide", "hunk", "rclone",
 ]  # fmt: skip
 
 # Override the version regex only where the first "\d+.\d+.\d+" in the

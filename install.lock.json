@@ -152,6 +152,13 @@
     "binary_name": "atuin",
     "extract_dir": "atuin-x86_64-unknown-linux-gnu"
   },
+  "zoxide": {
+    "version": "0.10.0",
+    "tag": "v0.10.0",
+    "url": "https://github.com/ajeetdsouza/zoxide/releases/download/v0.10.0/zoxide-0.10.0-x86_64-unknown-linux-musl.tar.gz",
+    "repo": "ajeetdsouza/zoxide",
+    "binary_name": "zoxide"
+  },
   "hunk": {
     "version": "0.17.1",
     "tag": "v0.17.1",

@@ -302,6 +302,17 @@ if command -v atuin >/dev/null 2>&1; then
     eval "$(atuin init zsh --disable-up-arrow)"
 fi
 
+#--- zoxide: frecency-based cd -----------------------------------------------
+# --cmd cd replaces `cd`: plain `cd path` still works, but `cd foo` also jumps
+# to the highest-frecency dir matching "foo", and `cdi` opens an interactive
+# picker (uses fzf, already installed). The default command name `z` is left
+# alone because this zshrc already uses `z` as a backgrounding helper (see the
+# GUI-app aliases above). zoxide is pinned in install.lock.json and installed to
+# ~/.local/bin (hence after the PATH export above).
+if command -v zoxide >/dev/null 2>&1; then
+    eval "$(zoxide init zsh --cmd cd)"
+fi
+
 #--- zsh-syntax-highlighting (MUST be last) ----------------------------------
 # It wraps every ZLE widget defined so far, so it has to come after all other
 # widget setup (copybuffer, fzf, fnm, etc.).
