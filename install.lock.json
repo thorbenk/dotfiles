@@ -1,8 +1,8 @@
 {
   "codex": {
-    "version": "0.142.5",
-    "tag": "rust-v0.142.5",
-    "url": "https://github.com/openai/codex/releases/download/rust-v0.142.5/codex-x86_64-unknown-linux-musl.tar.gz",
+    "version": "0.144.4",
+    "tag": "rust-v0.144.4",
+    "url": "https://github.com/openai/codex/releases/download/rust-v0.144.4/codex-x86_64-unknown-linux-musl.tar.gz",
     "repo": "openai/codex",
     "binary_name": "codex",
     "archive_binary_name": "codex-x86_64-unknown-linux-musl"
@@ -23,9 +23,9 @@
     "extract_dir": "fd-v10.4.2-x86_64-unknown-linux-gnu"
   },
   "lazygit": {
-    "version": "0.62.2",
-    "tag": "v0.62.2",
-    "url": "https://github.com/jesseduffield/lazygit/releases/download/v0.62.2/lazygit_0.62.2_linux_x86_64.tar.gz",
+    "version": "0.63.0",
+    "tag": "v0.63.0",
+    "url": "https://github.com/jesseduffield/lazygit/releases/download/v0.63.0/lazygit_0.63.0_linux_x86_64.tar.gz",
     "repo": "jesseduffield/lazygit",
     "binary_name": "lazygit"
   },
@@ -54,9 +54,9 @@
     "extract_dir": "delta-0.19.2-x86_64-unknown-linux-gnu"
   },
   "nvim": {
-    "version": "0.12.3",
-    "tag": "v0.12.3",
-    "url": "https://github.com/neovim/neovim/releases/download/v0.12.3/nvim-linux-x86_64.appimage",
+    "version": "0.12.4",
+    "tag": "v0.12.4",
+    "url": "https://github.com/neovim/neovim/releases/download/v0.12.4/nvim-linux-x86_64.appimage",
     "repo": "neovim/neovim",
     "binary_name": "nvim-linux-x86_64.appimage"
   },
@@ -79,16 +79,16 @@
     "repo": "Wilfred/difftastic"
   },
   "btm": {
-    "version": "0.14.3",
-    "tag": "0.14.3",
-    "url": "https://github.com/ClementTsang/bottom/releases/download/0.14.3/bottom_x86_64-unknown-linux-gnu.tar.gz",
+    "version": "0.14.4",
+    "tag": "0.14.4",
+    "url": "https://github.com/ClementTsang/bottom/releases/download/0.14.4/bottom_x86_64-unknown-linux-gnu.tar.gz",
     "repo": "ClementTsang/bottom",
     "binary_name": "btm"
   },
   "tree-sitter": {
-    "version": "0.26.10",
-    "tag": "v0.26.10",
-    "url": "https://github.com/tree-sitter/tree-sitter/releases/download/v0.26.10/tree-sitter-linux-x64.gz",
+    "version": "0.26.11",
+    "tag": "v0.26.11",
+    "url": "https://github.com/tree-sitter/tree-sitter/releases/download/v0.26.11/tree-sitter-linux-x64.gz",
     "repo": "tree-sitter/tree-sitter",
     "binary_name": "tree-sitter"
   },
@@ -107,9 +107,9 @@
     ]
   },
   "zed": {
-    "version": "1.9.0",
-    "tag": "v1.9.0",
-    "url": "https://github.com/zed-industries/zed/releases/download/v1.9.0/zed-linux-x86_64.tar.gz",
+    "version": "1.10.3",
+    "tag": "v1.10.3",
+    "url": "https://github.com/zed-industries/zed/releases/download/v1.10.3/zed-linux-x86_64.tar.gz",
     "repo": "zed-industries/zed",
     "binary_name": "zed"
   },
@@ -130,19 +130,19 @@
     "extract_dir": "typst-x86_64-unknown-linux-musl"
   },
   "hunk": {
-    "version": "0.16.0",
-    "tag": "v0.16.0",
-    "url": "https://github.com/modem-dev/hunk/releases/download/v0.16.0/hunkdiff-linux-x64.tar.gz",
+    "version": "0.17.0",
+    "tag": "v0.17.0",
+    "url": "https://github.com/modem-dev/hunk/releases/download/v0.17.0/hunkdiff-linux-x64.tar.gz",
     "repo": "modem-dev/hunk",
     "binary_name": "hunk",
     "extract_dir": "hunkdiff-linux-x64"
   },
   "rclone": {
-    "version": "1.74.3",
-    "tag": "v1.74.3",
-    "url": "https://github.com/rclone/rclone/releases/download/v1.74.3/rclone-v1.74.3-linux-amd64.zip",
+    "version": "1.74.4",
+    "tag": "v1.74.4",
+    "url": "https://github.com/rclone/rclone/releases/download/v1.74.4/rclone-v1.74.4-linux-amd64.zip",
     "repo": "rclone/rclone",
     "binary_name": "rclone",
-    "extract_dir": "rclone-v1.74.3-linux-amd64"
+    "extract_dir": "rclone-v1.74.4-linux-amd64"
   }
 }
