@@ -1,8 +1,44 @@
+personality = "pragmatic"
+web_search = "live"
+model = "gpt-5.5"
+approvals_reviewer = "user"
+model_reasoning_effort = "xhigh"
+service_tier = "default"
+
 [projects."/w/src/vgsm/master"]
 trust_level = "trusted"
 
 [projects."/home/kroeger/code/dotfiles"]
 trust_level = "trusted"
 
+[projects."/w/src/modelgym"]
+trust_level = "trusted"
+
+[projects."/w/src/eben"]
+trust_level = "trusted"
+
+[projects."/w/src/3rdparty/zed"]
+trust_level = "trusted"
+
+[projects."/w/src/deeplearningplugin/master"]
+trust_level = "trusted"
+
+[projects."/w/src/vg_companion"]
+trust_level = "trusted"
+
+[projects."/x/src/vgsm"]
+trust_level = "trusted"
+
 [sandbox_workspace_write]
-writable_roots = [ "/run/user/1000", "/w/rel", "/w/dbg"]
+writable_roots = [
+  "/run/user/1000",
+  "/w/rel",
+  "/w/dbg",
+  "/home/kroeger/.cache",
+]
+
+[notice.model_migrations]
+"gpt-5.3-codex" = "gpt-5.4"
+
+[tui.model_availability_nux]
+"gpt-5.5" = 4

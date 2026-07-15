@@ -6,3 +6,5 @@ FiraCode.zip
 log/*.log
 zed/settings.local.json
 .claude/
+
+codex/config.toml
