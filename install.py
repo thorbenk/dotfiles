@@ -225,6 +225,11 @@ GITHUB_RELEASES = {
         asset_pattern="fnm-linux.zip",
         binary_name="fnm",
     ),
+    "fzf": GitHubRelease(
+        repo="junegunn/fzf",
+        asset_pattern="fzf-{version}-linux_amd64.tar.gz",
+        binary_name="fzf",
+    ),
     "fd": GitHubRelease(
         repo="sharkdp/fd",
         asset_pattern="fd-v{version}-{arch}-unknown-linux-gnu.tar.gz",
@@ -759,6 +764,12 @@ def fnm_version(version_output: str) -> str:
     return match.group(1)
 
 
+def fzf_version(version_output: str) -> str:
+    match = re.search(r"(\d+\.\d+\.\d+)", version_output)
+    assert match
+    return match.group(1)
+
+
 def lazygit_version(version_output: str) -> str:
     match = re.search(r"version=(\d+\.\d+\.\d+)", version_output)
     assert match
@@ -1139,7 +1150,6 @@ def main() -> None:
         "wget": Check(cmd=["wget", "--version"], lines=1),
         "curl": Check(cmd=["curl", "--version"], lines=1, extract_version=curl_version),
         "npm": Check(cmd=["npm", "--version"], lines=1),
-        "fzf": Check(cmd=["fzf", "--version"], lines=1),
         "rg": Check(cmd=["rg", "--version"], lines=1),
         "tmux": Check(cmd=["tmux", "-V"], lines=1),
     }
@@ -1195,6 +1205,11 @@ def main() -> None:
             cmd=["fnm", "--version"],
             lines=1,
             extract_version=fnm_version,
+        ),
+        "fzf": Check(
+            cmd=["fzf", "--version"],
+            lines=1,
+            extract_version=fzf_version,
         ),
         # "ydotool": Check(
         #     cmd=["ydotool", "help"],

@@ -21,6 +21,13 @@
     "repo": "Schniz/fnm",
     "binary_name": "fnm"
   },
+  "fzf": {
+    "version": "0.74.0",
+    "tag": "v0.74.0",
+    "url": "https://github.com/junegunn/fzf/releases/download/v0.74.0/fzf-0.74.0-linux_amd64.tar.gz",
+    "repo": "junegunn/fzf",
+    "binary_name": "fzf"
+  },
   "fd": {
     "version": "10.4.2",
     "tag": "v10.4.2",

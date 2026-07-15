@@ -156,17 +156,21 @@ export PATH=$DOTFILES_DIR/bin:$PATH
 
 [ -f ~/.zshrc.user ] && source ~/.zshrc.user
 
-if [ -f /usr/share/fzf/key-bindings.zsh ]; then
-    # fzf install in Manjaro
-    source /usr/share/fzf/key-bindings.zsh
-    source /usr/share/fzf/completion.zsh
-elif [ -f ~/.fzf.zsh ]; then
-    # fzf local user install
-    source ~/.fzf.zsh
-    export PATH=$HOME/.fzf/bin:$PATH
-fi
-
 export PATH="$HOME/.local/bin:$PATH"
+
+# fzf: modern integration. `fzf --zsh` (fzf >= 0.48) emits key-bindings +
+# completion in sync with the binary, replacing the old source-the-shipped-
+# scripts dance. fzf is pinned in install.lock.json and installed to ~/.local/bin
+# (hence after the PATH export above).
+#
+# The `[[ -t 0 ]]` guard: fzf's key-bindings are ZLE widgets, useful only with a
+# terminal on stdin. It also silences fzf's harmless "can't change option: zle"
+# warning in TTY-less interactive shells (e.g. `zsh -ic exit`): fzf's internal
+# `emulate zsh` flips zle off, then its option-restore can't turn it back on
+# without a tty. Real terminals (tty=yes) load fzf normally and never warn.
+if command -v fzf >/dev/null 2>&1 && [[ -t 0 ]]; then
+    source <(fzf --zsh)
+fi
 
 export GCM_CREDENTIAL_STORE="secretservice"
 
