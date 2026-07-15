@@ -7,13 +7,6 @@
     "binary_name": "codex",
     "archive_binary_name": "codex-x86_64-unknown-linux-musl"
   },
-  "rtk": {
-    "version": "0.43.0",
-    "tag": "v0.43.0",
-    "url": "https://github.com/rtk-ai/rtk/releases/download/v0.43.0/rtk-x86_64-unknown-linux-musl.tar.gz",
-    "repo": "rtk-ai/rtk",
-    "binary_name": "rtk"
-  },
   "fnm": {
     "version": "1.39.0",
     "tag": "v1.39.0",

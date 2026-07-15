@@ -71,7 +71,6 @@ DEPS: list[Dep] = [
     Dep("bat"),
     Dep("delta"),
     Dep("codex"),
-    Dep("rtk"),
     # Dep("ydotool", not_on=("dell-brick",)),
     # Dep("ydotoold", not_on=("dell-brick",)),
     Dep("btm"),
@@ -215,11 +214,6 @@ GITHUB_RELEASES = {
         asset_pattern="codex-{arch}-unknown-linux-musl.tar.gz",
         binary_name="codex",
         archive_binary_name_pattern="codex-{arch}-unknown-linux-musl",
-    ),
-    "rtk": GitHubRelease(
-        repo="rtk-ai/rtk",
-        asset_pattern="rtk-{arch}-unknown-linux-musl.tar.gz",
-        binary_name="rtk",
     ),
     "fnm": GitHubRelease(
         repo="Schniz/fnm",
@@ -773,12 +767,6 @@ def codex_version(version_output: str) -> str:
     return match.group(1)
 
 
-def rtk_version(version_output: str) -> str:
-    match = re.search(r"rtk (\d+\.\d+\.\d+)", version_output)
-    assert match
-    return match.group(1)
-
-
 def fnm_version(version_output: str) -> str:
     match = re.search(r"fnm (\d+\.\d+\.\d+)", version_output)
     assert match
@@ -1056,7 +1044,6 @@ def check_versions() -> None:
             "bat",
             "delta",
             "codex",
-            "rtk",
             "tree-sitter",
             "clangd",
             "zed",
@@ -1074,7 +1061,6 @@ def check_versions() -> None:
                 "bat": (["bat", "--version"], bat_version),
                 "delta": (["delta", "--version"], delta_version),
                 "codex": (["codex", "--version"], codex_version),
-                "rtk": (["rtk", "--version"], rtk_version),
                 "tree-sitter": (["tree-sitter", "--version"], tree_sitter_version),
                 "clangd": (["clangd", "--version"], clangd_version),
                 "zed": (["zed", "--version"], zed_version),
@@ -1222,11 +1208,6 @@ def main() -> None:
             cmd=["codex", "--version"],
             lines=1,
             extract_version=codex_version,
-        ),
-        "rtk": Check(
-            cmd=["rtk", "--version"],
-            lines=1,
-            extract_version=rtk_version,
         ),
         "fnm": Check(
             cmd=["fnm", "--version"],
