@@ -1,44 +1,30 @@
 return {
-    {
-        "LazyVim/LazyVim",
-        opts = {
-            colorscheme = "catppuccin",
-        }
+  -- Use Catppuccin, matching the tmux + Ghostty theme.
+  {
+    "LazyVim/LazyVim",
+    opts = {
+      colorscheme = "catppuccin",
     },
-    {
-        "neovim/nvim-lspconfig",
-        ---@class PluginLspOpts
-        opts = {
-            ---@type lspconfig.options
-            servers = {
-                -- pyright will be automatically installed with mason and loaded with lspconfig
-                basedpyright = {
-                    settings = {
-                        python = {
-                            {
-                                venvPath = ".",
-                                venv = ".venv",
-                            },
-                        },
-                    },
-                },
-            },
-        },
+  },
+
+  -- Seamless navigation between nvim splits and tmux panes with <C-h/j/k/l>.
+  -- The tmux side is configured in ~/.tmux.conf (christoomey/vim-tmux-navigator).
+  -- Mappings live in lua/config/keymaps.lua so they win over LazyVim's defaults.
+  {
+    "christoomey/vim-tmux-navigator",
+    cmd = {
+      "TmuxNavigateLeft",
+      "TmuxNavigateDown",
+      "TmuxNavigateUp",
+      "TmuxNavigateRight",
+      "TmuxNavigatePrevious",
     },
-    {
-        "linux-cultist/venv-selector.nvim",
-        dependencies = {
-            "neovim/nvim-lspconfig",
-            "mfussenegger/nvim-dap", "mfussenegger/nvim-dap-python", --optional
-            { "nvim-telescope/telescope.nvim", branch = "0.1.x", dependencies = { "nvim-lua/plenary.nvim" } },
-        },
-        lazy = false,
-        branch = "main",
-        config = function()
-            require("venv-selector").setup({})
-        end,
-        keys = {
-            { ",v", "<cmd>VenvSelect<cr>" },
-        },
-    },
+    init = function()
+      vim.g.tmux_navigator_no_mappings = 1
+    end,
+  },
+
+  -- Python LSP is basedpyright (selected in lua/config/options.lua). It
+  -- auto-detects the project's .venv (as created by uv), so no venv-selector
+  -- plugin or explicit venv path is needed.
 }

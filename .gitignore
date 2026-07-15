@@ -1,7 +1,5 @@
 *.swp
-vim/.netrwhist
 tmux/plugins/**
-vim/plugged/**
 FiraCode.zip
 log/*.log
 zed/settings.local.json

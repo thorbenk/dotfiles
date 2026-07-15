@@ -12,8 +12,6 @@ git submodule update
 cd dotfiles
 ./install
 
-vim +PlugInstall +qall
-
 chsh -s $(which zsh)
 ```
 
@@ -25,6 +23,5 @@ wrt. the defaults. Consider deleting the previously generated directories
 
 # Tips & Tricks
 
-- [Vim](vim.md)
 - [T570](t570.md)
 - [command line](cmdline.md)
