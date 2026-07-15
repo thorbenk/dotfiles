@@ -14,6 +14,13 @@
     "repo": "rtk-ai/rtk",
     "binary_name": "rtk"
   },
+  "fnm": {
+    "version": "1.39.0",
+    "tag": "v1.39.0",
+    "url": "https://github.com/Schniz/fnm/releases/download/v1.39.0/fnm-linux.zip",
+    "repo": "Schniz/fnm",
+    "binary_name": "fnm"
+  },
   "fd": {
     "version": "10.4.2",
     "tag": "v10.4.2",

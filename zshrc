@@ -190,6 +190,9 @@ zed () {
 
 # eval "$(starship init zsh)"
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# --use-on-cd auto-switches node version when entering a dir with a
+# .nvmrc/.node-version. fnm is pinned in install.lock.json; node itself is
+# managed by fnm (fnm install/default).
+if command -v fnm >/dev/null 2>&1; then
+    eval "$(fnm env --use-on-cd --shell zsh)"
+fi

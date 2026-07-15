@@ -57,6 +57,7 @@ DEPS: list[Dep] = [
     Dep("wget"),
     Dep("curl"),
     Dep("npm"),
+    Dep("fnm"),
     Dep("fzf"),
     Dep("rg"),
     Dep("tmux"),
@@ -218,6 +219,11 @@ GITHUB_RELEASES = {
         repo="rtk-ai/rtk",
         asset_pattern="rtk-{arch}-unknown-linux-musl.tar.gz",
         binary_name="rtk",
+    ),
+    "fnm": GitHubRelease(
+        repo="Schniz/fnm",
+        asset_pattern="fnm-linux.zip",
+        binary_name="fnm",
     ),
     "fd": GitHubRelease(
         repo="sharkdp/fd",
@@ -747,6 +753,12 @@ def rtk_version(version_output: str) -> str:
     return match.group(1)
 
 
+def fnm_version(version_output: str) -> str:
+    match = re.search(r"fnm (\d+\.\d+\.\d+)", version_output)
+    assert match
+    return match.group(1)
+
+
 def lazygit_version(version_output: str) -> str:
     match = re.search(r"version=(\d+\.\d+\.\d+)", version_output)
     assert match
@@ -1178,6 +1190,11 @@ def main() -> None:
             cmd=["rtk", "--version"],
             lines=1,
             extract_version=rtk_version,
+        ),
+        "fnm": Check(
+            cmd=["fnm", "--version"],
+            lines=1,
+            extract_version=fnm_version,
         ),
         # "ydotool": Check(
         #     cmd=["ydotool", "help"],
