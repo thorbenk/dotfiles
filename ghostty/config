@@ -1,0 +1,7 @@
+window-decoration = client
+# launched-from = desktop
+# keybind = global:ctrl+alt+space=toggle_quick_terminal
+#
+# quick-terminal-position=top
+# quick-terminal-size=60%
+mouse-scroll-multiplier=0.25

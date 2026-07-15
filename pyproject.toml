@@ -34,7 +34,6 @@ exclude = [
   "nvim/",
   "bin/",
   "nvim-terminal-edit.py",
-  "konsole-colors-to-alacritty.py",
   "compile_nvim.sh",
 ]
 
