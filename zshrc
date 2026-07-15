@@ -1,13 +1,9 @@
-if [ -f /usr/share/fzf/key-bindings.zsh ]; then
-  # NVIM="/opt/nvim/nvim.appimage"
-  NVIM="nvim"
-else
-  NVIM="nvim"
-fi
-
+export NVIM="nvim"
 export EDITOR=$NVIM
 export VISUAL=$NVIM
 
+# Deprecated as an nvim startup flag (nvim itself uses --listen / $NVIM now),
+# but still honored by neovim-remote (nvr) et al., so kept for that tooling.
 export NVIM_LISTEN_ADDRESS="/tmp/nvimsocket"
 
 if [ `hostname` = "raspberrypi" ]; then
@@ -20,15 +16,11 @@ export LOCAL_INSTALL_PREFIX=/nobackup/inst
 export KDEV_DUCHAIN_DIR=$NOBACKUP/kdevduchain
 
 export DOTFILES_DIR=$HOME/code/dotfiles
-export ZSH=$HOME/.zsh
 export ZSH_CUSTOM=$DOTFILES_DIR/zsh
 
-# history
+# history (HISTFILE set before oh-my-zsh, which only sets it if unset;
+# dedup setopts are applied after the source in the extra-settings section)
 export HISTFILE=$HOME/.zsh/.zsh_history
-export HISTSIZE=10000
-export SAVEHIST=10000
-setopt HIST_IGNORE_ALL_DUPS
-setopt HIST_FIND_NO_DUPS
 
 #--- oh-my-zsh ---------------------------------------------------------------
 
@@ -37,7 +29,8 @@ export ZSH_THEME="half-life"
 # export CASE_SENSITIVE="false" # case-insensitive completion
 # export DISABLE_AUTO_UPDATE="true" # no weekly update checks
 
-plugins=(git ssh-agent copypath dotenv zsh-autosuggestions zsh-syntax-highlighting zsh-you-should-use)
+# zsh-syntax-highlighting must be last so it wraps all other ZLE widgets.
+plugins=(git ssh-agent copypath dotenv zsh-autosuggestions zsh-you-should-use zsh-syntax-highlighting)
 # colored-man-pages zsh-bat
 source $ZSH/oh-my-zsh.sh
 
@@ -57,6 +50,11 @@ bindkey -M vicmd "^O" copybuffer
 #--- zsh extra settings ------------------------------------------------------
 
 setopt NO_SHARE_HISTORY
+setopt INC_APPEND_HISTORY  # write each command immediately (crash-safe), without live-sharing into other sessions
+
+# history dedup (HISTSIZE/SAVEHIST left at oh-my-zsh defaults: 50000/10000)
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_FIND_NO_DUPS
 
 #unsetopt auto_name_dirs #do not replace path with environment variables
 
@@ -134,8 +132,8 @@ alias 'f=fzf'
 # Automatically background processes (no output to terminal etc)
 alias 'z=echo $RANDOM > /dev/null; zz'
 zz () {
-    echo $*
-    $* &> "/tmp/z-$1-$RANDOM" &!
+    echo "$@"
+    "$@" &> "/tmp/z-$1-$RANDOM" &!
 }
 
 # Aliases to use this; use e.g. 'command gv' to avoid
@@ -150,7 +148,7 @@ done
 
 alias inkscape="GDK_SCALE=2 GDK_DPI_SCALE=0.5 /usr/bin/inkscape"
 
-alias plssh="z ssh-add ~/.ssh/id_rsa"
+alias plssh="ssh-add ~/.ssh/id_rsa"
 
 #--- paths ------------------------------------------------------------------
 
