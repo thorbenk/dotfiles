@@ -129,6 +129,10 @@ alias 'll=ls -lh --color=auto'
 alias 'grep=grep --colour'
 alias 'f=fzf'
 
+# rm safety: -I prompts once before a recursive delete or removing >3 files
+# (unlike -i, which nags per file). Scripts call /bin/rm directly, so unaffected.
+alias 'rm=rm -I'
+
 # Automatically background processes (no output to terminal etc)
 alias 'z=echo $RANDOM > /dev/null; zz'
 zz () {
