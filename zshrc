@@ -276,8 +276,6 @@ zed () {
     ( sudo -n /usr/local/sbin/zed-oom-protect & ) >/dev/null 2>&1
 }
 
-# eval "$(starship init zsh)"
-
 # --use-on-cd auto-switches node version when entering a dir with a
 # .nvmrc/.node-version. fnm is pinned in install.lock.json; node itself is
 # managed by fnm (fnm install/default).
