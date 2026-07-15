@@ -291,6 +291,17 @@ if command -v direnv >/dev/null 2>&1; then
     eval "$(direnv hook zsh)"
 fi
 
+#--- atuin: SQLite shell history + search ------------------------------------
+# Rebinds Ctrl-R to atuin's fuzzy full-history search (its own SQLite DB, synced
+# across sessions/machines). --disable-up-arrow keeps the Up key on the existing
+# prefix search (up-line-or-beginning-search, bound above); zsh's own HISTFILE
+# still backs that, so both coexist. atuin is pinned in install.lock.json and
+# installed to ~/.local/bin (hence after the PATH export above). Before
+# syntax-highlighting since it defines ZLE widgets.
+if command -v atuin >/dev/null 2>&1; then
+    eval "$(atuin init zsh --disable-up-arrow)"
+fi
+
 #--- zsh-syntax-highlighting (MUST be last) ----------------------------------
 # It wraps every ZLE widget defined so far, so it has to come after all other
 # widget setup (copybuffer, fzf, fnm, etc.).
