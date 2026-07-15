@@ -371,6 +371,12 @@ def get_arch_short() -> str:
             return ARCH
 
 
+def github_token() -> str | None:
+    """A GitHub token from the environment, if set. Raises the API rate limit
+    from 60 to 5000 requests/hour when present."""
+    return os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
+
+
 def fetch_latest_release(repo: str) -> GitHubReleaseData:
     """Fetch the latest release info from GitHub API."""
     url = f"https://api.github.com/repos/{repo}/releases/latest"
@@ -378,12 +384,21 @@ def fetch_latest_release(repo: str) -> GitHubReleaseData:
 
     request = urllib.request.Request(url)
     request.add_header("Accept", "application/vnd.github+json")
+    request.add_header("X-GitHub-Api-Version", "2022-11-28")
+    token = github_token()
+    if token:
+        request.add_header("Authorization", f"Bearer {token}")
 
     try:
         with urllib.request.urlopen(request) as response:
             return cast(GitHubReleaseData, json.loads(response.read().decode()))
     except urllib.error.HTTPError as e:
         print(f"Error fetching release for {repo}: {e}")
+        if e.code in (403, 429) and not github_token():
+            print(
+                "  Looks like a rate limit (60 req/hour unauthenticated). "
+                "Set GITHUB_TOKEN to raise it to 5000/hour."
+            )
         raise
 
 
