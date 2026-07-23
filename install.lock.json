@@ -1,8 +1,8 @@
 {
   "codex": {
-    "version": "0.144.4",
-    "tag": "rust-v0.144.4",
-    "url": "https://github.com/openai/codex/releases/download/rust-v0.144.4/codex-x86_64-unknown-linux-musl.tar.gz",
+    "version": "0.144.5",
+    "tag": "rust-v0.144.5",
+    "url": "https://github.com/openai/codex/releases/download/rust-v0.144.5/codex-x86_64-unknown-linux-musl.tar.gz",
     "repo": "openai/codex",
     "binary_name": "codex",
     "archive_binary_name": "codex-x86_64-unknown-linux-musl"
@@ -122,9 +122,9 @@
     ]
   },
   "zed": {
-    "version": "1.10.3",
-    "tag": "v1.10.3",
-    "url": "https://github.com/zed-industries/zed/releases/download/v1.10.3/zed-linux-x86_64.tar.gz",
+    "version": "1.11.3",
+    "tag": "v1.11.3",
+    "url": "https://github.com/zed-industries/zed/releases/download/v1.11.3/zed-linux-x86_64.tar.gz",
     "repo": "zed-industries/zed",
     "binary_name": "zed"
   },
@@ -158,6 +158,13 @@
     "url": "https://github.com/ajeetdsouza/zoxide/releases/download/v0.10.0/zoxide-0.10.0-x86_64-unknown-linux-musl.tar.gz",
     "repo": "ajeetdsouza/zoxide",
     "binary_name": "zoxide"
+  },
+  "just": {
+    "version": "1.56.0",
+    "tag": "1.56.0",
+    "url": "https://github.com/casey/just/releases/download/1.56.0/just-1.56.0-x86_64-unknown-linux-musl.tar.gz",
+    "repo": "casey/just",
+    "binary_name": "just"
   },
   "hunk": {
     "version": "0.17.1",

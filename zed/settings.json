@@ -59,6 +59,7 @@
   },
   "use_system_path_prompts": false,
   "agent": {
+    "terminal_init_command": "claude --dangerously-skip-permissions",
     "dock": "left",
     "tool_permissions": {
       "default": "allow",
