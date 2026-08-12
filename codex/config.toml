@@ -1,8 +1,8 @@
 personality = "pragmatic"
 web_search = "live"
-model = "gpt-5.5"
+model = "gpt-5.6-sol"
 approvals_reviewer = "user"
-model_reasoning_effort = "xhigh"
+model_reasoning_effort = "high"
 service_tier = "default"
 
 [projects."/w/src/vgsm/master"]
@@ -42,3 +42,4 @@ writable_roots = [
 
 [tui.model_availability_nux]
 "gpt-5.5" = 4
+"gpt-5.6-sol" = 4
