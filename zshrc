@@ -272,7 +272,7 @@ fi
 #   (see zed/zed-oom-protect) and silently no-ops if not installed.
 zed () {
     env VK_DRIVER_FILES=/usr/share/vulkan/icd.d/nvidia_icd.json \
-        /x/3rdparty/zed/target/release-fast/zed "$@" &>/dev/null &!
+        /x/3rdparty/zed/target/release/zed "$@" &>/dev/null &!
     ( sudo -n /usr/local/sbin/zed-oom-protect & ) >/dev/null 2>&1
 }
 
