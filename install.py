@@ -97,6 +97,7 @@ DEPS: list[Dep] = [
     Dep("zoxide"),
     Dep("just"),
     Dep("hunk"),
+    Dep("wild"),
     Dep("rclone", only_on=("DEHEI-7H3ZXL3",)),
     # Fonts
     Dep("firacode"),
@@ -353,6 +354,12 @@ GITHUB_RELEASES = {
         extract_dir_pattern="hunkdiff-linux-{arch_short}",
         install=install_hunk,
     ),
+    "wild": GitHubRelease(
+        repo="wild-linker/wild",
+        asset_pattern="wild-linker-{version}-{arch}-unknown-linux-gnu.tar.gz",
+        binary_name="wild",
+        extract_dir_pattern="wild-linker-{version}-{arch}-unknown-linux-gnu",
+    ),
     "rclone": GitHubRelease(
         repo="rclone/rclone",
         asset_pattern="rclone-v{version}-linux-amd64.zip",
@@ -575,7 +582,7 @@ SYSTEM_DEPS: dict[str, Check] = {
 LOCKFILE_TOOL_NAMES = [
     "nvim", "lazygit", "difft", "fd", "hyperfine", "bat", "delta", "codex",
     "fnm", "fzf", "direnv", "btm", "tree-sitter", "clangd", "zed", "marktext",
-    "typst", "atuin", "zoxide", "just", "hunk", "rclone",
+    "typst", "atuin", "zoxide", "just", "hunk", "rclone", "wild",
 ]  # fmt: skip
 
 # Override the version regex only where the first "\d+.\d+.\d+" in the

@@ -1,8 +1,8 @@
 {
   "codex": {
-    "version": "0.144.5",
-    "tag": "rust-v0.144.5",
-    "url": "https://github.com/openai/codex/releases/download/rust-v0.144.5/codex-x86_64-unknown-linux-musl.tar.gz",
+    "version": "0.147.0",
+    "tag": "rust-v0.147.0",
+    "url": "https://github.com/openai/codex/releases/download/rust-v0.147.0/codex-x86_64-unknown-linux-musl.tar.gz",
     "repo": "openai/codex",
     "binary_name": "codex",
     "archive_binary_name": "codex-x86_64-unknown-linux-musl"
@@ -15,9 +15,9 @@
     "binary_name": "fnm"
   },
   "fzf": {
-    "version": "0.74.0",
-    "tag": "v0.74.0",
-    "url": "https://github.com/junegunn/fzf/releases/download/v0.74.0/fzf-0.74.0-linux_amd64.tar.gz",
+    "version": "0.74.2",
+    "tag": "v0.74.2",
+    "url": "https://github.com/junegunn/fzf/releases/download/v0.74.2/fzf-0.74.2-linux_amd64.tar.gz",
     "repo": "junegunn/fzf",
     "binary_name": "fzf"
   },
@@ -37,16 +37,16 @@
     "extract_dir": "fd-v10.4.2-x86_64-unknown-linux-gnu"
   },
   "lazygit": {
-    "version": "0.63.1",
-    "tag": "v0.63.1",
-    "url": "https://github.com/jesseduffield/lazygit/releases/download/v0.63.1/lazygit_0.63.1_linux_x86_64.tar.gz",
+    "version": "0.64.0",
+    "tag": "v0.64.0",
+    "url": "https://github.com/jesseduffield/lazygit/releases/download/v0.64.0/lazygit_0.64.0_linux_x86_64.tar.gz",
     "repo": "jesseduffield/lazygit",
     "binary_name": "lazygit"
   },
   "difft": {
-    "version": "0.69.0",
-    "tag": "0.69.0",
-    "url": "https://github.com/Wilfred/difftastic/releases/download/0.69.0/difft-x86_64-unknown-linux-gnu.tar.gz",
+    "version": "0.70.0",
+    "tag": "0.70.0",
+    "url": "https://github.com/Wilfred/difftastic/releases/download/0.70.0/difft-x86_64-unknown-linux-gnu.tar.gz",
     "repo": "Wilfred/difftastic",
     "binary_name": "difft"
   },
@@ -82,28 +82,28 @@
     "binary_name": "nvim-linux-x86_64.appimage"
   },
   "firacode": {
-    "version": "3.4.0",
-    "tag": "v3.4.0",
-    "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/FiraCode.zip",
+    "version": "3.5.0",
+    "tag": "v3.5.0",
+    "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.0/FiraCode.zip",
     "repo": "ryanoasis/nerd-fonts"
   },
   "iosevkaterm": {
-    "version": "3.4.0",
-    "tag": "v3.4.0",
-    "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/IosevkaTerm.zip",
+    "version": "3.5.0",
+    "tag": "v3.5.0",
+    "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.0/IosevkaTerm.zip",
     "repo": "ryanoasis/nerd-fonts"
   },
   "btm": {
-    "version": "0.14.4",
-    "tag": "0.14.4",
-    "url": "https://github.com/ClementTsang/bottom/releases/download/0.14.4/bottom_x86_64-unknown-linux-gnu.tar.gz",
+    "version": "0.14.7",
+    "tag": "0.14.7",
+    "url": "https://github.com/ClementTsang/bottom/releases/download/0.14.7/bottom_x86_64-unknown-linux-gnu.tar.gz",
     "repo": "ClementTsang/bottom",
     "binary_name": "btm"
   },
   "tree-sitter": {
-    "version": "0.26.11",
-    "tag": "v0.26.11",
-    "url": "https://github.com/tree-sitter/tree-sitter/releases/download/v0.26.11/tree-sitter-linux-x64.gz",
+    "version": "0.26.12",
+    "tag": "v0.26.12",
+    "url": "https://github.com/tree-sitter/tree-sitter/releases/download/v0.26.12/tree-sitter-linux-x64.gz",
     "repo": "tree-sitter/tree-sitter",
     "binary_name": "tree-sitter"
   },
@@ -122,9 +122,9 @@
     ]
   },
   "zed": {
-    "version": "1.11.3",
-    "tag": "v1.11.3",
-    "url": "https://github.com/zed-industries/zed/releases/download/v1.11.3/zed-linux-x86_64.tar.gz",
+    "version": "1.14.2",
+    "tag": "v1.14.2",
+    "url": "https://github.com/zed-industries/zed/releases/download/v1.14.2/zed-linux-x86_64.tar.gz",
     "repo": "zed-industries/zed",
     "binary_name": "zed"
   },
@@ -137,17 +137,17 @@
     "extract_dir": "marktext-linux-0.19.1"
   },
   "typst": {
-    "version": "0.15.0",
-    "tag": "v0.15.0",
-    "url": "https://github.com/typst/typst/releases/download/v0.15.0/typst-x86_64-unknown-linux-musl.tar.xz",
+    "version": "0.15.1",
+    "tag": "v0.15.1",
+    "url": "https://github.com/typst/typst/releases/download/v0.15.1/typst-x86_64-unknown-linux-musl.tar.xz",
     "repo": "typst/typst",
     "binary_name": "typst",
     "extract_dir": "typst-x86_64-unknown-linux-musl"
   },
   "atuin": {
-    "version": "18.17.1",
-    "tag": "v18.17.1",
-    "url": "https://github.com/atuinsh/atuin/releases/download/v18.17.1/atuin-x86_64-unknown-linux-gnu.tar.gz",
+    "version": "18.19.0",
+    "tag": "v18.19.0",
+    "url": "https://github.com/atuinsh/atuin/releases/download/v18.19.0/atuin-x86_64-unknown-linux-gnu.tar.gz",
     "repo": "atuinsh/atuin",
     "binary_name": "atuin",
     "extract_dir": "atuin-x86_64-unknown-linux-gnu"
@@ -160,26 +160,34 @@
     "binary_name": "zoxide"
   },
   "just": {
-    "version": "1.56.0",
-    "tag": "1.56.0",
-    "url": "https://github.com/casey/just/releases/download/1.56.0/just-1.56.0-x86_64-unknown-linux-musl.tar.gz",
+    "version": "1.58.0",
+    "tag": "1.58.0",
+    "url": "https://github.com/casey/just/releases/download/1.58.0/just-1.58.0-x86_64-unknown-linux-musl.tar.gz",
     "repo": "casey/just",
     "binary_name": "just"
   },
   "hunk": {
-    "version": "0.17.1",
-    "tag": "v0.17.1",
-    "url": "https://github.com/modem-dev/hunk/releases/download/v0.17.1/hunkdiff-linux-x64.tar.gz",
+    "version": "0.18.0",
+    "tag": "v0.18.0",
+    "url": "https://github.com/modem-dev/hunk/releases/download/v0.18.0/hunkdiff-linux-x64.tar.gz",
     "repo": "modem-dev/hunk",
     "binary_name": "hunk",
     "extract_dir": "hunkdiff-linux-x64"
   },
+  "wild": {
+    "version": "0.10.0",
+    "tag": "0.10.0",
+    "url": "https://github.com/wild-linker/wild/releases/download/0.10.0/wild-linker-0.10.0-x86_64-unknown-linux-gnu.tar.gz",
+    "repo": "wild-linker/wild",
+    "binary_name": "wild",
+    "extract_dir": "wild-linker-0.10.0-x86_64-unknown-linux-gnu"
+  },
   "rclone": {
-    "version": "1.74.4",
-    "tag": "v1.74.4",
-    "url": "https://github.com/rclone/rclone/releases/download/v1.74.4/rclone-v1.74.4-linux-amd64.zip",
+    "version": "1.75.0",
+    "tag": "v1.75.0",
+    "url": "https://github.com/rclone/rclone/releases/download/v1.75.0/rclone-v1.75.0-linux-amd64.zip",
     "repo": "rclone/rclone",
     "binary_name": "rclone",
-    "extract_dir": "rclone-v1.74.4-linux-amd64"
+    "extract_dir": "rclone-v1.75.0-linux-amd64"
   }
 }
