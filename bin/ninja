@@ -1,0 +1,71 @@
+#!/bin/sh
+# ninja shim: route agent builds through claude/ninja-progress.py, which reports
+# build progress to the Claude Code status line.
+#
+# $DOTFILES_DIR/bin is first on PATH (see zshrc), so this shadows the real ninja
+# in every shell. It therefore has to be completely transparent: on any doubt,
+# fall through to the real binary rather than breaking every build on the box.
+#
+# This covers a bare `ninja`. It also covers `cmake --build`, provided the build
+# dir was configured with CMAKE_MAKE_PROGRAM as the bare name "ninja" -- CMake
+# resolves that from PATH at build time and lands here, whereas the usual
+# /usr/bin/ninja would bypass the shim entirely.
+#
+# The publisher decides on its own whether to instrument: outside a Claude Code
+# session it exec's the real ninja, so interactive builds keep ninja's live
+# single-line terminal progress. Point CLAUDE_NINJA_SHIM elsewhere to override.
+
+set -eu
+
+# Locate ourselves using only shell builtins. `dirname` would be the obvious
+# choice, but if it is ever missing from PATH the substitution comes back empty,
+# self_dir silently becomes the current directory, and the search below then
+# picks *this script* as the real ninja and exec's it forever. cd and pwd are
+# builtins, so this cannot fail that way.
+case $0 in
+    */*) self_dir=${0%/*} ;;
+    *)   self_dir=. ;;
+esac
+self_dir=$(CDPATH= cd -- "$self_dir" && pwd -P)
+
+SHIM="${CLAUDE_NINJA_SHIM:-$self_dir/../claude/ninja-progress.py}"
+
+# The real ninja: the first one on PATH that is not this script.
+real=""
+IFS=:
+for dir in $PATH; do
+    [ -n "$dir" ] || dir=.
+    resolved=$(CDPATH= cd -- "$dir" 2>/dev/null && pwd -P) || continue
+    [ "$resolved" = "$self_dir" ] && continue
+    if [ -x "$dir/ninja" ]; then
+        real="$dir/ninja"
+        break
+    fi
+done
+unset IFS
+
+if [ -z "$real" ]; then
+    echo "ninja: no ninja binary found on PATH (shim: $0)" >&2
+    exit 127
+fi
+
+# Belt and braces: exec'ing ourselves would be an unbounded fork loop, so fail
+# loudly instead. Should be unreachable given the self_dir skip above.
+real_dir=$(CDPATH= cd -- "${real%/*}" && pwd -P)
+if [ "$real_dir" = "$self_dir" ]; then
+    echo "ninja: refusing to exec self as the real ninja (PATH: $PATH)" >&2
+    exit 127
+fi
+
+# Invoked through python3 explicitly, and only once we know it exists: a failed
+# exec is unrecoverable in sh, so a missing interpreter here would break every
+# ninja invocation on the machine (a container without python3, say) rather than
+# quietly costing us the progress report.
+#
+# NINJA_REAL is passed explicitly so the publisher never re-resolves ninja
+# through PATH and finds this shim again.
+if [ -f "$SHIM" ] && py=$(command -v python3 2>/dev/null); then
+    NINJA_REAL="$real" exec "$py" "$SHIM" "$@"
+fi
+
+exec "$real" "$@"

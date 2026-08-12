@@ -22,6 +22,7 @@ RESET = "\033[0m"
 ICON_FOLDER = "\uf07b"
 ICON_BRANCH = "\uf126"
 ICON_CONTEXT = "\uf2db"
+ICON_BUILD = "\uf085"
 
 
 def runtime_base():
@@ -112,6 +113,48 @@ def get_git_info():
     return info
 
 
+def get_build_progress(session_id):
+    """Sum live ninja builds published by shell-progress.py for this session.
+
+    Pruning is by /proc liveness, so a wrapper killed before it could clean up
+    after itself does not leave a phantom build on the status line.
+    """
+    if not session_id:
+        return None
+
+    directory = os.path.join(runtime_base(), "claude-ninja", session_id)
+
+    try:
+        names = os.listdir(directory)
+    except OSError:
+        return None
+
+    states = []
+    for name in names:
+        if not name.endswith(".json"):
+            continue
+        path = os.path.join(directory, name)
+        try:
+            with open(path) as f:
+                state = json.load(f)
+            if not os.path.exists(f"/proc/{state['pid']}"):
+                os.unlink(path)
+                continue
+            states.append(state)
+        except (OSError, ValueError, KeyError):
+            continue
+
+    if not states:
+        return None
+
+    return {
+        "builds": len(states),
+        "finished": sum(s["finished"] for s in states),
+        "total": sum(s["total"] for s in states),
+        "running": sum(s["running"] for s in states),
+    }
+
+
 def main():
     data = json.load(sys.stdin)
 
@@ -126,6 +169,22 @@ def main():
         parts.append(f"{CYAN}{ICON_BRANCH} {git['branch']}{RESET}")
     if git["files_changed"] > 0:
         parts.append(f"{GREEN}+{git['added']}{RESET} {RED}-{git['removed']}{RESET}")
+
+    # A status line that raises prints nothing at all, so never let a build
+    # segment take the whole line down with it.
+    try:
+        build = get_build_progress(data.get("session_id"))
+    except Exception:
+        build = None
+
+    if build:
+        total = build["total"]
+        build_pct = round(100 * build["finished"] / total) if total else 0
+        label = f"{build['builds']} builds " if build["builds"] > 1 else ""
+        parts.append(
+            f"{YELLOW}{ICON_BUILD} {label}{build['finished']}/{total}"
+            f" ({build_pct}%){RESET} {DIM}{build['running']} running{RESET}"
+        )
 
     model = data.get("model", {}).get("display_name", "")
     if model:

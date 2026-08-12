@@ -5,7 +5,8 @@
   "model": "opus[1m]",
   "statusLine": {
     "type": "command",
-    "command": "python3 ~/.claude/statusline.py"
+    "command": "python3 ~/.claude/statusline.py",
+    "refreshInterval": 1
   },
   "enabledPlugins": {
     "rust-analyzer-lsp@claude-plugins-official": true,
