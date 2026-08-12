@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """Claude Code status line (global)."""
 
+import hashlib
 import json
 import os
 import subprocess
 import sys
 import time
 
-CACHE_FILE = "/tmp/claude-statusline-git-cache"
 CACHE_MAX_AGE = 5  # seconds
 
 # ANSI colors
@@ -24,14 +24,42 @@ ICON_BRANCH = "\uf126"
 ICON_CONTEXT = "\uf2db"
 
 
+def runtime_base():
+    """Private per-user runtime dir, falling back to /tmp with no user session."""
+    base = f"/run/user/{os.getuid()}"
+    if not os.path.isdir(base):
+        base = f"/tmp/claude-{os.getuid()}"
+    return base
+
+
+def git_cache_file():
+    """Cache path keyed by cwd.
+
+    Keyed rather than global because parallel sessions in different worktrees
+    would otherwise overwrite each other's branch and diffstat. Digested, not
+    hash()ed: str hashing is salted per process, so a hash() key would never
+    hit. cwd is the key because that is where the git commands below run.
+    """
+    key = hashlib.sha1(os.getcwd().encode()).hexdigest()[:12]
+    directory = os.path.join(runtime_base(), "claude-statusline")
+    try:
+        os.makedirs(directory, mode=0o700, exist_ok=True)
+    except OSError:
+        return None
+    return os.path.join(directory, f"git-{key}")
+
+
 def get_git_info():
     """Get git branch and unstaged diffstat, with caching."""
+    cache_file = git_cache_file()
+
     try:
         if (
-            os.path.exists(CACHE_FILE)
-            and time.time() - os.path.getmtime(CACHE_FILE) < CACHE_MAX_AGE
+            cache_file
+            and os.path.exists(cache_file)
+            and time.time() - os.path.getmtime(cache_file) < CACHE_MAX_AGE
         ):
-            with open(CACHE_FILE) as f:
+            with open(cache_file) as f:
                 return json.load(f)
     except (OSError, json.JSONDecodeError):
         pass
@@ -75,8 +103,9 @@ def get_git_info():
     }
 
     try:
-        with open(CACHE_FILE, "w") as f:
-            json.dump(info, f)
+        if cache_file:
+            with open(cache_file, "w") as f:
+                json.dump(info, f)
     except OSError:
         pass
 
