@@ -270,9 +270,17 @@ fi
 #   parallel C++ builds (62G RAM, ~2G swap). zed-oom-protect lowers Zed's
 #   oom_score_adj so the build dies first; it needs the one-time root install
 #   (see zed/zed-oom-protect) and silently no-ops if not installed.
+#   Machines without the source build or the NVIDIA ICD fall back to the
+#   installed zed and the default Vulkan driver.
 zed () {
-    env VK_DRIVER_FILES=/usr/share/vulkan/icd.d/nvidia_icd.json \
-        /x/3rdparty/zed/target/release/zed "$@" &>/dev/null &!
+    local zed_bin=/x/3rdparty/zed/target/release/zed
+    local icd=/usr/share/vulkan/icd.d/nvidia_icd.json
+    [[ -x $zed_bin ]] || zed_bin=$(whence -p zed) || { print -u2 "zed: not found"; return 1 }
+    if [[ -f $icd ]]; then
+        VK_DRIVER_FILES=$icd "$zed_bin" "$@" &>/dev/null &!
+    else
+        "$zed_bin" "$@" &>/dev/null &!
+    fi
     ( sudo -n /usr/local/sbin/zed-oom-protect & ) >/dev/null 2>&1
 }
 
