@@ -16,10 +16,10 @@ chsh -s "$(which zsh)"    # make zsh the login shell
 
 ## Assumptions
 
-- The repo lives at `~/code/dotfiles`. `zshrc` (`DOTFILES_DIR`), `tmux.conf`
-  and `applications/dictation-indicator.desktop` hardcode that path; the
-  `.desktop` file also hardcodes the home dir (`/home/kroeger`), since
-  `.desktop` files can't expand `$HOME`.
+- The repo lives at `~/code/dotfiles`: `zshrc` (`DOTFILES_DIR`) and
+  `tmux.conf` hardcode that path. (`.desktop` files are generated from
+  `applications/*.desktop.in` with the actual path filled in, since they can't
+  expand `$HOME`.)
 
 ## Per-machine differences
 

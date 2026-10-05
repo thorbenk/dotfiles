@@ -53,15 +53,6 @@
       path: services/ydotool/ydotoold.service
       if: '[ "$(hostname)" != "dell-brick" ]'
 
-    # Desktop applications
-    ~/.local/share/applications/dictation-indicator.desktop:
-      path: applications/dictation-indicator.desktop
-      if: '[ "$(hostname)" != "dell-brick" ]'
-
-    # Autostart dictation indicator
-    ~/.config/autostart/dictation-indicator.desktop:
-      path: applications/dictation-indicator.desktop
-      if: '[ "$(hostname)" != "dell-brick" ]'
     
     # Note: install.py handles tool installation (fd, bat, delta, lazygit, nvim, etc.)
     # Run './install.py --check' to see tool versions
@@ -82,6 +73,25 @@
         if [ ! -e "$target" ]; then
           mkdir -p ~/.codex && cp codex/config.base.toml "$target"
         fi
+    # Generated, not linked: .desktop files can't expand $HOME, so the repo's
+    # absolute path is filled in here. Installed both as an app and to
+    # autostart. Symlinks are what older checkouts leave behind (these used to
+    # be linked); we leave fixing that to a human.
+    - description: Generating dictation-indicator.desktop
+      command: |
+        [ "$(hostname)" != "dell-brick" ] || exit 0
+        dotfiles=$(pwd -P)
+        escaped=$(printf '%s' "$dotfiles" | sed 's/[&|\\]/\\&/g')
+        for target in ~/.local/share/applications/dictation-indicator.desktop \
+                      ~/.config/autostart/dictation-indicator.desktop; do
+          if [ -L "$target" ]; then
+            echo "$target is a symlink ($(readlink "$target")). Remove it and rerun." >&2
+            exit 1
+          fi
+          mkdir -p "$(dirname "$target")"
+          sed "s|@DOTFILES_DIR@|$escaped|g" applications/dictation-indicator.desktop.in > "$target.tmp"
+          mv "$target.tmp" "$target"
+        done
     - description: Installing tmux plugins
       command: |
         if [ -f ~/.tmux/plugins/tpm/bin/install_plugins ]; then
