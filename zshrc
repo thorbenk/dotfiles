@@ -11,10 +11,6 @@ if [ `hostname` = "raspberrypi" ]; then
     export LC_ALL="C"
 fi
 
-export NOBACKUP="/nobackup"
-export LOCAL_INSTALL_PREFIX=/nobackup/inst
-export KDEV_DUCHAIN_DIR=$NOBACKUP/kdevduchain
-
 export DOTFILES_DIR=$HOME/code/dotfiles
 ZSH_PLUGINS=$DOTFILES_DIR/zsh/plugins
 
