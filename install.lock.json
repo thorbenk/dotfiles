@@ -116,8 +116,8 @@
     "extract_dir": "clangd_22.1.6/bin",
     "extra_dirs": [
       [
-        "../lib",
-        "lib"
+        "../lib/clang",
+        "lib/clang"
       ]
     ]
   },

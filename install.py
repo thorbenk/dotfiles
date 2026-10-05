@@ -310,7 +310,7 @@ GITHUB_RELEASES = {
         asset_pattern="clangd-linux-{version}.zip",
         binary_name="clangd",
         extract_dir_pattern="clangd_{version}/bin",
-        extra_dirs=[("../lib", "lib")],
+        extra_dirs=[("../lib/clang", "lib/clang")],
     ),
     "zed": GitHubRelease(
         repo="zed-industries/zed",
