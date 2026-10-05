@@ -48,10 +48,11 @@
     # direnv
     ~/.config/direnv/direnv.toml: direnv/direnv.toml
 
-    # Systemd user services
+    # Systemd user services (ydotoold is only for dictation; keep the host list
+    # in sync with the dictation-indicator step below)
     ~/.config/systemd/user/ydotoold.service:
       path: services/ydotool/ydotoold.service
-      if: '[ "$(hostname)" != "dell-brick" ]'
+      if: 'case "$(hostname)" in dell-brick|dell16) false ;; esac'
 
     
     # Note: install.py handles tool installation (fd, bat, delta, lazygit, nvim, etc.)
@@ -79,7 +80,8 @@
     # be linked); we leave fixing that to a human.
     - description: Generating dictation-indicator.desktop
       command: |
-        [ "$(hostname)" != "dell-brick" ] || exit 0
+        # No dictation on these hosts (same list as the ydotoold link above).
+        case "$(hostname)" in dell-brick|dell16) exit 0 ;; esac
         dotfiles=$(pwd -P)
         escaped=$(printf '%s' "$dotfiles" | sed 's/[&|\\]/\\&/g')
         for target in ~/.local/share/applications/dictation-indicator.desktop \
