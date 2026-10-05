@@ -284,6 +284,19 @@ zed () {
     ( sudo -n /usr/local/sbin/zed-oom-protect & ) >/dev/null 2>&1
 }
 
+# claude: layer per-host settings over the shared ~/.claude/settings.json.
+#   Claude Code has no user-level settings.local.json, so things like
+#   skipDangerousModePermissionPrompt / skipAutoPermissionPrompt (permission
+#   prompts off) go in ~/.claude/settings.host.json, which is not in the repo.
+claude () {
+    local host_settings=~/.claude/settings.host.json
+    if [[ -f $host_settings ]]; then
+        command claude --settings $host_settings "$@"
+    else
+        command claude "$@"
+    fi
+}
+
 # --use-on-cd auto-switches node version when entering a dir with a
 # .nvmrc/.node-version. fnm is pinned in install.lock.json; node itself is
 # managed by fnm (fnm install/default).
