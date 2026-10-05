@@ -4,6 +4,7 @@
 import hashlib
 import json
 import os
+import stat
 import subprocess
 import sys
 import time
@@ -26,10 +27,23 @@ ICON_BUILD = "\uf085"
 
 
 def runtime_base():
-    """Private per-user runtime dir, falling back to /tmp with no user session."""
+    """Private per-user runtime dir, falling back to /tmp with no user session.
+
+    None if the /tmp fallback is not ours: /tmp is shared, and another user
+    could have planted the dir (or a symlink) first.
+    """
     base = f"/run/user/{os.getuid()}"
-    if not os.path.isdir(base):
-        base = f"/tmp/claude-{os.getuid()}"
+    if os.path.isdir(base):
+        return base
+
+    base = f"/tmp/claude-{os.getuid()}"
+    try:
+        os.makedirs(base, mode=0o700, exist_ok=True)
+        st = os.lstat(base)
+    except OSError:
+        return None
+    if not stat.S_ISDIR(st.st_mode) or st.st_uid != os.getuid() or st.st_mode & 0o077:
+        return None
     return base
 
 
@@ -42,7 +56,10 @@ def git_cache_file():
     hit. cwd is the key because that is where the git commands below run.
     """
     key = hashlib.sha1(os.getcwd().encode()).hexdigest()[:12]
-    directory = os.path.join(runtime_base(), "claude-statusline")
+    base = runtime_base()
+    if base is None:
+        return None
+    directory = os.path.join(base, "claude-statusline")
     try:
         os.makedirs(directory, mode=0o700, exist_ok=True)
     except OSError:
@@ -122,7 +139,10 @@ def get_build_progress(session_id):
     if not session_id:
         return None
 
-    directory = os.path.join(runtime_base(), "claude-ninja", session_id)
+    base = runtime_base()
+    if base is None:
+        return None
+    directory = os.path.join(base, "claude-ninja", session_id)
 
     try:
         names = os.listdir(directory)

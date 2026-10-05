@@ -31,6 +31,7 @@ import json
 import os
 import re
 import shutil
+import stat
 import subprocess
 import sys
 from pathlib import Path
@@ -67,6 +68,11 @@ def state_paths(session_id: str) -> tuple[Path, Path]:
     base = Path(f"/run/user/{os.getuid()}")
     if not base.is_dir():
         base = Path(f"/tmp/claude-{os.getuid()}")
+        # /tmp is shared: refuse a dir (or symlink) another user planted first.
+        base.mkdir(mode=0o700, exist_ok=True)
+        st = os.lstat(base)
+        if not stat.S_ISDIR(st.st_mode) or st.st_uid != os.getuid() or st.st_mode & 0o077:
+            raise PermissionError(f"{base} is not a private directory")
 
     directory = base / "claude-ninja" / session_id
     directory.mkdir(parents=True, exist_ok=True)
