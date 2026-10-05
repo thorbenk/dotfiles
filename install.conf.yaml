@@ -39,9 +39,6 @@
     ~/.claude/settings.json: claude/settings.json
     ~/.claude/statusline.py: claude/statusline.py
 
-    # Codex
-    ~/.codex/config.toml: codex/config.toml
-
     # Bottom (btm)
     ~/.config/bottom/bottom.toml: bottom/bottom.toml
 
@@ -71,6 +68,20 @@
     # Run './install.py --update-lock' to update to latest releases
 
 - shell:
+    # Copied, not linked: Codex writes per-machine trust entries into it. A
+    # symlink is what older checkouts leave behind (the file used to be linked
+    # from codex/config.toml); we leave fixing that to a human.
+    - description: Seeding ~/.codex/config.toml
+      command: |
+        target=~/.codex/config.toml
+        if [ -L "$target" ]; then
+          echo "$target is a symlink ($(readlink "$target")). Replace it with a" >&2
+          echo "real file, e.g. a copy of codex/config.base.toml, and rerun." >&2
+          exit 1
+        fi
+        if [ ! -e "$target" ]; then
+          mkdir -p ~/.codex && cp codex/config.base.toml "$target"
+        fi
     - description: Installing tmux plugins
       command: |
         if [ -f ~/.tmux/plugins/tpm/bin/install_plugins ]; then

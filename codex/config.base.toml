@@ -1,0 +1,18 @@
+# Shared defaults, copied to ~/.codex/config.toml on machines that don't have
+# one yet (see install.conf.yaml). Not symlinked: Codex writes per-machine
+# state (project trust, migration notices) into that file, and it doesn't
+# belong in the repo. Edits here don't reach machines that already have a
+# config.
+personality = "pragmatic"
+web_search = "live"
+model = "gpt-5.6-sol"
+approvals_reviewer = "user"
+model_reasoning_effort = "high"
+service_tier = "default"
+
+[sandbox_workspace_write]
+writable_roots = [
+  "/w/rel",
+  "/w/dbg",
+  "/home/kroeger/.cache",
+]
