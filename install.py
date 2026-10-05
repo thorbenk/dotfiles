@@ -730,7 +730,14 @@ def install_from_lock(package_name: str) -> None:
             )
             for src_rel, dest_rel in package_info["extra_dirs"]:
                 src_path = (extract_base / src_rel).resolve()
-                dest_path = local_prefix / dest_rel
+                dest_path = (local_prefix / dest_rel).resolve()
+                # dest_path gets rmtree()d below: never let it escape ~/.local
+                # (via "..", an absolute path or a symlink) or be ~/.local itself.
+                prefix = local_prefix.resolve()
+                if dest_path == prefix or not dest_path.is_relative_to(prefix):
+                    raise ValueError(
+                        f"{package_name}: extra dir {dest_rel!r} is not inside {prefix}"
+                    )
                 if src_path.is_dir():
                     if dest_path.exists():
                         shutil.rmtree(dest_path)
