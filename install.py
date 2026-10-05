@@ -694,7 +694,7 @@ def install_from_lock(package_name: str) -> None:
             # Try to find the binary in tmpdir
             print(f"Binary not found at expected path: {bin_path}")
             print(f"Contents of {tmpdir}:")
-            subprocess.call(f"ls -la {tmpdir}", shell=True)
+            subprocess.call(["ls", "-la", tmpdir])
 
             # Try to find it recursively
             for root, dirs, files in os.walk(tmpdir):
