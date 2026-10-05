@@ -630,6 +630,13 @@ def install_fonts(font_names: list[str]) -> None:
         subprocess.run(["fc-cache", "-f", "-v"], cwd=LOCAL_FONTS)
 
 
+def unlink_symlink(path: Path) -> None:
+    """Drop a symlink at path, so writing there replaces the link rather than
+    overwriting whatever it points at."""
+    if path.is_symlink():
+        path.unlink()
+
+
 def chmod_x(fname: Path) -> None:
     current_permissions = os.stat(fname).st_mode
     new_permissions = current_permissions | 0o111
@@ -657,6 +664,7 @@ def install_from_lock(package_name: str) -> None:
     if url.endswith(".appimage"):
         with download_to_tempdir(url) as fpath:
             dest = LOCAL_BIN / fpath.name
+            unlink_symlink(dest)
             shutil.copy(fpath, dest)
             chmod_x(dest)
 
@@ -671,6 +679,7 @@ def install_from_lock(package_name: str) -> None:
     if not url.endswith((".tar.gz", ".tar.xz", ".zip", ".tgz")):
         with download_to_tempdir(url) as fpath:
             dest = LOCAL_BIN / package_info.get("binary_name", package_name)
+            unlink_symlink(dest)
             if url.endswith(".gz"):
                 with gzip.open(fpath, "rb") as f_in, open(dest, "wb") as f_out:
                     shutil.copyfileobj(f_in, f_out)
@@ -705,6 +714,7 @@ def install_from_lock(package_name: str) -> None:
 
         if bin_path.exists():
             dest_path = LOCAL_BIN / binary_name
+            unlink_symlink(dest_path)
             shutil.copy(bin_path, dest_path)
             chmod_x(dest_path)
         else:
