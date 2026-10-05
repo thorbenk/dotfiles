@@ -96,41 +96,46 @@ def relay(args: list[str], state_file: Path, tmp_file: Path) -> int:
         bufsize=1,
     )
 
+    # Once downstream closes the pipe (a `head` in the pipeline, say) we stop
+    # forwarding but keep reading: a ninja that can no longer write to its own
+    # stdout blocks forever, and the caller is waiting on its exit code.
+    forwarding = True
     try:
-        try:
-            assert process.stdout is not None
-            for line in process.stdout:
-                match = STATUS_RE.match(line)
-                if match:
-                    finished, total, running, queued = map(int, match.groups())
-                    publish(
-                        state_file,
-                        tmp_file,
-                        {
-                            "pid": os.getpid(),
-                            "finished": finished,
-                            "total": total,
-                            "running": running,
-                            "queued": queued,
-                        },
-                    )
-                    # Restore ninja's normal prefix, so build output that does
-                    # reach a human or an agent looks untouched.
-                    line = f"[{finished}/{total}] {line[match.end():]}"
+        assert process.stdout is not None
+        for line in process.stdout:
+            match = STATUS_RE.match(line)
+            if match:
+                finished, total, running, queued = map(int, match.groups())
+                publish(
+                    state_file,
+                    tmp_file,
+                    {
+                        "pid": os.getpid(),
+                        "finished": finished,
+                        "total": total,
+                        "running": running,
+                        "queued": queued,
+                    },
+                )
+                # Restore ninja's normal prefix, so build output that does
+                # reach a human or an agent looks untouched.
+                line = f"[{finished}/{total}] {line[match.end():]}"
 
+            if not forwarding:
+                continue
+            try:
                 sys.stdout.write(line)
                 sys.stdout.flush()
-        except Exception:
-            # Downstream closed the pipe (a `head` in the pipeline, say), or
-            # something equally unexpected. Point stdout at /dev/null so the
-            # interpreter's final flush cannot raise, then let the build finish:
-            # its exit code is what the caller is waiting for.
-            try:
-                devnull = os.open(os.devnull, os.O_WRONLY)
-                os.dup2(devnull, sys.stdout.fileno())
-                os.close(devnull)
             except Exception:
-                pass
+                # Point stdout at /dev/null so the interpreter's final flush
+                # cannot raise either.
+                forwarding = False
+                try:
+                    devnull = os.open(os.devnull, os.O_WRONLY)
+                    os.dup2(devnull, sys.stdout.fileno())
+                    os.close(devnull)
+                except Exception:
+                    pass
 
         return process.wait()
     finally:
