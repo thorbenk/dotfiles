@@ -2,7 +2,7 @@
   "permissions": {
     "defaultMode": "auto"
   },
-  "model": "opus[1m]",
+  "enableWorkflows": false,
   "statusLine": {
     "type": "command",
     "command": "python3 ~/.claude/statusline.py",
@@ -11,10 +11,16 @@
   "enabledPlugins": {
     "rust-analyzer-lsp@claude-plugins-official": true,
     "clangd-lsp@claude-plugins-official": true,
-    "playwright@claude-plugins-official": true
+    "playwright@claude-plugins-official": true,
+    "mattpocock-skills@claude-plugins-official": true
   },
   "syntaxHighlightingDisabled": false,
   "effortLevel": "xhigh",
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "effortLevel": "medium"
+    }
+  },
   "tui": "fullscreen",
   "voice": {
     "enabled": true,
