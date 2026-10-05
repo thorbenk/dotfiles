@@ -99,6 +99,7 @@ DEPS: list[Dep] = [
     Dep("hunk"),
     Dep("wild"),
     Dep("rclone", only_on=("DEHEI-7H3ZXL3",)),
+    Dep("copilot", only_on=("DEHEI-7H3ZXL3",)),
     # Fonts
     Dep("firacode"),
     Dep("iosevkaterm"),
@@ -366,6 +367,11 @@ GITHUB_RELEASES = {
         binary_name="rclone",
         extract_dir_pattern="rclone-v{version}-linux-amd64",
     ),
+    "copilot": GitHubRelease(
+        repo="github/copilot-cli",
+        asset_pattern="copilot-linux-{arch_short}.tar.gz",
+        binary_name="copilot",
+    ),
 }
 
 
@@ -582,7 +588,7 @@ SYSTEM_DEPS: dict[str, Check] = {
 LOCKFILE_TOOL_NAMES = [
     "nvim", "lazygit", "difft", "fd", "hyperfine", "bat", "delta", "codex",
     "fnm", "fzf", "direnv", "btm", "tree-sitter", "clangd", "zed", "marktext",
-    "typst", "atuin", "zoxide", "just", "hunk", "rclone", "wild",
+    "typst", "atuin", "zoxide", "just", "hunk", "rclone", "wild", "copilot",
 ]  # fmt: skip
 
 # Override the version regex only where the first "\d+.\d+.\d+" in the

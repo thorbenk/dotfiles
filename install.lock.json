@@ -1,8 +1,8 @@
 {
   "codex": {
-    "version": "0.147.0",
-    "tag": "rust-v0.147.0",
-    "url": "https://github.com/openai/codex/releases/download/rust-v0.147.0/codex-x86_64-unknown-linux-musl.tar.gz",
+    "version": "0.160.0",
+    "tag": "rust-v0.160.0",
+    "url": "https://github.com/openai/codex/releases/download/rust-v0.160.0/codex-x86_64-unknown-linux-musl.tar.gz",
     "repo": "openai/codex",
     "binary_name": "codex",
     "archive_binary_name": "codex-x86_64-unknown-linux-musl"
@@ -15,9 +15,9 @@
     "binary_name": "fnm"
   },
   "fzf": {
-    "version": "0.74.2",
-    "tag": "v0.74.2",
-    "url": "https://github.com/junegunn/fzf/releases/download/v0.74.2/fzf-0.74.2-linux_amd64.tar.gz",
+    "version": "0.74.4",
+    "tag": "v0.74.4",
+    "url": "https://github.com/junegunn/fzf/releases/download/v0.74.4/fzf-0.74.4-linux_amd64.tar.gz",
     "repo": "junegunn/fzf",
     "binary_name": "fzf"
   },
@@ -29,26 +29,19 @@
     "binary_name": "direnv"
   },
   "fd": {
-    "version": "10.4.2",
-    "tag": "v10.4.2",
-    "url": "https://github.com/sharkdp/fd/releases/download/v10.4.2/fd-v10.4.2-x86_64-unknown-linux-gnu.tar.gz",
+    "version": "10.5.0",
+    "tag": "v10.5.0",
+    "url": "https://github.com/sharkdp/fd/releases/download/v10.5.0/fd-v10.5.0-x86_64-unknown-linux-gnu.tar.gz",
     "repo": "sharkdp/fd",
     "binary_name": "fd",
-    "extract_dir": "fd-v10.4.2-x86_64-unknown-linux-gnu"
+    "extract_dir": "fd-v10.5.0-x86_64-unknown-linux-gnu"
   },
   "lazygit": {
-    "version": "0.64.0",
-    "tag": "v0.64.0",
-    "url": "https://github.com/jesseduffield/lazygit/releases/download/v0.64.0/lazygit_0.64.0_linux_x86_64.tar.gz",
+    "version": "0.65.1",
+    "tag": "v0.65.1",
+    "url": "https://github.com/jesseduffield/lazygit/releases/download/v0.65.1/lazygit_0.65.1_linux_x86_64.tar.gz",
     "repo": "jesseduffield/lazygit",
     "binary_name": "lazygit"
-  },
-  "difft": {
-    "version": "0.70.0",
-    "tag": "0.70.0",
-    "url": "https://github.com/Wilfred/difftastic/releases/download/0.70.0/difft-x86_64-unknown-linux-gnu.tar.gz",
-    "repo": "Wilfred/difftastic",
-    "binary_name": "difft"
   },
   "hyperfine": {
     "version": "1.20.0",
@@ -67,53 +60,53 @@
     "extract_dir": "bat-v0.26.1-x86_64-unknown-linux-gnu"
   },
   "delta": {
-    "version": "0.19.2",
-    "tag": "0.19.2",
-    "url": "https://github.com/dandavison/delta/releases/download/0.19.2/delta-0.19.2-x86_64-unknown-linux-gnu.tar.gz",
+    "version": "0.20.1",
+    "tag": "0.20.1",
+    "url": "https://github.com/dandavison/delta/releases/download/0.20.1/delta-0.20.1-x86_64-unknown-linux-gnu.tar.gz",
     "repo": "dandavison/delta",
     "binary_name": "delta",
-    "extract_dir": "delta-0.19.2-x86_64-unknown-linux-gnu"
+    "extract_dir": "delta-0.20.1-x86_64-unknown-linux-gnu"
   },
   "nvim": {
-    "version": "0.12.4",
-    "tag": "v0.12.4",
-    "url": "https://github.com/neovim/neovim/releases/download/v0.12.4/nvim-linux-x86_64.appimage",
+    "version": "0.12.5",
+    "tag": "v0.12.5",
+    "url": "https://github.com/neovim/neovim/releases/download/v0.12.5/nvim-linux-x86_64.appimage",
     "repo": "neovim/neovim",
     "binary_name": "nvim-linux-x86_64.appimage"
   },
   "firacode": {
-    "version": "3.5.0",
-    "tag": "v3.5.0",
-    "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.0/FiraCode.zip",
+    "version": "3.5.1",
+    "tag": "v3.5.1",
+    "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/FiraCode.zip",
     "repo": "ryanoasis/nerd-fonts"
   },
   "iosevkaterm": {
-    "version": "3.5.0",
-    "tag": "v3.5.0",
-    "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.0/IosevkaTerm.zip",
+    "version": "3.5.1",
+    "tag": "v3.5.1",
+    "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/IosevkaTerm.zip",
     "repo": "ryanoasis/nerd-fonts"
   },
   "btm": {
-    "version": "0.14.7",
-    "tag": "0.14.7",
-    "url": "https://github.com/ClementTsang/bottom/releases/download/0.14.7/bottom_x86_64-unknown-linux-gnu.tar.gz",
+    "version": "0.14.9",
+    "tag": "0.14.9",
+    "url": "https://github.com/ClementTsang/bottom/releases/download/0.14.9/bottom_x86_64-unknown-linux-gnu.tar.gz",
     "repo": "ClementTsang/bottom",
     "binary_name": "btm"
   },
   "tree-sitter": {
-    "version": "0.26.12",
-    "tag": "v0.26.12",
-    "url": "https://github.com/tree-sitter/tree-sitter/releases/download/v0.26.12/tree-sitter-linux-x64.gz",
+    "version": "0.27.0",
+    "tag": "v0.27.0",
+    "url": "https://github.com/tree-sitter/tree-sitter/releases/download/v0.27.0/tree-sitter-linux-x64.gz",
     "repo": "tree-sitter/tree-sitter",
     "binary_name": "tree-sitter"
   },
   "clangd": {
-    "version": "22.1.6",
-    "tag": "22.1.6",
-    "url": "https://github.com/clangd/clangd/releases/download/22.1.6/clangd-linux-22.1.6.zip",
+    "version": "23.1.0",
+    "tag": "23.1.0",
+    "url": "https://github.com/clangd/clangd/releases/download/23.1.0/clangd-linux-23.1.0.zip",
     "repo": "clangd/clangd",
     "binary_name": "clangd",
-    "extract_dir": "clangd_22.1.6/bin",
+    "extract_dir": "clangd_23.1.0/bin",
     "extra_dirs": [
       [
         "../lib/clang",
@@ -122,19 +115,19 @@
     ]
   },
   "zed": {
-    "version": "1.14.2",
-    "tag": "v1.14.2",
-    "url": "https://github.com/zed-industries/zed/releases/download/v1.14.2/zed-linux-x86_64.tar.gz",
+    "version": "1.22.0",
+    "tag": "v1.22.0",
+    "url": "https://github.com/zed-industries/zed/releases/download/v1.22.0/zed-linux-x86_64.tar.gz",
     "repo": "zed-industries/zed",
     "binary_name": "zed"
   },
   "marktext": {
-    "version": "0.19.1",
-    "tag": "v0.19.1",
-    "url": "https://github.com/marktext/marktext/releases/download/v0.19.1/marktext-linux-0.19.1.tar.gz",
+    "version": "0.20.0",
+    "tag": "v0.20.0",
+    "url": "https://github.com/marktext/marktext/releases/download/v0.20.0/marktext-linux-0.20.0.tar.gz",
     "repo": "marktext/marktext",
     "binary_name": "marktext",
-    "extract_dir": "marktext-linux-0.19.1"
+    "extract_dir": "marktext-linux-0.20.0"
   },
   "typst": {
     "version": "0.15.1",
@@ -145,9 +138,9 @@
     "extract_dir": "typst-x86_64-unknown-linux-musl"
   },
   "atuin": {
-    "version": "18.19.0",
-    "tag": "v18.19.0",
-    "url": "https://github.com/atuinsh/atuin/releases/download/v18.19.0/atuin-x86_64-unknown-linux-gnu.tar.gz",
+    "version": "18.23.0",
+    "tag": "v18.23.0",
+    "url": "https://github.com/atuinsh/atuin/releases/download/v18.23.0/atuin-x86_64-unknown-linux-gnu.tar.gz",
     "repo": "atuinsh/atuin",
     "binary_name": "atuin",
     "extract_dir": "atuin-x86_64-unknown-linux-gnu"
@@ -167,9 +160,9 @@
     "binary_name": "just"
   },
   "hunk": {
-    "version": "0.18.0",
-    "tag": "v0.18.0",
-    "url": "https://github.com/modem-dev/hunk/releases/download/v0.18.0/hunkdiff-linux-x64.tar.gz",
+    "version": "0.23.0",
+    "tag": "v0.23.0",
+    "url": "https://github.com/modem-dev/hunk/releases/download/v0.23.0/hunkdiff-linux-x64.tar.gz",
     "repo": "modem-dev/hunk",
     "binary_name": "hunk",
     "extract_dir": "hunkdiff-linux-x64"
@@ -183,11 +176,18 @@
     "extract_dir": "wild-linker-0.10.0-x86_64-unknown-linux-gnu"
   },
   "rclone": {
-    "version": "1.75.0",
-    "tag": "v1.75.0",
-    "url": "https://github.com/rclone/rclone/releases/download/v1.75.0/rclone-v1.75.0-linux-amd64.zip",
+    "version": "1.75.1",
+    "tag": "v1.75.1",
+    "url": "https://github.com/rclone/rclone/releases/download/v1.75.1/rclone-v1.75.1-linux-amd64.zip",
     "repo": "rclone/rclone",
     "binary_name": "rclone",
-    "extract_dir": "rclone-v1.75.0-linux-amd64"
+    "extract_dir": "rclone-v1.75.1-linux-amd64"
+  },
+  "copilot": {
+    "version": "1.0.91",
+    "tag": "v1.0.91",
+    "url": "https://github.com/github/copilot-cli/releases/download/v1.0.91/copilot-linux-x64.tar.gz",
+    "repo": "github/copilot-cli",
+    "binary_name": "copilot"
   }
 }
