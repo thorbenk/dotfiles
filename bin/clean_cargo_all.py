@@ -8,6 +8,7 @@ Find all project directories containg a `Cargo.toml` and run
 """
 
 import os
+import shlex
 import sys
 
 
@@ -21,8 +22,8 @@ def find_dirs_with_file(root_dir, file_name):
 
 def make_clean_cargo_cmd(root_dir):
     dirs = find_dirs_with_file(root_dir, "Cargo.toml")
-    cmds = list(map(lambda d: "cd %s && cargo clean" % d, dirs))
-    cmds.append("cd %s" % os.getcwd())
+    cmds = list(map(lambda d: "cd %s && cargo clean" % shlex.quote(d), dirs))
+    cmds.append("cd %s" % shlex.quote(os.getcwd()))
     return " && \\\n".join(cmds)
 
 
