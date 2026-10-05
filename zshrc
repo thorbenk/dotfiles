@@ -213,11 +213,15 @@ alias 'f=fzf'
 # (unlike -i, which nags per file). Scripts call /bin/rm directly, so unaffected.
 alias 'rm=rm -I'
 
-# Automatically background processes (no output to terminal etc)
-alias 'z=echo $RANDOM > /dev/null; zz'
+# Automatically background processes (no output to terminal etc). The log is
+# created by mktemp: unique, mode 0600, and named after the command's basename
+# so arguments like ./script.sh work.
+alias 'z=zz'
 zz () {
-    echo "$@"
-    "$@" &> "/tmp/z-$1-$RANDOM" &!
+    local log
+    log=$(mktemp -t "z-${1##*/}.XXXXXX") || return
+    echo "$@ (log: $log)"
+    "$@" &> "$log" &!
 }
 
 # Aliases to use this; use e.g. 'command gv' to avoid
