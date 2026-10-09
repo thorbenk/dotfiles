@@ -1,8 +1,8 @@
 {
   "codex": {
-    "version": "0.160.0",
-    "tag": "rust-v0.160.0",
-    "url": "https://github.com/openai/codex/releases/download/rust-v0.160.0/codex-x86_64-unknown-linux-musl.tar.gz",
+    "version": "0.162.0",
+    "tag": "rust-v0.162.0",
+    "url": "https://github.com/openai/codex/releases/download/rust-v0.162.0/codex-x86_64-unknown-linux-musl.tar.gz",
     "repo": "openai/codex",
     "binary_name": "codex",
     "archive_binary_name": "codex-x86_64-unknown-linux-musl"
@@ -22,9 +22,9 @@
     "binary_name": "fzf"
   },
   "direnv": {
-    "version": "2.37.1",
-    "tag": "v2.37.1",
-    "url": "https://github.com/direnv/direnv/releases/download/v2.37.1/direnv.linux-amd64",
+    "version": "2.38.1",
+    "tag": "v2.38.1",
+    "url": "https://github.com/direnv/direnv/releases/download/v2.38.1/direnv.linux-amd64",
     "repo": "direnv/direnv",
     "binary_name": "direnv"
   },
@@ -37,19 +37,26 @@
     "extract_dir": "fd-v10.5.0-x86_64-unknown-linux-gnu"
   },
   "lazygit": {
-    "version": "0.65.1",
-    "tag": "v0.65.1",
-    "url": "https://github.com/jesseduffield/lazygit/releases/download/v0.65.1/lazygit_0.65.1_linux_x86_64.tar.gz",
+    "version": "0.66.0",
+    "tag": "v0.66.0",
+    "url": "https://github.com/jesseduffield/lazygit/releases/download/v0.66.0/lazygit_0.66.0_linux_x86_64.tar.gz",
     "repo": "jesseduffield/lazygit",
     "binary_name": "lazygit"
   },
+  "difft": {
+    "version": "0.71.0",
+    "tag": "0.71.0",
+    "url": "https://github.com/Wilfred/difftastic/releases/download/0.71.0/difft-0.71.0-x86_64-unknown-linux-gnu.tar.gz",
+    "repo": "Wilfred/difftastic",
+    "binary_name": "difft"
+  },
   "hyperfine": {
-    "version": "1.20.0",
-    "tag": "v1.20.0",
-    "url": "https://github.com/sharkdp/hyperfine/releases/download/v1.20.0/hyperfine-v1.20.0-x86_64-unknown-linux-gnu.tar.gz",
+    "version": "2.0.0",
+    "tag": "v2.0.0",
+    "url": "https://github.com/sharkdp/hyperfine/releases/download/v2.0.0/hyperfine-v2.0.0-x86_64-unknown-linux-gnu.tar.gz",
     "repo": "sharkdp/hyperfine",
     "binary_name": "hyperfine",
-    "extract_dir": "hyperfine-v1.20.0-x86_64-unknown-linux-gnu"
+    "extract_dir": "hyperfine-v2.0.0-x86_64-unknown-linux-gnu"
   },
   "bat": {
     "version": "0.26.1",
@@ -94,9 +101,9 @@
     "binary_name": "btm"
   },
   "tree-sitter": {
-    "version": "0.27.0",
-    "tag": "v0.27.0",
-    "url": "https://github.com/tree-sitter/tree-sitter/releases/download/v0.27.0/tree-sitter-linux-x64.gz",
+    "version": "0.27.1",
+    "tag": "v0.27.1",
+    "url": "https://github.com/tree-sitter/tree-sitter/releases/download/v0.27.1/tree-sitter-linux-x64.gz",
     "repo": "tree-sitter/tree-sitter",
     "binary_name": "tree-sitter"
   },
@@ -115,19 +122,19 @@
     ]
   },
   "zed": {
-    "version": "1.22.0",
-    "tag": "v1.22.0",
-    "url": "https://github.com/zed-industries/zed/releases/download/v1.22.0/zed-linux-x86_64.tar.gz",
+    "version": "1.23.2",
+    "tag": "v1.23.2",
+    "url": "https://github.com/zed-industries/zed/releases/download/v1.23.2/zed-linux-x86_64.tar.gz",
     "repo": "zed-industries/zed",
     "binary_name": "zed"
   },
   "marktext": {
-    "version": "0.20.0",
-    "tag": "v0.20.0",
-    "url": "https://github.com/marktext/marktext/releases/download/v0.20.0/marktext-linux-0.20.0.tar.gz",
+    "version": "0.21.1",
+    "tag": "v0.21.1",
+    "url": "https://github.com/marktext/marktext/releases/download/v0.21.1/marktext-linux-0.21.1.tar.gz",
     "repo": "marktext/marktext",
     "binary_name": "marktext",
-    "extract_dir": "marktext-linux-0.20.0"
+    "extract_dir": "marktext-linux-0.21.1"
   },
   "typst": {
     "version": "0.15.1",
@@ -184,9 +191,9 @@
     "extract_dir": "rclone-v1.75.1-linux-amd64"
   },
   "copilot": {
-    "version": "1.0.91",
-    "tag": "v1.0.91",
-    "url": "https://github.com/github/copilot-cli/releases/download/v1.0.91/copilot-linux-x64.tar.gz",
+    "version": "1.0.94",
+    "tag": "v1.0.94",
+    "url": "https://github.com/github/copilot-cli/releases/download/v1.0.94/copilot-linux-x64.tar.gz",
     "repo": "github/copilot-cli",
     "binary_name": "copilot"
   }

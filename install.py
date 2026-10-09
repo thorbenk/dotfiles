@@ -262,7 +262,7 @@ GITHUB_RELEASES = {
     ),
     "difft": GitHubRelease(
         repo="Wilfred/difftastic",
-        asset_pattern="difft-{arch}-unknown-linux-gnu.tar.gz",
+        asset_pattern="difft-{version}-{arch}-unknown-linux-gnu.tar.gz",
         binary_name="difft",
     ),
     "hyperfine": GitHubRelease(
@@ -431,7 +431,12 @@ def find_matching_asset(
 
 
 def update_lock_file() -> None:
-    """Fetch latest releases and update the lock file."""
+    """Fetch latest releases and update the lock file. A dep whose fetch fails
+    keeps its previous entry rather than dropping out of the lock file."""
+    previous: dict[str, PackageInfo] = {}
+    if LOCK_FILE.exists():
+        with open(LOCK_FILE) as f:
+            previous = cast(dict[str, PackageInfo], json.load(f))
     lock_data: dict[str, PackageInfo] = {}
     dep_names = {d.name for d in DEPS}
 
@@ -450,8 +455,7 @@ def update_lock_file() -> None:
                     version,
                 )
                 if not url:
-                    print(f"Warning: Could not find matching asset for {name}")
-                    continue
+                    raise LookupError(f"no asset matching {release_info.asset_pattern!r}")
             else:
                 url = release["tarball_url"]
 
@@ -482,6 +486,9 @@ def update_lock_file() -> None:
 
         except Exception as e:
             print(f"✗ Failed to fetch {name}: {e}")
+            if name in previous:
+                lock_data[name] = previous[name]
+                print(f"  keeping previous entry v{previous[name]['version']}")
             continue
 
     with open(LOCK_FILE, "w") as f:
