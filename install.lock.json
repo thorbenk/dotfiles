@@ -2,10 +2,9 @@
   "codex": {
     "version": "0.162.0",
     "tag": "rust-v0.162.0",
-    "url": "https://github.com/openai/codex/releases/download/rust-v0.162.0/codex-x86_64-unknown-linux-musl.tar.gz",
+    "url": "https://github.com/openai/codex/releases/download/rust-v0.162.0/codex-package-x86_64-unknown-linux-musl.tar.gz",
     "repo": "openai/codex",
-    "binary_name": "codex",
-    "archive_binary_name": "codex-x86_64-unknown-linux-musl"
+    "binary_name": "codex"
   },
   "fnm": {
     "version": "1.39.0",

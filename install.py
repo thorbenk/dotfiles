@@ -190,6 +190,22 @@ def install_hunk(name: str, info: "PackageInfo", tmpdir: Path) -> None:
     ensure_symlink(bundle / "hunk", LOCAL_BIN / "hunk")
 
 
+def install_codex(name: str, info: "PackageInfo", tmpdir: Path) -> None:
+    # Codex refuses to run outside a complete package (codex-package.json,
+    # bin/codex-code-mode-host, codex-path/rg, codex-resources/bwrap), so the
+    # whole archive is kept together as a bundle and the binary symlinked.
+    local_prefix = LOCAL_BIN.parent  # ~/.local
+    bundle = local_prefix / "codex"
+    if bundle.exists():
+        shutil.rmtree(bundle)
+    shutil.copytree(tmpdir, bundle, ignore=shutil.ignore_patterns("*.tar.gz"))
+    for exe in ("bin/codex", "bin/codex-code-mode-host", "codex-path/rg"):
+        chmod_x(bundle / exe)
+    if (bundle / "codex-resources/bwrap").exists():
+        chmod_x(bundle / "codex-resources/bwrap")
+    ensure_symlink(bundle / "bin" / "codex", LOCAL_BIN / "codex")
+
+
 def install_marktext(name: str, info: "PackageInfo", tmpdir: Path) -> None:
     # MarkText is an Electron bundle: the binary must stay with its resources.
     # The bundled chrome-sandbox isn't setuid-root after a home-dir extract, so
@@ -230,9 +246,9 @@ GITHUB_RELEASES = {
     "codex": GitHubRelease(
         repo="openai/codex",
         version_pattern=r"rust-v(\d+\.\d+\.\d+)",
-        asset_pattern="codex-{arch}-unknown-linux-musl.tar.gz",
+        asset_pattern="codex-package-{arch}-unknown-linux-musl.tar.gz",
         binary_name="codex",
-        archive_binary_name_pattern="codex-{arch}-unknown-linux-musl",
+        install=install_codex,
     ),
     "fnm": GitHubRelease(
         repo="Schniz/fnm",
