@@ -19,6 +19,7 @@ import tempfile
 import platform
 import json
 import argparse
+import shlex
 
 PWD = Path(__file__).parent
 LOCAL_BIN = Path(os.path.expanduser("~/.local/bin"))
@@ -87,6 +88,7 @@ DEPS: list[Dep] = [
     Dep("bat"),
     Dep("delta"),
     Dep("codex"),
+    Dep("blender-mcp"),
     Dep("btm"),
     Dep("tree-sitter"),
     Dep("clangd"),
@@ -138,6 +140,7 @@ class GitHubReleaseData(TypedDict):
 @dataclasses.dataclass(frozen=True)
 class GitHubRelease:
     repo: str  # e.g., "sharkdp/fd"
+    api_base: str = "https://api.github.com"
     version_pattern: str | None = (
         None  # regex to match version in tag, e.g., r"v(\d+\.\d+\.\d+)"
     )
@@ -155,6 +158,30 @@ class GitHubRelease:
     install: Callable[[str, "PackageInfo", Path], None] | None = (
         None  # custom installer; if set, takes over after archive extraction
     )
+
+
+def install_blender_mcp(name: str, info: "PackageInfo", tmpdir: Path) -> None:
+    """Keep the MCPB project together and launch it with uv run."""
+    manifest = json.loads((tmpdir / "manifest.json").read_text())
+    if manifest["version"] != info["version"]:
+        raise ValueError("Blender MCP bundle version does not match the lock file")
+    bundle = LOCAL_BIN.parent / "share/blender-mcp"
+    if bundle.exists():
+        shutil.rmtree(bundle)
+    shutil.copytree(tmpdir, bundle, ignore=shutil.ignore_patterns("*.mcpb"))
+    launcher = LOCAL_BIN / name
+    unlink_symlink(launcher)
+    # The upstream server has no --version option. Report the bundled version
+    # without starting MCP or resolving dependencies for version checks.
+    launcher.write_text(
+        "#!/bin/sh\n"
+        'if [ "$1" = "--version" ]; then\n'
+        f"  printf '%s\\n' {shlex.quote(name + ' ' + manifest['version'])}\n"
+        "  exit 0\n"
+        "fi\n"
+        f'exec uv --directory {shlex.quote(str(bundle))} run blender-mcp "$@"\n'
+    )
+    chmod_x(launcher)
 
 
 def install_zed(name: str, info: "PackageInfo", tmpdir: Path) -> None:
@@ -244,6 +271,13 @@ def install_marktext(name: str, info: "PackageInfo", tmpdir: Path) -> None:
 
 
 GITHUB_RELEASES = {
+    "blender-mcp": GitHubRelease(
+        repo="lab/blender_mcp",
+        api_base="https://projects.blender.org/api/v1",
+        asset_pattern="blender-{version}.mcpb",
+        binary_name="blender-mcp",
+        install=install_blender_mcp,
+    ),
     "codex": GitHubRelease(
         repo="openai/codex",
         version_pattern=r"rust-v(\d+\.\d+\.\d+)",
@@ -403,23 +437,26 @@ def github_token() -> str | None:
     return os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
 
 
-def fetch_latest_release(repo: str) -> GitHubReleaseData:
-    """Fetch the latest release info from GitHub API."""
-    url = f"https://api.github.com/repos/{repo}/releases/latest"
+def fetch_latest_release(
+    repo: str, api_base: str = "https://api.github.com"
+) -> GitHubReleaseData:
+    """Fetch a release from GitHub or a compatible Gitea API."""
+    url = f"{api_base}/repos/{repo}/releases/latest"
 
     request = urllib.request.Request(url)
-    request.add_header("Accept", "application/vnd.github+json")
-    request.add_header("X-GitHub-Api-Version", "2022-11-28")
-    token = github_token()
-    if token:
-        request.add_header("Authorization", f"Bearer {token}")
+    if api_base == "https://api.github.com":
+        request.add_header("Accept", "application/vnd.github+json")
+        request.add_header("X-GitHub-Api-Version", "2022-11-28")
+        token = github_token()
+        if token:
+            request.add_header("Authorization", f"Bearer {token}")
 
     try:
         with urllib.request.urlopen(request) as response:
             return cast(GitHubReleaseData, json.loads(response.read().decode()))
     except urllib.error.HTTPError as e:
         print(f"Error fetching release for {repo}: {e}")
-        if e.code in (403, 429) and not github_token():
+        if api_base == "https://api.github.com" and e.code in (403, 429) and not github_token():
             print(
                 "  Looks like a rate limit (60 req/hour unauthenticated). "
                 "Set GITHUB_TOKEN to raise it to 5000/hour."
@@ -466,7 +503,7 @@ def update_lock_file() -> None:
         if name not in dep_names:
             continue
         try:
-            release = fetch_latest_release(release_info.repo)
+            release = fetch_latest_release(release_info.repo, release_info.api_base)
             tag = release["tag_name"]
             version = extract_version_from_tag(tag, release_info.version_pattern)
 
@@ -487,6 +524,8 @@ def update_lock_file() -> None:
                 "url": url,
                 "repo": release_info.repo,
             }
+            if release_info.api_base != "https://api.github.com":
+                lock_data[name]["source"] = release_info.api_base
 
             if release_info.binary_name:
                 lock_data[name]["binary_name"] = fill(release_info.binary_name, version)
@@ -561,7 +600,7 @@ def extract_and_download(url: str) -> Generator[Path, None, None]:
             mode = "r:gz" if name.endswith(".tar.gz") else "r:xz"
             with tarfile.open(fpath, mode) as tar:
                 tar.extractall(path=fpath.parent, filter="data")
-        elif name.endswith(".zip"):
+        elif name.endswith((".zip", ".mcpb")):
             with zipfile.ZipFile(fpath, "r") as zip_ref:
                 zip_ref.extractall(fpath.parent)
         yield fpath.parent
@@ -615,7 +654,7 @@ SYSTEM_DEPS: dict[str, Check] = {
 
 # Tools installed from install.lock.json, all checked with `<tool> --version`.
 LOCKFILE_TOOL_NAMES = [
-    "nvim", "lazygit", "difft", "fd", "hyperfine", "bat", "delta", "codex",
+    "nvim", "lazygit", "difft", "fd", "hyperfine", "bat", "delta", "codex", "blender-mcp",
     "fnm", "fzf", "direnv", "btm", "tree-sitter", "clangd", "zed", "marktext",
     "typst", "atuin", "zoxide", "just", "hunk", "rclone", "wild", "copilot",
     "tuicr",
@@ -946,7 +985,7 @@ def main() -> None:
     parser.add_argument(
         "--update-lock",
         action="store_true",
-        help="Update install.lock.json with latest releases from GitHub",
+        help="Update install.lock.json with latest releases",
     )
     parser.add_argument(
         "--show-lock",

@@ -42,7 +42,16 @@ Per-machine state that isn't in the repo:
 ```sh
 ./install.py --check         # compare installed vs. locked versions
 ./install.py --show-lock     # print the lockfile
-./install.py --update-lock   # bump lockfile to latest GitHub releases
+./install.py --update-lock   # bump lockfile to latest releases
+```
+
+Blender MCP is installed from its locked `.mcpb` release into
+`~/.local/share/blender-mcp`, with a `~/.local/bin/blender-mcp` launcher using
+`uv run`. Dependencies are resolved on first launch. Install and enable the
+Blender add-on separately, then register the launcher yourself:
+
+```sh
+codex mcp add blender -- blender-mcp
 ```
 
 ## Tips & tricks

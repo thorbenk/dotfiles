@@ -6,3 +6,6 @@ zed/settings.local.json
 .claude/
 
 codex/config.toml
+
+/ref/
+__pycache__/
