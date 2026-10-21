@@ -97,6 +97,7 @@ DEPS: list[Dep] = [
     Dep("zoxide"),
     Dep("just"),
     Dep("hunk"),
+    Dep("tuicr"),
     Dep("wild"),
     Dep("rclone", only_on=("DEHEI-7H3ZXL3",)),
     Dep("copilot", only_on=("DEHEI-7H3ZXL3",)),
@@ -371,6 +372,11 @@ GITHUB_RELEASES = {
         extract_dir_pattern="hunkdiff-linux-{arch_short}",
         install=install_hunk,
     ),
+    "tuicr": GitHubRelease(
+        repo="agavra/tuicr",
+        asset_pattern="tuicr-{version}-{arch}-unknown-linux-musl.tar.gz",
+        binary_name="tuicr",
+    ),
     "wild": GitHubRelease(
         repo="wild-linker/wild",
         asset_pattern="wild-linker-{version}-{arch}-unknown-linux-gnu.tar.gz",
@@ -612,6 +618,7 @@ LOCKFILE_TOOL_NAMES = [
     "nvim", "lazygit", "difft", "fd", "hyperfine", "bat", "delta", "codex",
     "fnm", "fzf", "direnv", "btm", "tree-sitter", "clangd", "zed", "marktext",
     "typst", "atuin", "zoxide", "just", "hunk", "rclone", "wild", "copilot",
+    "tuicr",
 ]  # fmt: skip
 
 # Override the version regex only where the first "\d+.\d+.\d+" in the
@@ -1010,9 +1017,20 @@ def main() -> None:
             continue
 
         locked = lock[name].get("version", "unknown")
-        installed = query_version(check)
+        output = run(check.cmd)
+        line = output.splitlines()[0] if output else ""
+        match = re.search(check.pattern or r"(\d+\.\d+\.\d+)", line)
+        installed = match.group(1) if match else None
 
-        if installed is None:
+        if output and not match:
+            # e.g. a locally built dev binary ("Wild <git sha> ..."); leave it be.
+            print(
+                Fore.YELLOW
+                + f"{name:<{M}} : unrecognized version {line!r}, skipping"
+                + Fore.RESET
+            )
+            continue
+        elif installed is None:
             print(
                 Fore.YELLOW
                 + f"{name:<{M}} : not found, installing v{locked}"

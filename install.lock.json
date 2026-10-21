@@ -1,8 +1,8 @@
 {
   "codex": {
-    "version": "0.162.0",
-    "tag": "rust-v0.162.0",
-    "url": "https://github.com/openai/codex/releases/download/rust-v0.162.0/codex-package-x86_64-unknown-linux-musl.tar.gz",
+    "version": "0.163.0",
+    "tag": "rust-v0.163.0",
+    "url": "https://github.com/openai/codex/releases/download/rust-v0.163.0/codex-package-x86_64-unknown-linux-musl.tar.gz",
     "repo": "openai/codex",
     "binary_name": "codex"
   },
@@ -14,16 +14,16 @@
     "binary_name": "fnm"
   },
   "fzf": {
-    "version": "0.74.4",
-    "tag": "v0.74.4",
-    "url": "https://github.com/junegunn/fzf/releases/download/v0.74.4/fzf-0.74.4-linux_amd64.tar.gz",
+    "version": "0.74.5",
+    "tag": "v0.74.5",
+    "url": "https://github.com/junegunn/fzf/releases/download/v0.74.5/fzf-0.74.5-linux_amd64.tar.gz",
     "repo": "junegunn/fzf",
     "binary_name": "fzf"
   },
   "direnv": {
-    "version": "2.38.1",
-    "tag": "v2.38.1",
-    "url": "https://github.com/direnv/direnv/releases/download/v2.38.1/direnv.linux-amd64",
+    "version": "2.38.2",
+    "tag": "v2.38.2",
+    "url": "https://github.com/direnv/direnv/releases/download/v2.38.2/direnv.linux-amd64",
     "repo": "direnv/direnv",
     "binary_name": "direnv"
   },
@@ -36,9 +36,9 @@
     "extract_dir": "fd-v10.5.0-x86_64-unknown-linux-gnu"
   },
   "lazygit": {
-    "version": "0.66.0",
-    "tag": "v0.66.0",
-    "url": "https://github.com/jesseduffield/lazygit/releases/download/v0.66.0/lazygit_0.66.0_linux_x86_64.tar.gz",
+    "version": "0.66.2",
+    "tag": "v0.66.2",
+    "url": "https://github.com/jesseduffield/lazygit/releases/download/v0.66.2/lazygit_0.66.2_linux_x86_64.tar.gz",
     "repo": "jesseduffield/lazygit",
     "binary_name": "lazygit"
   },
@@ -74,9 +74,9 @@
     "extract_dir": "delta-0.20.1-x86_64-unknown-linux-gnu"
   },
   "nvim": {
-    "version": "0.12.5",
-    "tag": "v0.12.5",
-    "url": "https://github.com/neovim/neovim/releases/download/v0.12.5/nvim-linux-x86_64.appimage",
+    "version": "0.12.6",
+    "tag": "v0.12.6",
+    "url": "https://github.com/neovim/neovim/releases/download/v0.12.6/nvim-linux-x86_64.appimage",
     "repo": "neovim/neovim",
     "binary_name": "nvim-linux-x86_64.appimage"
   },
@@ -121,19 +121,19 @@
     ]
   },
   "zed": {
-    "version": "1.23.2",
-    "tag": "v1.23.2",
-    "url": "https://github.com/zed-industries/zed/releases/download/v1.23.2/zed-linux-x86_64.tar.gz",
+    "version": "1.24.4",
+    "tag": "v1.24.4",
+    "url": "https://github.com/zed-industries/zed/releases/download/v1.24.4/zed-linux-x86_64.tar.gz",
     "repo": "zed-industries/zed",
     "binary_name": "zed"
   },
   "marktext": {
-    "version": "0.21.1",
-    "tag": "v0.21.1",
-    "url": "https://github.com/marktext/marktext/releases/download/v0.21.1/marktext-linux-0.21.1.tar.gz",
+    "version": "0.23.0",
+    "tag": "v0.23.0",
+    "url": "https://github.com/marktext/marktext/releases/download/v0.23.0/marktext-linux-0.23.0.tar.gz",
     "repo": "marktext/marktext",
     "binary_name": "marktext",
-    "extract_dir": "marktext-linux-0.21.1"
+    "extract_dir": "marktext-linux-0.23.0"
   },
   "typst": {
     "version": "0.15.1",
@@ -144,9 +144,9 @@
     "extract_dir": "typst-x86_64-unknown-linux-musl"
   },
   "atuin": {
-    "version": "18.23.0",
-    "tag": "v18.23.0",
-    "url": "https://github.com/atuinsh/atuin/releases/download/v18.23.0/atuin-x86_64-unknown-linux-gnu.tar.gz",
+    "version": "18.24.1",
+    "tag": "v18.24.1",
+    "url": "https://github.com/atuinsh/atuin/releases/download/v18.24.1/atuin-x86_64-unknown-linux-gnu.tar.gz",
     "repo": "atuinsh/atuin",
     "binary_name": "atuin",
     "extract_dir": "atuin-x86_64-unknown-linux-gnu"
@@ -159,19 +159,26 @@
     "binary_name": "zoxide"
   },
   "just": {
-    "version": "1.58.0",
-    "tag": "1.58.0",
-    "url": "https://github.com/casey/just/releases/download/1.58.0/just-1.58.0-x86_64-unknown-linux-musl.tar.gz",
+    "version": "1.59.0",
+    "tag": "1.59.0",
+    "url": "https://github.com/casey/just/releases/download/1.59.0/just-1.59.0-x86_64-unknown-linux-musl.tar.gz",
     "repo": "casey/just",
     "binary_name": "just"
   },
   "hunk": {
-    "version": "0.23.0",
-    "tag": "v0.23.0",
-    "url": "https://github.com/modem-dev/hunk/releases/download/v0.23.0/hunkdiff-linux-x64.tar.gz",
+    "version": "0.24.0",
+    "tag": "v0.24.0",
+    "url": "https://github.com/modem-dev/hunk/releases/download/v0.24.0/hunkdiff-linux-x64.tar.gz",
     "repo": "modem-dev/hunk",
     "binary_name": "hunk",
     "extract_dir": "hunkdiff-linux-x64"
+  },
+  "tuicr": {
+    "version": "0.27.0",
+    "tag": "v0.27.0",
+    "url": "https://github.com/agavra/tuicr/releases/download/v0.27.0/tuicr-0.27.0-x86_64-unknown-linux-musl.tar.gz",
+    "repo": "agavra/tuicr",
+    "binary_name": "tuicr"
   },
   "wild": {
     "version": "0.10.0",
@@ -182,17 +189,17 @@
     "extract_dir": "wild-linker-0.10.0-x86_64-unknown-linux-gnu"
   },
   "rclone": {
-    "version": "1.75.1",
-    "tag": "v1.75.1",
-    "url": "https://github.com/rclone/rclone/releases/download/v1.75.1/rclone-v1.75.1-linux-amd64.zip",
+    "version": "1.75.2",
+    "tag": "v1.75.2",
+    "url": "https://github.com/rclone/rclone/releases/download/v1.75.2/rclone-v1.75.2-linux-amd64.zip",
     "repo": "rclone/rclone",
     "binary_name": "rclone",
-    "extract_dir": "rclone-v1.75.1-linux-amd64"
+    "extract_dir": "rclone-v1.75.2-linux-amd64"
   },
   "copilot": {
-    "version": "1.0.94",
-    "tag": "v1.0.94",
-    "url": "https://github.com/github/copilot-cli/releases/download/v1.0.94/copilot-linux-x64.tar.gz",
+    "version": "1.0.101",
+    "tag": "v1.0.101",
+    "url": "https://github.com/github/copilot-cli/releases/download/v1.0.101/copilot-linux-x64.tar.gz",
     "repo": "github/copilot-cli",
     "binary_name": "copilot"
   }
