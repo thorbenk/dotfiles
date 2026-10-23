@@ -1,8 +1,8 @@
 {
   "codex": {
-    "version": "0.163.0",
-    "tag": "rust-v0.163.0",
-    "url": "https://github.com/openai/codex/releases/download/rust-v0.163.0/codex-package-x86_64-unknown-linux-musl.tar.gz",
+    "version": "0.164.0",
+    "tag": "rust-v0.164.0",
+    "url": "https://github.com/openai/codex/releases/download/rust-v0.164.0/codex-package-x86_64-unknown-linux-musl.tar.gz",
     "repo": "openai/codex",
     "binary_name": "codex"
   },
@@ -121,9 +121,9 @@
     ]
   },
   "zed": {
-    "version": "1.24.4",
-    "tag": "v1.24.4",
-    "url": "https://github.com/zed-industries/zed/releases/download/v1.24.4/zed-linux-x86_64.tar.gz",
+    "version": "1.25.2",
+    "tag": "v1.25.2",
+    "url": "https://github.com/zed-industries/zed/releases/download/v1.25.2/zed-linux-x86_64.tar.gz",
     "repo": "zed-industries/zed",
     "binary_name": "zed"
   },
@@ -144,9 +144,9 @@
     "extract_dir": "typst-x86_64-unknown-linux-musl"
   },
   "atuin": {
-    "version": "18.24.1",
-    "tag": "v18.24.1",
-    "url": "https://github.com/atuinsh/atuin/releases/download/v18.24.1/atuin-x86_64-unknown-linux-gnu.tar.gz",
+    "version": "18.24.2",
+    "tag": "v18.24.2",
+    "url": "https://github.com/atuinsh/atuin/releases/download/v18.24.2/atuin-x86_64-unknown-linux-gnu.tar.gz",
     "repo": "atuinsh/atuin",
     "binary_name": "atuin",
     "extract_dir": "atuin-x86_64-unknown-linux-gnu"
@@ -197,9 +197,9 @@
     "extract_dir": "rclone-v1.75.2-linux-amd64"
   },
   "copilot": {
-    "version": "1.0.101",
-    "tag": "v1.0.101",
-    "url": "https://github.com/github/copilot-cli/releases/download/v1.0.101/copilot-linux-x64.tar.gz",
+    "version": "1.0.103",
+    "tag": "v1.0.103",
+    "url": "https://github.com/github/copilot-cli/releases/download/v1.0.103/copilot-linux-x64.tar.gz",
     "repo": "github/copilot-cli",
     "binary_name": "copilot"
   }
