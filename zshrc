@@ -270,12 +270,17 @@ fi
 #   parallel C++ builds (62G RAM, ~2G swap). zed-oom-protect lowers Zed's
 #   oom_score_adj so the build dies first; it needs the one-time root install
 #   (see zed/zed-oom-protect) and silently no-ops if not installed.
-#   Machines without the source build or the NVIDIA ICD fall back to the
-#   installed zed and the default Vulkan driver.
+#   Uses the zed installed by install.py (~/.local/bin/zed); machines without
+#   the NVIDIA ICD fall back to the default Vulkan driver.
 zed () {
-    local zed_bin=/x/3rdparty/zed/target/release/zed
-    local icd=/usr/share/vulkan/icd.d/nvidia_icd.json
-    [[ -x $zed_bin ]] || zed_bin=$(whence -p zed) || { print -u2 "zed: not found"; return 1 }
+    local zed_bin icd=/usr/share/vulkan/icd.d/nvidia_icd.json
+    zed_bin=$(whence -p zed) || { print -u2 "zed: not found"; return 1 }
+    # Default window behaviour, unless a mode flag (-a/-n/-e) is given:
+    #   inside Zed's terminal ($ZED_TERM) -> add to the current window
+    #   anywhere else                     -> open a new window
+    if (( ! ${@[(I)(-a|--add|-n|--new|-e|--existing)]} )); then
+        if [[ -n $ZED_TERM ]]; then set -- -a "$@"; else set -- -n "$@"; fi
+    fi
     if [[ -f $icd ]]; then
         VK_DRIVER_FILES=$icd "$zed_bin" "$@" &>/dev/null &!
     else
