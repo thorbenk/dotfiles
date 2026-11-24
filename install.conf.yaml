@@ -48,6 +48,10 @@
     # direnv
     ~/.config/direnv/direnv.toml: direnv/direnv.toml
 
+    # Lazygit (only config.yml; the directory also holds lazygit's state)
+    ~/.config/lazygit/config.yml: lazygit/config.yml
+    ~/.config/delta/catppuccin-mocha.gitconfig: delta/catppuccin-mocha.gitconfig
+
     # Systemd user services (ydotoold is only for dictation; keep the host list
     # in sync with the dictation-indicator step below)
     ~/.config/systemd/user/ydotoold.service:
