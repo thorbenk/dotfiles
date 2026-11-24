@@ -162,7 +162,8 @@ export FZF_DEFAULT_COMMAND="rg --files"
 #--- git worktree picker -----------------------------------------------------
 
 # wt: fuzzy-pick a git worktree and cd into it.
-#   - lists every worktree as "<branch>  <path>"; type to filter
+#   - lists every worktree as "<branch>  <path>"; the query matches both
+#     the branch name and the path (e.g. "feat api" or "~/code/proj")
 #   - Enter cd's into the selected worktree
 #   - preview pane shows that worktree's recent commits
 # (named 'wt' so it doesn't clash with oh-my-zsh's `gwt`=`git worktree`)
@@ -173,8 +174,8 @@ wt () {
     return 1
   }
 
-  local selection dir
-  selection=$(
+  local dir
+  dir=$(
     command git worktree list --porcelain | awk '
       /^worktree /  { path = substr($0, 10) }
       /^branch /    { ref = substr($0, 8); sub(/^refs\/heads\//, "", ref); emit() }
@@ -183,17 +184,16 @@ wt () {
       function emit() {
         disp = path
         sub("^" ENVIRON["HOME"], "~", disp)
-        printf "%-30s %s\t%s\n", ref, disp, path
+        printf "%-30s\t%s\t%s\n", ref, disp, path
         ref=""; path=""
       }
-    ' | fzf --delimiter='\t' --with-nth=1 \
+    ' | fzf --delimiter='\t' --with-nth=1,2 --nth=1,2 --accept-nth=3 \
             --prompt='worktree> ' \
             --height=40% --reverse --ansi \
-            --preview='git -C {2} -c color.ui=always log --oneline -15' \
+            --preview='git -C {3} -c color.ui=always log --oneline -15' \
             --preview-window='right:55%'
   ) || return
 
-  dir=${selection##*$'\t'}
   [[ -n $dir && -d $dir ]] && cd -- "$dir"
 }
 
