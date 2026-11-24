@@ -11,6 +11,8 @@ import time
 
 CACHE_MAX_AGE = 5  # seconds
 
+MODEL_ABBREVIATIONS = {"Opus": "Op", "Sonnet": "So", "Fable": "Fa"}
+
 # ANSI colors
 CYAN = "\033[36m"
 GREEN = "\033[32m"
@@ -24,6 +26,7 @@ ICON_FOLDER = "\uf07b"
 ICON_BRANCH = "\uf126"
 ICON_CONTEXT = "\uf2db"
 ICON_BUILD = "\uf085"
+ICON_AGENT = "\uf2bd"  # user-circle
 
 
 def runtime_base():
@@ -175,16 +178,71 @@ def get_build_progress(session_id):
     }
 
 
+def get_session_name(session_id):
+    """Peer-messaging name (e.g. "vgsm-34") that SendMessage/ListAgents use.
+
+    Not part of the status line input, but Claude Code records it per process
+    in ~/.claude/sessions/<pid>.json alongside the session id. Re-read on every
+    refresh so a rename shows up.
+    """
+    if not session_id:
+        return None
+    directory = os.path.expanduser("~/.claude/sessions")
+    try:
+        names = os.listdir(directory)
+    except OSError:
+        return None
+    for name in names:
+        if not name.endswith(".json"):
+            continue
+        try:
+            with open(os.path.join(directory, name)) as f:
+                entry = json.load(f)
+        except (OSError, ValueError):
+            continue
+        if entry.get("sessionId") == session_id:
+            return entry.get("name")
+    return None
+
+
+def format_tokens(n):
+    """Compact token count: 850, 12k, 100k, 1.2M."""
+    if n >= 1_000_000:
+        return f"{n / 1_000_000:.1f}M"
+    if n >= 1000:
+        return f"{round(n / 1000)}k"
+    return str(n)
+
+
 def main():
     data = json.load(sys.stdin)
 
     directory = os.path.basename(
         data.get("workspace", {}).get("current_dir", data.get("cwd", ""))
     )
-    pct = int(data.get("context_window", {}).get("used_percentage", 0) or 0)
+    ctx = data.get("context_window", {})
+    pct = int(ctx.get("used_percentage", 0) or 0)
+    usage = ctx.get("current_usage") or {}
+    used = sum(
+        usage.get(k, 0) or 0
+        for k in (
+            "input_tokens",
+            "cache_creation_input_tokens",
+            "cache_read_input_tokens",
+        )
+    )
+    if not used:
+        used = pct * (ctx.get("context_window_size", 0) or 0) // 100
     git = get_git_info()
 
-    parts = [f"{DIM}{ICON_FOLDER} {directory}{RESET}"]
+    parts = []
+    try:
+        session_name = get_session_name(data.get("session_id"))
+    except Exception:
+        session_name = None
+    if session_name:
+        parts.append(f"{YELLOW}{ICON_AGENT} {session_name}{RESET}")
+    parts.append(f"{DIM}{ICON_FOLDER} {directory}{RESET}")
     if git["branch"]:
         parts.append(f"{CYAN}{ICON_BRANCH} {git['branch']}{RESET}")
     if git["files_changed"] > 0:
@@ -208,7 +266,17 @@ def main():
 
     model = data.get("model", {}).get("display_name", "")
     if model:
-        parts.append(model.replace(" context", ""))
+        model = model.replace(" context", "")
+        for full, short in MODEL_ABBREVIATIONS.items():
+            if model.startswith(full):
+                model = short + model[len(full) :]
+                break
+        effort = data.get("effort")
+        if isinstance(effort, dict):
+            effort = effort.get("level")
+        if effort:
+            model = f"{model} / {effort}"
+        parts.append(model)
 
     permission_mode = data.get("permissionMode", "")
     if permission_mode:
@@ -218,7 +286,7 @@ def main():
     bar_color = RED if pct >= 90 else YELLOW if pct >= 70 else GREEN
     filled = pct * 10 // 100
     bar = "\u2593" * filled + "\u2591" * (10 - filled)
-    parts.append(f"{ICON_CONTEXT} {bar_color}{bar}{RESET} {pct}%")
+    parts.append(f"{ICON_CONTEXT} {bar_color}{bar}{RESET} {format_tokens(used)}")
 
     print(" | ".join(parts))
 

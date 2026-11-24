@@ -10,7 +10,7 @@
   },
   "enabledPlugins": {
     "rust-analyzer-lsp@claude-plugins-official": true,
-    "clangd-lsp@claude-plugins-official": true,
+    "clangd-lsp@claude-plugins-official": false,
     "playwright@claude-plugins-official": true,
     "mattpocock-skills@claude-plugins-official": true
   },
@@ -18,7 +18,7 @@
   "effortLevel": "xhigh",
   "modelSettings": {
     "claude-opus-5-5": {
-      "effortLevel": "medium"
+      "effortLevel": "high"
     }
   },
   "tui": "fullscreen",
@@ -26,5 +26,8 @@
     "enabled": true,
     "mode": "hold"
   },
-  "voiceEnabled": true
+  "skipDangerousModePermissionPrompt": true,
+  "switchModelsOnFlag": true,
+  "voiceEnabled": true,
+  "crossSessionInbound": "accept"
 }
